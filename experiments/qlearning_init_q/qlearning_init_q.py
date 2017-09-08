@@ -7,8 +7,8 @@ import seaborn as sns
 from environments.gridworld import GridWorld, GridWorldVisualizer
 from algorithms.qlearning import QLearning
 from utilities.utilities import get_data_directory
-from utilities.serializer import deserialize
 from utilities.numerical import moving_average
+from utilities.datacontainers import Summary
 
 directory = get_data_directory(__file__)
 
@@ -41,7 +41,7 @@ if run_experiment:
 if plot_results:
     for i, init_q in enumerate(init_q_values):
         fps = [os.path.join(directory, "QLearning_GridWorldHard_%.3f_%d.bin" % (init_q, idx)) for idx in range(num_exp)]
-        summaries = [deserialize(fp) for fp in fps]
+        summaries = [Summary.load(fp) for fp in fps]
         rewards = np.array([np.array(summary.average_episode_reward()) for summary in summaries])
 
         mean = np.mean(rewards, axis=0)

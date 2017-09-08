@@ -1,18 +1,14 @@
 import os
 
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-from environments.gridworld import GridWorldVisualizer, GridWorld
-from algorithms.qlearning import QLearning
-from algorithms.qlearninglambda import QLearningLambda
-from smartstart.smartstart_file import SmartStart
-from utilities.utilities import get_data_directory
+from algorithms.qlearning import QLearning, QLearningLambda
+from algorithms.smartstart import SmartStart
+from environments.gridworld import GridWorld
 from utilities.experimenter import run_experiment
 from utilities.plot import plot_results
 from utilities.scheduler import LinearScheduler
-
+from utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
@@ -69,7 +65,7 @@ param_grid = {'task': task, 'use_traces': [True, False], 'smart_start': [True, F
 
 run_experiment(param_grid)
 
-# Plot results or exit
+# Plot results
 maze = 'GridWorldHard'
 files = [os.path.join(directory, 'QLearning_%s' % maze),
          os.path.join(directory, 'QLearningLambda_%s' % maze),

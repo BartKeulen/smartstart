@@ -1,15 +1,16 @@
 import datetime
 import json
+import os
 
 import numpy as np
 
-from utilities.serializer import Serializable, DIR
+from .utilities import DIR
 
 summary_variables = dict()
 summary_variables['reward'] = 0
 
 
-class Episode(Serializable):
+class Episode(object):
 
     def __init__(self):
         super().__init__()
@@ -39,7 +40,6 @@ class Episode(Serializable):
             '_reward': np.asarray(self._reward).tolist(),
             '_obs_tp1': np.asarray(self._obs_tp1).tolist(),
             '_done': np.asarray(self._done).tolist()
-            '_done': np.asarray(self._done).tolist()
         }
         return json.dumps(json_dict)
 
@@ -60,10 +60,10 @@ class Episode(Serializable):
                (self.__class__.__name__, self.__len__(), self.total_reward(), self.average_reward())
 
 
-class Summary(Serializable):
+class Summary(object):
     REWARD = 0
 
-    def __init__(self, name):
+    def __init__(self, name=None):
         super().__init__()
         self.name = name
         self.time = datetime.datetime.today().isoformat()
@@ -84,12 +84,40 @@ class Summary(Serializable):
     def average_episode_reward(self):
         return [episode.average_reward() for episode in self._episodes]
 
-    def save(self, directory=DIR, post_fix=None):
+    def to_json(self):
+        json_dict = {
+            'name': self.name,
+            'time': self.time,
+            '_episodes': [episode.to_json() for episode in self._episodes]
+        }
+        return json.dumps(json_dict)
 
+    @classmethod
+    def from_json(cls, data):
+        summary = cls()
+        data_dict = json.loads(data)
+        data_dict['_episodes'] = [Episode.from_json(episode_data) for episode_data in data_dict['_episodes']]
+        summary.__dict__.update(data_dict)
+        return summary
+
+    def save(self, directory=DIR, post_fix=None):
         name = self.name
         if post_fix is not None:
             name += "_" + str(post_fix)
-        self.serialize(name, directory=directory)
+        name += ".json"
+
+        fp = os.path.join(directory, name)
+
+        with open(fp, 'w') as f:
+            f.write(self.to_json())
+
+        return fp
+
+    @classmethod
+    def load(cls, fp):
+        with open(fp, 'r') as f:
+            data = f.read()
+            return cls.from_json(data)
 
     def __len__(self):
         return len(self._episodes)
