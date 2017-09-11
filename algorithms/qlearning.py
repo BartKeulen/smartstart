@@ -53,7 +53,7 @@ if __name__ == "__main__":
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = QLearning(env, alpha=0.3, num_episodes=1000, max_steps=500)
+    agent = QLearning(env, alpha=0.3, num_episodes=1000, max_steps=1000, exploration=QLearning.E_GREEDY)
 
     summary = agent.train(render=False, render_episode=True)
 

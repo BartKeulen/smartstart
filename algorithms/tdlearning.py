@@ -155,7 +155,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
     def _boltzmann(self, obs):
         q_values, actions = self.get_q_values(obs)
 
-        sum_q = np.exp(np.sum(q_values))
+        sum_q = np.sum(np.exp(q_values))
         q_values = [np.exp(q_value) / sum_q for q_value in q_values]
 
         return np.random.choice(actions, p=q_values)
