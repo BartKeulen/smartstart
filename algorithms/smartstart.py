@@ -1,7 +1,7 @@
 import numpy as np
 
 from algorithms.policy import PolicyMap
-from utilities.datacontainers import Episode, Summary
+from utilities.datacontainers import Episode, SummarySmall, Summary
 
 
 def SmartStart(base, env, *args, **kwargs):
@@ -48,8 +48,8 @@ def SmartStart(base, env, *args, **kwargs):
             node = self.policy_map.get_node(state)
             return node.get_policy()
 
-        def train(self, render=False, render_episode=False, print_results=True):
-            summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        def train(self, summary_to_use=SummarySmall, render=False, render_episode=False, print_results=True):
+            summary = summary_to_use(self.__class__.__name__ + "_" + self.env.name)
 
             for i_episode in range(self.num_episodes):
                 episode = Episode()
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = SmartStart(SARSALamba, env, alpha=0.3, num_episodes=1000, max_steps=500)
+    agent = SmartStart(QLearning, env, alpha=0.3, num_episodes=1000, max_steps=500)
 
     summary = agent.train(render=False, render_episode=True)
 

@@ -68,8 +68,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return self.Q[idx], action_tp1
 
-    def train(self, render=False, render_episode=False, print_results=True):
-        summary = SummarySmall(self.__class__.__name__ + "_" + self.env.name)
+    def train(self, summary_to_use=SummarySmall, render=False, render_episode=False, print_results=True):
+        summary = summary_to_use(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode()
@@ -159,6 +159,9 @@ class TDLearning(Counter, metaclass=ABCMeta):
         q_values = [np.exp(q_value) / sum_q for q_value in q_values]
 
         return np.random.choice(actions, p=q_values)
+
+    def _count_based(self, obs):
+        pass
 
     def get_q_map(self):
         w, h = self.env.w, self.env.h

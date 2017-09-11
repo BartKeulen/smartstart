@@ -8,13 +8,13 @@ from utilities.datacontainers import Summary, SummarySmall
 from utilities.numerical import moving_average
 
 
-def plot_results(files, num_exp=1, legend=None):
+def plot_results(files, num_exp=1, legend=None, summary=SummarySmall):
     for file in files:
         if num_exp > 1:
             fps = ["%s_%d.json" % (file, idx) for idx in range(num_exp)]
         else:
             fps = ["%s.json" % (file)]
-        summaries = [SummarySmall.load(fp) for fp in fps]
+        summaries = [summary.load(fp) for fp in fps]
         rewards = np.array([np.array(summary.average_episode_reward()) for summary in summaries])
 
         mean = np.mean(rewards, axis=0)
