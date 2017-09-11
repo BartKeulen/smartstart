@@ -4,14 +4,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from utilities.datacontainers import Summary
+from utilities.datacontainers import Summary, SummarySmall
 from utilities.numerical import moving_average
 
 
-def plot_results(files, num_exp, legend=None):
+def plot_results(files, num_exp=1, legend=None):
     for file in files:
-        fps = ["%s_%d.json" % (file, idx) for idx in range(num_exp)]
-        summaries = [Summary.load(fp) for fp in fps]
+        if num_exp > 1:
+            fps = ["%s_%d.json" % (file, idx) for idx in range(num_exp)]
+        else:
+            fps = ["%s.json" % (file)]
+        summaries = [SummarySmall.load(fp) for fp in fps]
         rewards = np.array([np.array(summary.average_episode_reward()) for summary in summaries])
 
         mean = np.mean(rewards, axis=0)

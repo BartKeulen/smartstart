@@ -128,3 +128,28 @@ class Summary(object):
     def __repr__(self):
         return "%s(num_episodes=%d, average_reward=%.2f)" % \
                (self.__class__.__name__, self.__len__(), self.average_reward())
+
+
+class SummarySmall(Summary):
+
+    def __init__(self, name=None):
+        super(SummarySmall, self).__init__(name)
+
+    def append(self, episode):
+        self._episodes.append((len(episode), episode.total_reward()))
+
+    def total_episode_reward(self):
+        return [reward for steps, reward in self._episodes]
+
+    def average_episode_reward(self):
+        return [reward/steps for steps, reward in self._episodes]
+
+    def to_json(self):
+        return json.dumps(self.__dict__)
+
+    @classmethod
+    def from_json(cls, data):
+        summary = cls()
+        data_dict = json.loads(data)
+        summary.__dict__.update(data_dict)
+        return summary
