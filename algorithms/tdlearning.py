@@ -11,6 +11,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
     NONE = 0
     E_GREEDY = 1
     BOLTZMANN = 2
+    COUNT_BASED = 3
 
     def __init__(self,
                  env,
@@ -21,7 +22,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                  init_q_value=0.,
                  exploration=E_GREEDY,
                  epsilon=0.1,
-
+                 beta=1.,
                  seed=None):
         super(TDLearning, self).__init__(env)
 
@@ -36,6 +37,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         self.Q = np.ones((self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
         self.exploration = exploration
         self.epsilon = epsilon
+        self.beta = beta
         self.seed = seed
 
     def reset(self):
@@ -90,6 +92,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                 value_map = np.max(value_map, axis=2)
                 render_episode = self.env.render(value_map=value_map, density_map=self.get_density_map(),
                                                  message=message)
+
             if print_results:
                 print("Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward()))
             summary.append(episode)
@@ -111,7 +114,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         _, action_tp1 = self.update_q_value(obs, action, r, obs_tp1, done)
 
-        self.increment(obs)
+        self.increment(obs, action)
 
         episode.append(obs, action, r, obs_tp1, done)
 
@@ -124,6 +127,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
             return self._epsilon_greedy(obs)
         elif self.exploration == TDLearning.BOLTZMANN:
             return self._boltzmann(obs)
+        elif self.exploration == TDLearning.COUNT_BASED:
+            return self._count_based(obs)
         else:
             raise NotImplementedError("Please choose from the available smartstart methods: E_GREEDY, BOLTZMANN.")
 
@@ -156,12 +161,30 @@ class TDLearning(Counter, metaclass=ABCMeta):
         q_values, actions = self.get_q_values(obs)
 
         sum_q = np.sum(np.exp(q_values))
-        q_values = [np.exp(q_value) / sum_q for q_value in q_values]
+        updated_values = [np.exp(q_value) / sum_q for q_value in q_values]
 
-        return np.random.choice(actions, p=q_values)
+        return np.random.choice(actions, p=updated_values)
 
     def _count_based(self, obs):
-        pass
+        q_values, actions = self.get_q_values(obs)
+        count = self.get_count(obs)
+
+        updated_values = q_values.copy()
+        updated_values += self.beta / (np.sqrt(count) + 1e-20)
+
+        max_value = -float('inf')
+        max_actions = []
+        for action, value in zip(actions, updated_values):
+            if value > max_value:
+                max_value = value
+                max_actions = [action]
+            elif value == max_value:
+                max_actions.append(action)
+
+        if not max_actions:
+            raise Exception("No maximum q-values were found.")
+
+        return random.choice(max_actions)
 
     def get_q_map(self):
         w, h = self.env.w, self.env.h
@@ -206,8 +229,8 @@ class TDLearningLambda(TDLearning):
 
         return self.Q[idx], action_tp1
 
-    def train(self, render=False, render_episode=False, print_results=True):
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+    def train(self, summary_to_use=SummarySmall, render=False, render_episode=False, print_results=True):
+        summary = summary_to_use(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode()

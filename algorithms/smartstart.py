@@ -105,7 +105,7 @@ def SmartStart(base, env, *args, **kwargs):
 
             _, action_tp1 = self.update_q_value(obs, action, r, obs_tp1, done)
 
-            self.increment(obs)
+            self.increment(obs, action)
             self.policy_map.add_node(obs_tp1, action)
 
             episode.append(obs, action, r, obs_tp1, done)
