@@ -6,7 +6,6 @@ from algorithms.tdlearning import TDLearning, TDLearningLambda
 class SARSA(TDLearning):
 
     def __init__(self, env, *args, **kwargs):
-        self.__class__.__name__ = "SARSA"
         super(SARSA, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):
@@ -23,7 +22,6 @@ class SARSA(TDLearning):
 class SARSALamba(TDLearningLambda):
 
     def __init__(self, env, *args, **kwargs):
-        self.__class__.__name__ = "SARSA"
         super(SARSALamba, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):

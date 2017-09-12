@@ -8,7 +8,7 @@ from algorithms.sarsa import SARSA, SARSALamba
 from algorithms.smartstart import SmartStart
 from environments.gridworld import GridWorldVisualizer, GridWorld
 from utilities.experimenter import run_experiment
-from utilities.plot import plot_results
+from utilities.plot import plot_mean_std
 from utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
@@ -88,5 +88,5 @@ files = [os.path.join(directory, 'QLearning_%s' % maze),
          # os.path.join(directory, 'QLearning_%s_boltzmann' % maze),
          os.path.join(directory, 'SmartStart_QLearning_%s_egreedy' % maze)]
          # os.path.join(directory, 'SmartStart_QLearning_%s_boltzmann' % maze)]
-plot_results(files, 5, [r'None', r'$\epsilon$-greedy', r'SmartStart $\epsilon$-greedy'])
+plot_mean_std(files, 5, [r'None', r'$\epsilon$-greedy', r'SmartStart $\epsilon$-greedy'])
 

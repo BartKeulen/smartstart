@@ -22,6 +22,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                  init_q_value=0.,
                  exploration=E_GREEDY,
                  epsilon=0.1,
+                 temp=0.5,
                  beta=1.,
                  seed=None):
         super(TDLearning, self).__init__(env)
@@ -37,6 +38,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         self.Q = np.ones((self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
         self.exploration = exploration
         self.epsilon = epsilon
+        self.temp = temp
         self.beta = beta
         self.seed = seed
 
@@ -160,8 +162,9 @@ class TDLearning(Counter, metaclass=ABCMeta):
     def _boltzmann(self, obs):
         q_values, actions = self.get_q_values(obs)
 
-        sum_q = np.sum(np.exp(q_values))
-        updated_values = [np.exp(q_value) / sum_q for q_value in q_values]
+        q_values = np.asarray(q_values)
+        sum_q = np.sum(np.exp(q_values/self.temp))
+        updated_values = [np.exp(q_value/self.temp) / sum_q for q_value in q_values]
 
         return np.random.choice(actions, p=updated_values)
 

@@ -6,7 +6,7 @@ from algorithms.qlearning import QLearning, QLearningLambda
 from algorithms.smartstart import SmartStart
 from environments.gridworld import GridWorld
 from utilities.experimenter import run_experiment
-from utilities.plot import plot_results
+from utilities.plot import plot_mean_std
 from utilities.scheduler import LinearScheduler
 from utilities.utilities import get_data_directory
 
@@ -71,4 +71,4 @@ files = [os.path.join(directory, 'QLearning_%s' % maze),
          os.path.join(directory, 'QLearningLambda_%s' % maze),
          os.path.join(directory, 'QLearning_%s_smartstart' % maze),
          os.path.join(directory, 'QLearningLambda_%s_smartstart' % maze)]
-plot_results(files, num_exp, [r'Q-Learning', r'Q-Learning($\lambda$)', r'Q-Learning SmartStart', r'Q-Learning($\lambda$) SmartStart'])
+plot_mean_std(files, num_exp, [r'Q-Learning', r'Q-Learning($\lambda$)', r'Q-Learning SmartStart', r'Q-Learning($\lambda$) SmartStart'])

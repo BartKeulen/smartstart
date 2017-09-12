@@ -25,6 +25,8 @@ def run_experiment(param_grid, n_processes=-1):
     for i in range(len(params)):
         params[i]['id'] = i
 
+    print("\033[1mNumber of processes: %d\033[0m" % len(params))
+
     if n_processes == -1:
         n_processes = cpu_count()
     if n_processes > 1:

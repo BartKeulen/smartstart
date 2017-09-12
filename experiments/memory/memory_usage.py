@@ -8,7 +8,7 @@ from algorithms.sarsa import SARSA, SARSALamba
 from algorithms.smartstart import SmartStart
 from environments.gridworld import GridWorldVisualizer, GridWorld
 from utilities.experimenter import run_experiment
-from utilities.plot import plot_results
+from utilities.plot import plot_mean_std
 from utilities.utilities import get_data_directory
 from utilities.datacontainers import SummarySmall, Summary
 
