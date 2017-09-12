@@ -12,6 +12,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
     E_GREEDY = 1
     BOLTZMANN = 2
     COUNT_BASED = 3
+    UCB = 4
 
     def __init__(self,
                  env,
@@ -131,6 +132,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
             return self._boltzmann(obs)
         elif self.exploration == TDLearning.COUNT_BASED:
             return self._count_based(obs)
+        elif self.exploration == TDLearning.UCB:
+            return self._ucb(obs)
         else:
             raise NotImplementedError("Please choose from the available smartstart methods: E_GREEDY, BOLTZMANN.")
 
@@ -178,6 +181,27 @@ class TDLearning(Counter, metaclass=ABCMeta):
         max_value = -float('inf')
         max_actions = []
         for action, value in zip(actions, updated_values):
+            if value > max_value:
+                max_value = value
+                max_actions = [action]
+            elif value == max_value:
+                max_actions.append(action)
+
+        if not max_actions:
+            raise Exception("No maximum q-values were found.")
+
+        return random.choice(max_actions)
+
+    def _ucb(self, obs):
+        q_values, actions = self.get_q_values(obs)
+        count = self.get_count(obs)
+
+        ucb = q_values.copy()
+        ucb += self.beta * np.sqrt(2*np.log(np.sum(self.count_map)) / (count + 1e-20))
+
+        max_value = -float('inf')
+        max_actions = []
+        for action, value in zip(actions, ucb):
             if value > max_value:
                 max_value = value
                 max_actions = [action]
