@@ -37,13 +37,12 @@ def create_instance(compute, project, image, zone, name, experiment):
                 {'type': 'ONE_TO_ONE_NAT', 'name': 'External NAT'}
             ]
         }],
-        'serviceAccounts': [{
-            'email': 'default',
-            'scopes': [
-                'https://www.googleapis.com/auth/devstorage.read_write',
-                'https://www.googleapis.com/auth/logging.write'
-            ]
-        }],
+        'serviceAccounts': [
+            {
+                'email': 'drl-service-account@infra-rhino-169522.iam.gserviceaccount.com',
+                'scopes': ['https://www.googleapis.com/auth/cloud-platform']
+            }
+        ],
         'metadata': {
             'items': [
                 {
@@ -53,6 +52,14 @@ def create_instance(compute, project, image, zone, name, experiment):
                 {
                     'key': 'experiment',
                     'value': experiment
+                },
+                {
+                    'key': 'zone',
+                    'value': zone
+                },
+                {
+                    'key': 'instance',
+                    'value': name
                 }
             ]
         }
@@ -101,8 +108,6 @@ def main(project, zone, image, instance_name, experiment, wait=True):
     print('Instances in project %s and zone %s:' % (project, zone))
     for instance in instances:
         print(' - ' + instance['name'])
-
-
 
     if wait:
         input()

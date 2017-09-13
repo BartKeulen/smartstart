@@ -35,7 +35,6 @@ def run_experiment(param_grid, n_processes=-1):
         #     p.map(process_task, params)
         with Pool(n_processes) as p:
             r = list(tqdm(p.imap_unordered(process_task, params), total=len(params)))
-
     else:
         for single_param in params:
             process_task(single_param)
