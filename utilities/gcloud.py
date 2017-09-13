@@ -80,7 +80,7 @@ instance=name).execute()
 
 
 def wait_for_operation(compute, project, zone, operation):
-    print('Waiting for operation to finish...')
+    print('Starting up server...')
     while True:
         result = compute.zoneOperations().get(
             project=project,
@@ -88,7 +88,7 @@ def wait_for_operation(compute, project, zone, operation):
             operation=operation).execute()
 
         if result['status'] == 'DONE':
-            print("done.")
+            print("Experiment started.")
             if 'error' in result:
                 raise Exception(result['error'])
             return result
@@ -102,19 +102,6 @@ def main(project, zone, image, instance_name, experiment, wait=True):
     print('Creating instance.')
 
     operation = create_instance(compute, project, image, zone, instance_name, experiment)
-    wait_for_operation(compute, project, zone, operation['name'])
-
-    instances = list_instances(compute, project, zone)
-    print('Instances in project %s and zone %s:' % (project, zone))
-    for instance in instances:
-        print(' - ' + instance['name'])
-
-    if wait:
-        input()
-
-    print('Deleting instance.')
-
-    operation = delete_instance(compute, project, zone, instance_name)
     wait_for_operation(compute, project, zone, operation['name'])
 
 

@@ -15,8 +15,8 @@ num_exp = 5
 def task(params):
     np.random.seed()
 
-    num_episodes = 1000
-    max_steps = 1000
+    num_episodes = 25
+    max_steps = 100
 
     env = GridWorld.generate(GridWorld.EASY)
 
