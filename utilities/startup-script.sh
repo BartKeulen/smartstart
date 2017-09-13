@@ -7,3 +7,7 @@ git clone https://github.com/BartKeulen/smartstart.git
 cd smartstart
 pip3 install . -r requirements.txt
 
+python3 ./experiments/$EXPERIMENT/experiment.py
+
+touch test.txt
+gsutil cp test.txt gs://drl-data/test.txt
