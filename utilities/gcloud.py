@@ -114,6 +114,10 @@ def main(project, zone, image, instance_name, experiment, wait=True):
 
 
 if __name__ == "__main__":
-    import gcloud_config
+    project_id = 'infra-rhino-169522'
+    zone = 'us-east1-c'
+    bucket_name = 'drl-data'
+    image_name = 'drl-image'
+    instances = ['drl-instance-2']
 
-    main(gcloud_config.project_id, gcloud_config.zone, 'drl-image', 'test-instance-2', 'test_experiment')
+    main(project_id, zone, 'drl-image', 'test-instance-2', 'test_experiment')
