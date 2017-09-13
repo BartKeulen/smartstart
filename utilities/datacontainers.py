@@ -5,7 +5,8 @@ import os
 import numpy as np
 from google.cloud import storage
 
-from .utilities import DIR, GCLOUD_BUCKET
+from .utilities import DIR
+import gcloud_config
 
 summary_variables = dict()
 summary_variables['reward'] = 0
@@ -116,7 +117,7 @@ class Summary(object):
         fp = os.path.join(directory, name)
 
         storage_client = storage.Client()
-        bucket = storage_client.get_bucket(GCLOUD_BUCKET)
+        bucket = storage_client.get_bucket(gcloud_config.bucket_name)
         blob = bucket.blob(fp)
 
         blob.upload_from_string(self.to_json())
