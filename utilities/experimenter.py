@@ -1,6 +1,7 @@
 from multiprocessing import Pool, cpu_count
 
 from sklearn.model_selection import ParameterGrid
+from tqdm import *
 
 
 def run_experiment(param_grid, n_processes=-1):
@@ -30,16 +31,15 @@ def run_experiment(param_grid, n_processes=-1):
     if n_processes == -1:
         n_processes = cpu_count()
     if n_processes > 1:
+        # with Pool(n_processes) as p:
+        #     p.map(process_task, params)
         with Pool(n_processes) as p:
-            p.map(process_task, params)
+            r = list(tqdm(p.imap_unordered(process_task, params), total=len(params)))
+
     else:
         for single_param in params:
             process_task(single_param)
 
 
 def process_task(params):
-    print("\033[1mProcess %d started\033[0m. Params: %s" % (params['id'], params))
-
     params['task'](params)
-
-    print('\033[1mProcess %d finished\033[0m' % params['id'])

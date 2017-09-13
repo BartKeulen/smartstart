@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 from .counter import Counter
-from utilities.datacontainers import Summary, Episode, SummarySmall
+from utilities.datacontainers import Summary, Episode
 
 
 class TDLearning(Counter, metaclass=ABCMeta):
@@ -73,8 +73,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return self.Q[idx], action_tp1
 
-    def train(self, summary_to_use=SummarySmall, render=False, render_episode=False, print_results=True):
-        summary = summary_to_use(self.__class__.__name__ + "_" + self.env.name)
+    def train(self, render=False, render_episode=False, print_results=True):
+        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode()
@@ -256,8 +256,8 @@ class TDLearningLambda(TDLearning):
 
         return self.Q[idx], action_tp1
 
-    def train(self, summary_to_use=SummarySmall, render=False, render_episode=False, print_results=True):
-        summary = summary_to_use(self.__class__.__name__ + "_" + self.env.name)
+    def train(self, render=False, render_episode=False, print_results=True):
+        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode()

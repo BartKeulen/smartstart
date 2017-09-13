@@ -10,7 +10,7 @@ from environments.gridworld import GridWorldVisualizer, GridWorld
 from utilities.experimenter import run_experiment
 from utilities.plot import plot_mean_std
 from utilities.utilities import get_data_directory
-from utilities.datacontainers import SummarySmall, Summary
+from utilities.datacontainers import Summary
 
 directory = get_data_directory(__file__)
 

@@ -3,8 +3,9 @@ import json
 import os
 
 import numpy as np
+from google.cloud import storage
 
-from .utilities import DIR
+from .utilities import DIR, GCLOUD_BUCKET
 
 summary_variables = dict()
 summary_variables['reward'] = 0
@@ -70,73 +71,13 @@ class Summary(object):
         self._episodes = []
 
     def append(self, episode):
-        self._episodes.append(episode)
+        self._episodes.append((len(episode), episode.total_reward()))
 
     def total_reward(self):
         return sum(self.total_episode_reward())
 
     def average_reward(self):
         return self.total_reward() / self.__len__()
-
-    def total_episode_reward(self):
-        return [episode.total_reward() for episode in self._episodes]
-
-    def average_episode_reward(self):
-        return [episode.average_reward() for episode in self._episodes]
-
-    def to_json(self):
-        json_dict = {
-            'name': self.name,
-            'time': self.time,
-            '_episodes': [episode.to_json() for episode in self._episodes]
-        }
-        return json.dumps(json_dict)
-
-    @classmethod
-    def from_json(cls, data):
-        summary = cls()
-        data_dict = json.loads(data)
-        data_dict['_episodes'] = [Episode.from_json(episode_data) for episode_data in data_dict['_episodes']]
-        summary.__dict__.update(data_dict)
-        return summary
-
-    def save(self, directory=DIR, post_fix=None):
-        name = self.name
-        if post_fix is not None:
-            name += "_" + str(post_fix)
-        name += ".json"
-
-        fp = os.path.join(directory, name)
-
-        with open(fp, 'w') as f:
-            f.write(self.to_json())
-
-        return fp
-
-    @classmethod
-    def load(cls, fp):
-        with open(fp, 'r') as f:
-            data = f.read()
-            return cls.from_json(data)
-
-    def __len__(self):
-        return len(self._episodes)
-
-    def __getitem__(self, key):
-        return self._episodes[key]
-
-    def __repr__(self):
-        return "%s(num_episodes=%d, average_reward=%.2f)" % \
-               (self.__class__.__name__, self.__len__(), self.average_reward())
-
-
-class SummarySmall(Summary):
-
-    def __init__(self, name=None):
-        super(SummarySmall, self).__init__(name)
-
-    def append(self, episode):
-        self._episodes.append((len(episode), episode.total_reward()))
 
     def total_episode_reward(self):
         return [reward for steps, reward in self._episodes]
@@ -153,3 +94,45 @@ class SummarySmall(Summary):
         data_dict = json.loads(data)
         summary.__dict__.update(data_dict)
         return summary
+
+    def save(self, directory=DIR, post_fix=None):
+        name = self.name
+        if post_fix is not None:
+            name += "_" + str(post_fix)
+        name += ".json"
+
+        fp = os.path.join(directory, name)
+
+        with open(fp, 'w') as f:
+            f.write(self.to_json())
+
+        return fp
+
+    def save_to_gcloud(self, directory, post_fix=None):
+        name = self.name
+        if post_fix is not None:
+            name += "_" + str(post_fix)
+        name += ".json"
+        fp = os.path.join(directory, name)
+
+        storage_client = storage.Client()
+        bucket = storage_client.get_bucket(GCLOUD_BUCKET)
+        blob = bucket.blob(fp)
+
+        blob.upload_from_string(self.to_json())
+
+    @classmethod
+    def load(cls, fp):
+        with open(fp, 'r') as f:
+            data = f.read()
+            return cls.from_json(data)
+
+    def __len__(self):
+        return len(self._episodes)
+
+    def __getitem__(self, key):
+        return self._episodes[key]
+
+    def __repr__(self):
+        return "%s(num_episodes=%d, average_reward=%.2f)" % \
+               (self.__class__.__name__, self.__len__(), self.average_reward())
