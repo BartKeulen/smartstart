@@ -89,7 +89,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                     break
 
             # Render and/or print results
-            message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward())
+            message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.average_reward())
             if render or render_episode:
                 value_map = self.Q.copy()
                 value_map = np.max(value_map, axis=2)
@@ -97,7 +97,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                                                  message=message)
 
             if print_results:
-                print("Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward()))
+                print("Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.average_reward()))
             summary.append(episode)
 
         while render:

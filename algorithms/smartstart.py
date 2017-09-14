@@ -11,16 +11,16 @@ def SmartStart(base, env, *args, **kwargs):
         def __init__(self,
                      env,
                      exploration_steps=50,
-                     alpha=1.,
-                     beta=1.,
+                     w_value=1.,
+                     w_density=1.,
                      eta=0.5,
                      *args,
                      **kwargs):
             super(_SmartStart, self).__init__(env, *args, **kwargs)
             self.__class__.__name__ = "SmartStart_" + base.__name__
             self.exploration_steps = exploration_steps
-            self.alpha = alpha
-            self.beta = beta
+            self.w_value = w_value
+            self.w_density = w_density
             self.eta = eta
             self.policy_map = PolicyMap(self.env.reset())
 
@@ -38,7 +38,7 @@ def SmartStart(base, env, *args, **kwargs):
                 obs = possible_starts[:, i]
                 q_values, _ = self.get_q_values(obs)
                 q_value = max(q_values)
-                ucb = self.alpha * q_value + self.beta * (1 - density_map[tuple(obs)])
+                ucb = self.w_value * q_value + self.w_density * (1 - density_map[tuple(obs)])
                 if ucb > max_ucb:
                     smart_start = obs
                     max_ucb = ucb
