@@ -6,13 +6,10 @@ import numpy as np
 from google.cloud import storage
 
 from .utilities import DIR
-# import gcloud_config
 
 project_id = 'infra-rhino-169522'
 zone = 'us-east1-c'
 bucket_name = 'drl-data'
-image_name = 'drl-image'
-instances = ['drl-instance-2']
 
 summary_variables = dict()
 summary_variables['reward'] = 0

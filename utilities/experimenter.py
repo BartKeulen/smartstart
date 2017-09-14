@@ -31,8 +31,6 @@ def run_experiment(param_grid, n_processes=-1):
     if n_processes == -1:
         n_processes = cpu_count()
     if n_processes > 1:
-        # with Pool(n_processes) as p:
-        #     p.map(process_task, params)
         with Pool(n_processes) as p:
             r = list(tqdm(p.imap_unordered(process_task, params), total=len(params)))
     else:

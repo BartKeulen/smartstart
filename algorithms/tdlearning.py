@@ -8,11 +8,11 @@ from utilities.datacontainers import Summary, Episode
 
 
 class TDLearning(Counter, metaclass=ABCMeta):
-    NONE = 0
-    E_GREEDY = 1
-    BOLTZMANN = 2
-    COUNT_BASED = 3
-    UCB = 4
+    NONE = "None"
+    E_GREEDY = "E-Greedy"
+    BOLTZMANN = "Boltzmann"
+    COUNT_BASED = "Count-Based"
+    UCB = "UCB"
 
     def __init__(self,
                  env,
