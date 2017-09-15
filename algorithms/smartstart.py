@@ -1,6 +1,9 @@
+from collections import defaultdict
+
 import numpy as np
 
 from algorithms.policy import PolicyMap
+from algorithms.valueiteration import ValueIteration
 from utilities.datacontainers import Episode, Summary
 
 
@@ -22,7 +25,10 @@ def SmartStart(base, env, *args, **kwargs):
             self.w_value = w_value
             self.w_density = w_density
             self.eta = eta
-            self.policy_map = PolicyMap(self.env.reset())
+            self.m = 1
+
+            self.policy = ValueIteration(self.env)
+            # self.policy_map = PolicyMap(self.env.reset())
 
         def get_start(self):
             density_map = self.get_density_map()
@@ -42,11 +48,12 @@ def SmartStart(base, env, *args, **kwargs):
                 if ucb > max_ucb:
                     smart_start = obs
                     max_ucb = ucb
-            return smart_start, self._get_policy(smart_start)
+            return smart_start
+            # return smart_start, self._get_policy(smart_start)
 
-        def _get_policy(self, state):
-            node = self.policy_map.get_node(state)
-            return node.get_policy()
+        # def _get_policy(self, state):
+        #     node = self.policy_map.get_node(state)
+        #     return node.get_policy()
 
         def train(self, render=False, render_episode=False, print_results=True):
             summary = Summary(self.__class__.__name__ + "_" + self.env.name)
@@ -55,16 +62,28 @@ def SmartStart(base, env, *args, **kwargs):
                 episode = Episode()
 
                 obs = self.env.reset()
-                self.policy_map.reset_to_root()
+                self.policy.add_obs(obs)
+                # self.policy_map.reset_to_root()
 
                 max_steps = self.max_steps
                 if i_episode > 0 and np.random.rand() <= self.eta:
-                    start_state, policy = self.get_start()
+                    start_state = self.get_start()
 
-                    for action in policy:
+                    self.policy.reset()
+                    for obs_c, obs_count in self.count_map.items():
+                        for action, action_count in obs_count.items():
+                            for obs_tp1, count in action_count.items():
+                                if obs_tp1 == tuple(start_state):
+                                    self.policy.R[obs_c + action] = 1.
+                                self.policy.T[obs_c + action][obs_tp1] = count / sum(self.count_map[obs_c][action].values())
+
+                    self.policy.optimize()
+
+                    for i in range(self.max_steps):
+                        action = self.policy.get_action(obs)
                         obs, _, done, render = self.take_step(obs, action, episode, render)
 
-                        if done:
+                        if done or np.array_equal(obs, start_state):
                             break
 
                     max_steps = self.exploration_steps
@@ -97,6 +116,7 @@ def SmartStart(base, env, *args, **kwargs):
 
         def take_step(self, obs, action, episode, render=False):
             obs_tp1, r, done, _ = self.env.step(action)
+            self.policy.add_obs(obs_tp1)
 
             if render:
                 value_map = self.Q.copy()
@@ -105,8 +125,8 @@ def SmartStart(base, env, *args, **kwargs):
 
             _, action_tp1 = self.update_q_value(obs, action, r, obs_tp1, done)
 
-            self.increment(obs, action)
-            self.policy_map.add_node(obs_tp1, action)
+            self.increment(obs, action, obs_tp1)
+            # self.policy_map.add_node(obs_tp1, action)
 
             episode.append(obs, action, r, obs_tp1, done)
 
@@ -133,7 +153,7 @@ if __name__ == "__main__":
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = SmartStart(QLearning, env, alpha=0.3, num_episodes=1000, max_steps=500)
+    agent = SmartStart(QLearning, env, eta=0.5, alpha=0.3, num_episodes=1000, max_steps=1000, w_value=0.)
 
     summary = agent.train(render=False, render_episode=True)
 

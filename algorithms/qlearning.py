@@ -39,6 +39,9 @@ class QLearningLambda(TDLearningLambda):
 
 if __name__ == "__main__":
     from environments.gridworld import GridWorld, GridWorldVisualizer
+    import time
+
+    start = time.time()
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 
@@ -53,10 +56,12 @@ if __name__ == "__main__":
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = QLearning(env, alpha=0.3, num_episodes=1000, max_steps=1000, exploration=QLearning.COUNT_BASED)
+    agent = QLearning(env, alpha=0.3, num_episodes=1000, max_steps=1000, exploration=QLearning.E_GREEDY)
 
-    summary = agent.train(render=False, render_episode=True)
+    summary = agent.train(render=False, render_episode=True, print_results=False)
 
     summary.save(directory=directory)
+
+    print("Time elapsed: %.0f seconds" % (time.time() - start))
 
 

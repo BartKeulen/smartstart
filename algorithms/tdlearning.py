@@ -117,7 +117,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         _, action_tp1 = self.update_q_value(obs, action, r, obs_tp1, done)
 
-        self.increment(obs, action)
+        self.increment(obs, action, obs_tp1)
 
         episode.append(obs, action, r, obs_tp1, done)
 

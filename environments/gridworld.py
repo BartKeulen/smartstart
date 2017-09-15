@@ -15,9 +15,10 @@ class GridWorld(object):
     EXTREME = 3
     IMPOSSIBRUUHHH = 4
 
-    def __init__(self, name, layout, wall_reset=False, visualizer=None, scale=5):
+    def __init__(self, name, layout, T_prob=0.1, wall_reset=False, visualizer=None, scale=5):
         self.name = name
         layout = np.asarray(layout)
+        self.T_prob = T_prob
 
         grid_world = np.kron(layout, np.ones((scale, scale), dtype=layout.dtype))
         start_state = np.asarray(np.where(grid_world == 2))[:, math.floor(scale**2/2)]
@@ -70,6 +71,9 @@ class GridWorld(object):
         return self.state + movement
 
     def step(self, action):
+        # if np.random.rand() < self.T_prob:
+        #     action = np.random.choice(self.possible_actions(self.state))
+
         new_state = self._move(action)
 
         if (new_state < 0).any() or (new_state[0] >= self.w) or (new_state[1] >= self.h) or (self.grid_world[tuple(new_state)] == 1):
