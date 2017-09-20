@@ -1,4 +1,5 @@
 import math
+from collections import defaultdict
 import time
 
 import numpy as np
@@ -15,7 +16,7 @@ class GridWorld(object):
     EXTREME = 3
     IMPOSSIBRUUHHH = 4
 
-    def __init__(self, name, layout, T_prob=0.1, wall_reset=False, visualizer=None, scale=5):
+    def __init__(self, name, layout, T_prob=0.  , wall_reset=False, visualizer=None, scale=5):
         self.name = name
         layout = np.asarray(layout)
         self.T_prob = T_prob
@@ -40,6 +41,41 @@ class GridWorld(object):
         else:
             self.visualizer = visualizer
 
+    def get_all_states(self):
+        h, w = self.grid_world.shape
+        states = set()
+        for y in range(h):
+            for x in range(w):
+                if self.grid_world[y, x] != 1:
+                    states.add((y, x))
+        return states
+
+    def get_T_R(self):
+        states = self.get_all_states()
+
+        T = defaultdict(lambda: defaultdict(lambda: 0))
+        R = defaultdict(lambda: defaultdict(lambda: 0))
+        for state in states:
+            cur_state = np.asarray(state)
+            for action in self.possible_actions(cur_state):
+                for p_action in self.possible_actions(cur_state):
+                    new_state = self._move(cur_state.copy(), p_action)
+                    if (new_state < 0).any() or (new_state[0] >= self.w) or (new_state[1] >= self.h) or (
+                        self.grid_world[tuple(new_state)] == 1):
+                        new_state = cur_state.copy()
+
+                    if self.grid_world[tuple(new_state)] == 3:
+                        R[tuple(cur_state) + (action,)][tuple(new_state)] = 1.
+
+                    if action == p_action:
+                        p = 1 - self.T_prob + self.T_prob / len(self.possible_actions(cur_state))
+                    else:
+                        p = self.T_prob / len(self.possible_actions(cur_state))
+
+                    T[tuple(cur_state) + (action,)][tuple(new_state)] += p
+
+        return T, R
+
     @property
     def visualizer(self):
         return self._visualizer
@@ -56,7 +92,7 @@ class GridWorld(object):
             self.state = self.start_state.copy()
         return self.start_state
 
-    def _move(self, action):
+    def _move(self, state, action):
         if action == 0:
             movement = np.array([0, 1])
         elif action == 1:
@@ -68,13 +104,13 @@ class GridWorld(object):
         else:
             raise NotImplementedError("Invalid action %d. Available actions: [0, 1, 2, 3]")
 
-        return self.state + movement
+        return state + movement
 
     def step(self, action):
-        # if np.random.rand() < self.T_prob:
-        #     action = np.random.choice(self.possible_actions(self.state))
+        if np.random.rand() < self.T_prob:
+            action = np.random.choice(self.possible_actions(self.state))
 
-        new_state = self._move(action)
+        new_state = self._move(self.state, action)
 
         if (new_state < 0).any() or (new_state[0] >= self.w) or (new_state[1] >= self.h) or (self.grid_world[tuple(new_state)] == 1):
             if self.wall_reset:
@@ -129,42 +165,50 @@ class GridWorld(object):
 
 if __name__ == "__main__":
     env = GridWorld.generate(GridWorld.EASY)
-    env.wall_reset = True
 
-    obs = env.reset()
+    # print(env.get_all_states())
+    T, R = env.get_T_R()
 
-    steps = []
-    num_episodes = 50
-    reached_goal = False
-    i_episode = 0
-    while not reached_goal:
-        obs = env.reset()
-        start = time.time()
-        i_step = 0
-        while True:
-            action = np.random.randint(4)
+    for key, value in R.items():
+        print(key, T[key][(2, 2)])
+        print("")
 
-            # env.render()
-
-            obs_tp1, r, done, _ = env.step(action)
-
-            obs = obs_tp1
-            i_step += 1
-
-            # if i_step % 10000 == 0:
-            #     elapsed = time.time() - start
-            #     print("%d steps in %.2f seconds" % (i_step, elapsed))
-
-            if done:
-                if r > 0:
-                    reached_goal = True
-                break
-
-        elapsed = time.time() - start
-        print("Episode %d finished in %d steps and %.2f seconds" % (i_episode, i_step, elapsed))
-        steps.append(i_step)
-        i_episode += 1
-
-    print("")
-    print("GOAL REACHED IN %d EPISODES" % i_episode)
+    # env.wall_reset = True
+    #
+    # obs = env.reset()
+    #
+    # steps = []
+    # num_episodes = 50
+    # reached_goal = False
+    # i_episode = 0
+    # while not reached_goal:
+    #     obs = env.reset()
+    #     start = time.time()
+    #     i_step = 0
+    #     while True:
+    #         action = np.random.randint(4)
+    #
+    #         # env.render()
+    #
+    #         obs_tp1, r, done, _ = env.step(action)
+    #
+    #         obs = obs_tp1
+    #         i_step += 1
+    #
+    #         # if i_step % 10000 == 0:
+    #         #     elapsed = time.time() - start
+    #         #     print("%d steps in %.2f seconds" % (i_step, elapsed))
+    #
+    #         if done:
+    #             if r > 0:
+    #                 reached_goal = True
+    #             break
+    #
+    #     elapsed = time.time() - start
+    #     print("Episode %d finished in %d steps and %.2f seconds" % (i_episode, i_step, elapsed))
+    #     steps.append(i_step)
+    #     i_episode += 1
+    #
+    # print("")
+    # print("GOAL REACHED IN %d EPISODES" % i_episode)
     # print("Average number of steps over %d episodes is %.f" % (num_episodes, sum(steps) / len(steps)))

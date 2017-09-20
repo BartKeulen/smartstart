@@ -14,16 +14,16 @@ def SmartStart(base, env, *args, **kwargs):
         def __init__(self,
                      env,
                      exploration_steps=50,
-                     w_value=1.,
-                     w_density=1.,
+                     exploitation_param=1.,
+                     exploration_param=2.,
                      eta=0.5,
                      *args,
                      **kwargs):
             super(_SmartStart, self).__init__(env, *args, **kwargs)
             self.__class__.__name__ = "SmartStart_" + base.__name__
             self.exploration_steps = exploration_steps
-            self.w_value = w_value
-            self.w_density = w_density
+            self.exploitation_param = exploitation_param
+            self.exploration_param = exploration_param
             self.eta = eta
             self.m = 1
 
@@ -31,10 +31,10 @@ def SmartStart(base, env, *args, **kwargs):
             # self.policy_map = PolicyMap(self.env.reset())
 
         def get_start(self):
-            density_map = self.get_density_map()
-            if density_map is None:
+            count_map = self.get_count_map()
+            if count_map is None:
                 return None
-            possible_starts = np.asarray(np.where(density_map > 0))
+            possible_starts = np.asarray(np.where(count_map > 0))
             if not possible_starts.any():
                 return None
 
@@ -44,12 +44,32 @@ def SmartStart(base, env, *args, **kwargs):
                 obs = possible_starts[:, i]
                 q_values, _ = self.get_q_values(obs)
                 q_value = max(q_values)
-                ucb = self.w_value * q_value + self.w_density * (1 - density_map[tuple(obs)])
+                ucb = self.exploitation_param * q_value + \
+                      np.sqrt((self.exploration_param * np.log(np.sum(count_map)))/count_map[tuple(obs)])
                 if ucb > max_ucb:
                     smart_start = obs
                     max_ucb = ucb
             return smart_start
-            # return smart_start, self._get_policy(smart_start)
+
+        # def get_start(self):
+        #     density_map = self.get_density_map()
+        #     if density_map is None:
+        #         return None
+        #     possible_starts = np.asarray(np.where(density_map > 0))
+        #     if not possible_starts.any():
+        #         return None
+        #
+        #     smart_start = None
+        #     max_ucb = -float('inf')
+        #     for i in range(possible_starts.shape[1]):
+        #         obs = possible_starts[:, i]
+        #         q_values, _ = self.get_q_values(obs)
+        #         q_value = max(q_values)
+        #         ucb = self.exploitation_param * q_value + self.exploration_param * (1 - density_map[tuple(obs)])
+        #         if ucb > max_ucb:
+        #             smart_start = obs
+        #             max_ucb = ucb
+        #     return smart_start
 
         # def _get_policy(self, state):
         #     node = self.policy_map.get_node(state)
@@ -66,15 +86,17 @@ def SmartStart(base, env, *args, **kwargs):
                 # self.policy_map.reset_to_root()
 
                 max_steps = self.max_steps
+                start_state = obs
                 if i_episode > 0 and np.random.rand() <= self.eta:
                     start_state = self.get_start()
 
                     self.policy.reset()
+                    finished = False
                     for obs_c, obs_count in self.count_map.items():
                         for action, action_count in obs_count.items():
                             for obs_tp1, count in action_count.items():
                                 if obs_tp1 == tuple(start_state):
-                                    self.policy.R[obs_c + action] = 1.
+                                    self.policy.R[obs_c + action][obs_tp1] = 1.
                                 self.policy.T[obs_c + action][obs_tp1] = count / sum(self.count_map[obs_c][action].values())
 
                     self.policy.optimize()
@@ -83,10 +105,23 @@ def SmartStart(base, env, *args, **kwargs):
                         action = self.policy.get_action(obs)
                         obs, _, done, render = self.take_step(obs, action, episode, render)
 
-                        if done or np.array_equal(obs, start_state):
+                        if np.array_equal(obs, start_state):
                             break
 
-                    max_steps = self.exploration_steps
+                        if done:
+                            finished = True
+                            break
+
+                    max_steps = self.max_steps - len(episode)
+
+                    if finished:
+                        max_steps = 0
+
+                print("Smart start / Actual state --- %s / %s" % (tuple(start_state), tuple(obs)))
+                if render or render_episode:
+                    value_map = self.Q.copy()
+                    value_map = np.max(value_map, axis=2)
+                    render_episode = self.env.render(value_map=value_map, density_map=self.get_density_map())
 
                 action = self.get_action(obs)
 
@@ -149,11 +184,13 @@ if __name__ == "__main__":
                               GridWorldVisualizer.CONSOLE,
                               GridWorldVisualizer.VALUE_FUNCTION,
                               GridWorldVisualizer.DENSITY)
-    env = GridWorld.generate(GridWorld.EASY)
+    env = GridWorld.generate(GridWorld.EXTREME)
     env.visualizer = visualizer
+    # env.T_prob = 0.1
+
     # env.wall_reset = True
 
-    agent = SmartStart(QLearning, env, eta=0.5, alpha=0.3, num_episodes=1000, max_steps=1000, w_value=0.)
+    agent = SmartStart(SARSALamba, env, eta=0.75, alpha=0.3, num_episodes=1000, max_steps=10000, exploitation_param=0.)
 
     summary = agent.train(render=False, render_episode=True)
 

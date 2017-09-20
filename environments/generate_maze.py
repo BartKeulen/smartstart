@@ -39,8 +39,11 @@ def check_free_cell(maze, pos, location):
     return pos, free
 
 
-def generate_maze(size=(450, 450)):
-    size = (30, 30)
+def generate_maze(size=None):
+    if size is None:
+        size = (100, 100)
+    if size[0] > 100 or size[1] > 100:
+        print("\033[1mMaximum size is (100, 100). Maximum size is used for the generated maze.\033[0m")
     maze = np.ones(size, dtype=np.int32)
 
     start = np.random.randint(1, min(size), size=2)

@@ -47,11 +47,11 @@ if __name__ == "__main__":
                               GridWorldVisualizer.CONSOLE,
                               GridWorldVisualizer.VALUE_FUNCTION,
                               GridWorldVisualizer.DENSITY)
-    env = GridWorld.generate(GridWorld.EASY)
+    env = GridWorld.generate(GridWorld.EXTREME)
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = SARSA(env, alpha=0.3, num_episodes=1000, max_steps=500)
+    agent = SARSALamba(env, alpha=0.3, num_episodes=1000, max_steps=10000)
 
     summary = agent.train(render=False, render_episode=True)
 

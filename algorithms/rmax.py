@@ -34,11 +34,11 @@ class RMax(Counter):
         self.R_max = R_max
 
         self.policy = ValueIteration(self.env, gamma, min_error, max_itr)
-        self.R_sum = defaultdict(lambda: 0)
+        self.R_sum = defaultdict(lambda: defaultdict(lambda: 0))
 
         self.obs_abs = "o"
         for action in env.possible_actions(self.obs_abs):
-            self.policy.set_reward(self.obs_abs, action, self.R_max)
+            self.policy.set_reward(self.obs_abs, action, self.obs_abs, self.R_max)
             self.policy.set_transition(self.obs_abs, action, self.obs_abs, 1)
 
     def train(self, render=False, render_episode=False, print_results=True):
@@ -84,13 +84,14 @@ class RMax(Counter):
             render = self.env.render()
 
         self.increment(obs, action, obs_tp1)
-        self.R_sum[tuple(obs) + (action,)] += r
+        self.R_sum[tuple(obs) + (action,)][tuple(obs_tp1)] += r
 
         if self.get_count(obs, action) > self.m:
             # Known state
-            self.policy.set_reward(obs, action, self.R_sum[tuple(obs) + (action,)]/self.get_count(obs, action))
             for obs_prime, count in self.count_map[tuple(obs)][(action,)].items():
-                self.policy.set_transition(obs, action, obs_prime, count/self.get_count(obs, action))
+                reward = self.R_sum[tuple(obs) + (action,)][tuple(obs_prime)] / self.get_count(obs, action)
+                self.policy.set_reward(obs, action, obs_prime, reward)
+                self.policy.set_transition(obs, action, obs_prime, count / self.get_count(obs, action))
         # TODO: R-Max setting unknown state optimistically not working
         # else:
         #     # Unknown state
