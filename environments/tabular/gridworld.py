@@ -1,12 +1,11 @@
 import math
 from collections import defaultdict
-import time
 
 import numpy as np
+from environments.tabular.generate_gridworld import generate_gridworld
+from environments.tabular.presetgridworlds import *
 
-from environments.gridworldvisualizer import GridWorldVisualizer
-from environments.presetgridworlds import *
-from environments.generate_maze import generate_maze
+from environments.tabular.gridworldvisualizer import GridWorldVisualizer
 
 
 class GridWorld(object):
@@ -16,7 +15,7 @@ class GridWorld(object):
     EXTREME = 3
     IMPOSSIBRUUHHH = 4
 
-    def __init__(self, name, layout, T_prob=0.  , wall_reset=False, visualizer=None, scale=5):
+    def __init__(self, name, layout, T_prob=0., wall_reset=False, visualizer=None, scale=5):
         self.name = name
         layout = np.asarray(layout)
         self.T_prob = T_prob
@@ -156,7 +155,7 @@ class GridWorld(object):
         elif type == GridWorld.EXTREME:
             name, layout, scale = gridworld_extreme()
         elif type == GridWorld.IMPOSSIBRUUHHH:
-            name, layout, scale = generate_maze(size=size)
+            name, layout, scale = generate_gridworld(size=size)
         else:
             raise NotImplementedError("Please choose from the available GridWorld implementations or build one your self.")
 

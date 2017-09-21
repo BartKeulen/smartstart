@@ -100,7 +100,7 @@ class ValueIteration(object):
 
 if __name__ == "__main__":
     import time
-    from environments.gridworld import GridWorld, GridWorldVisualizer
+    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
 
     visualizer = GridWorldVisualizer()
     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,

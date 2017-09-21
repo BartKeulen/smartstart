@@ -1,10 +1,10 @@
 import os
 
 import numpy as np
-
 from algorithms.qlearning import QLearning, QLearningLambda
-from algorithms.smartstart import SmartStart
-from environments.gridworld import GridWorld
+
+from environments.tabular.gridworld import GridWorld
+from smartexploration.tabularss import SmartStart
 from utilities.experimenter import run_experiment
 from utilities.plot import plot_mean_std
 from utilities.scheduler import LinearScheduler

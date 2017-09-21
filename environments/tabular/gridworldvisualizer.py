@@ -16,15 +16,15 @@ class GridWorldVisualizer(object):
     DENSITY = 3
 
     def __init__(self, name="GridWorld", size=None, fps=60):
-        self._name = name
+        self.name = name
         if size is None:
             size = (450, 450)
         self.spacing = 10
-        self._size = size
-        self._fps = fps
+        self.size = size
+        self.fps = fps
 
-        self._screen = None
-        self._clock = None
+        self.screen = None
+        self.clock = None
 
         self.colors = {
             '0': (0, 0, 0, 0),
@@ -44,39 +44,39 @@ class GridWorldVisualizer(object):
 
     def render(self, grid, value_map=None, density_map=None, message=None, close=False):
         # Create screen on first call
-        if self._screen is None:
+        if self.screen is None:
             w, h = 1, 1
             if len(self.active_visualizers) > 1:
                 w = 2
                 if len(self.active_visualizers) > 2:
                     h = 2
-            size = (self._size[0]*w + self.spacing, self._size[1]*h + self.spacing)
-            self._screen = pygame.display.set_mode(size, 0, 32)
-            pygame.display.set_caption(self._name)
-            self._clock = pygame.time.Clock()
+            size = (self.size[0] * w + self.spacing, self.size[1] * h + self.spacing)
+            self.screen = pygame.display.set_mode(size, 0, 32)
+            pygame.display.set_caption(self.name)
+            self.clock = pygame.time.Clock()
 
         # Check for events
-        if self._screen is not None:
+        if self.screen is not None:
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                     close = True
 
         # Close the screen
         if close:
-            if self._screen is not None:
+            if self.screen is not None:
                 pygame.display.quit()
-                self._screen = None
+                self.screen = None
                 return False
 
         # Fill background with black
-        self._screen.fill(self.colors['0'])
+        self.screen.fill(self.colors['0'])
 
         # Render dividers
-        w, h = self._size
+        w, h = self.size
         hor_divider = np.array([[0, h], [w*2 + self.spacing, h], [w*2 + self.spacing, h + self.spacing], [0, h + self.spacing]])
-        pygame.draw.polygon(self._screen, self.colors['1'], hor_divider)
+        pygame.draw.polygon(self.screen, self.colors['1'], hor_divider)
         ver_divider = np.array([[w, 0], [w + self.spacing, 0], [w + self.spacing, h*2 + self.spacing], [w, h*2 + self.spacing]])
-        pygame.draw.polygon(self._screen, self.colors['1'], ver_divider)
+        pygame.draw.polygon(self.screen, self.colors['1'], ver_divider)
 
         # Render value maps and console
         positions = [(1, 1), (0, 1), (1, 0), (0, 0)]
@@ -90,13 +90,13 @@ class GridWorldVisualizer(object):
             self._render_console(pos=positions.pop(), message=message)
 
         pygame.display.flip()
-        self._clock.tick(self._fps)
+        self.clock.tick(self.fps)
 
         return True
 
     def _render_map(self, grid, pos=(0, 0), value_map=None):
         grid_h, grid_w = grid.shape
-        w, h = self._size
+        w, h = self.size
 
         offset_left = pos[0] * (w + self.spacing)
         offset_top = pos[1] * (h + self.spacing)
@@ -133,31 +133,31 @@ class GridWorldVisualizer(object):
                 else:
                     color = self.colors[str(cell_type)]
 
-                pygame.draw.polygon(self._screen, color, vertices)
+                pygame.draw.polygon(self.screen, color, vertices)
 
         if border_left > 0:
             vertices = np.array([[0 + offset_left, 0 + offset_top], [border_left + offset_left, 0 + offset_top],
                                  [border_left + offset_left, h + offset_top], [0 + offset_left, h + offset_top]])
-            pygame.draw.polygon(self._screen, self.colors[str(1)], vertices)
+            pygame.draw.polygon(self.screen, self.colors[str(1)], vertices)
 
         if border_top > 0:
             vertices = np.array([[0 + offset_left, 0 + offset_top], [w + offset_left, 0 + offset_top],
                                  [w + offset_left, border_top + offset_top], [0 + offset_left, border_top + offset_top]])
-            pygame.draw.polygon(self._screen, self.colors[str(1)], vertices)
+            pygame.draw.polygon(self.screen, self.colors[str(1)], vertices)
 
         if border_right > 0:
             vertices = np.array([[w - border_right + offset_left, 0 + offset_top], [w + offset_left, 0 + offset_top],
                                  [w + offset_left, h + offset_top], [w - border_right + offset_left, h + offset_top]])
-            pygame.draw.polygon(self._screen, self.colors[str(1)], vertices)
+            pygame.draw.polygon(self.screen, self.colors[str(1)], vertices)
 
         if border_bottom > 0:
             vertices = np.array([[0 + offset_left, h - border_bottom + offset_top],
                                  [w + offset_left, h - border_bottom + offset_top], [w + offset_left, h + offset_top],
                                  [0 + offset_left, h + offset_top]])
-            pygame.draw.polygon(self._screen, self.colors[str(1)], vertices)
+            pygame.draw.polygon(self.screen, self.colors[str(1)], vertices)
 
     def _render_console(self, pos, message=None):
-        w, h = self._size
+        w, h = self.size
         offset_left = pos[0] * (w + self.spacing) + 5
         offset_top = pos[1] * (h + self.spacing) + 5
 
@@ -170,4 +170,4 @@ class GridWorldVisualizer(object):
         basic_font = pygame.font.SysFont('Sans', 15)
         for i, message in enumerate(self.messages):
             text = basic_font.render(message, True, (255, 255, 255, 255))
-            self._screen.blit(text, (offset_left, offset_top + i*15))
+            self.screen.blit(text, (offset_left, offset_top + i * 15))

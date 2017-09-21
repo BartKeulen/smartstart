@@ -1,5 +1,5 @@
-from collections import deque
 import random
+from collections import deque
 
 import numpy as np
 
@@ -39,7 +39,7 @@ def check_free_cell(maze, pos, location):
     return pos, free
 
 
-def generate_maze(size=None):
+def generate_gridworld(size=None):
     if size is None:
         size = (100, 100)
     if size[0] > 100 or size[1] > 100:
@@ -77,8 +77,8 @@ def generate_maze(size=None):
 
 
 if __name__ == "__main__":
-    from environments.gridworldvisualizer import GridWorldVisualizer
-    maze = generate_maze()
+    from environments.tabular.gridworldvisualizer import GridWorldVisualizer
+    maze = generate_gridworld()
 
     render = True
     visualizer = GridWorldVisualizer("RandomMaze")

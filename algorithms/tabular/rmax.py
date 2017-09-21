@@ -2,9 +2,9 @@ import random
 from collections import defaultdict
 
 import numpy as np
-
 from algorithms.counter import Counter
 from algorithms.valueiteration import ValueIteration
+
 from utilities.datacontainers import Summary, Episode
 
 
@@ -111,7 +111,7 @@ class RMax(Counter):
 
 
 if __name__ == "__main__":
-    from environments.gridworld import GridWorld, GridWorldVisualizer
+    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 

@@ -1,13 +1,11 @@
 import os
 
 import numpy as np
-
-from algorithms.tdlearning import TDLearning
 from algorithms.qlearning import QLearning
-from algorithms.sarsa import SARSA, SARSALamba
-from algorithms.smartstart import SmartStart
-from environments.gridworld import GridWorldVisualizer, GridWorld
-from utilities.experimenter import run_experiment
+from algorithms.tdlearning import TDLearning
+
+from environments.tabular.gridworld import GridWorld
+from smartexploration.tabularss import SmartStart
 from utilities.plot import plot_mean_std
 from utilities.utilities import get_data_directory
 

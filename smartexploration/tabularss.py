@@ -1,9 +1,6 @@
-from collections import defaultdict
-
 import numpy as np
-
-from algorithms.policy import PolicyMap
 from algorithms.valueiteration import ValueIteration
+
 from utilities.datacontainers import Episode, Summary
 
 
@@ -171,9 +168,8 @@ def SmartStart(base, env, *args, **kwargs):
 
 
 if __name__ == "__main__":
-    from environments.gridworld import GridWorld, GridWorldVisualizer
-    from algorithms.qlearning import QLearning, QLearningLambda
-    from algorithms.sarsa import SARSA, SARSALamba
+    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
+    from algorithms.tabular.sarsa import SARSALamba
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 
