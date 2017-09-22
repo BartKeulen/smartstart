@@ -12,11 +12,13 @@ from utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
-gridworlds = [GridWorld.EASY, GridWorld.MEDIUM]
+gridworlds = [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD]
 algorithms = [QLearning, SARSA, SARSALambda]
 exploration_strategies = [TDLearning.COUNT_BASED, TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.NONE]
 use_smart_start = [True, False]
 num_exp = 25
+
+cur_time = time.time()
 
 
 def task(params):
@@ -30,6 +32,10 @@ def task(params):
         num_episodes = 2500
         max_steps = 2500
         exploration_steps = 250
+    elif params['gridworld'] == GridWorld.HARD:
+        num_episodes = 10000
+        max_steps = 10000
+        exploration_steps = 1000
     else:
         raise Exception("Invalid gridworld type")
 
@@ -60,7 +66,7 @@ def task(params):
     summary = agent.train(render=False, render_episode=False, print_results=False)
 
     # summary.save(directory, post_fix)
-    summary.save_to_gcloud("smartstart/%.0f" % (time.time()), post_fix)
+    summary.save_to_gcloud("smartstart/%.0f/%s" % (cur_time, env.name), post_fix)
 
 
 param_grid = {'task': task,
