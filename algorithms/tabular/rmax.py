@@ -2,9 +2,9 @@ import random
 from collections import defaultdict
 
 import numpy as np
-
 from algorithms.counter import Counter
 from algorithms.valueiteration import ValueIteration
+
 from utilities.datacontainers import Summary, Episode
 
 

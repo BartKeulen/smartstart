@@ -1,7 +1,7 @@
 import numpy as np
+from algorithms.tabular.qlearning import QLearning
+from algorithms.tabular.tdlearning import TDLearning
 
-from algorithms.qlearning import QLearning
-from algorithms.tdlearning import TDLearning
 from environments.gridworld import GridWorld
 from utilities.experimenter import run_experiment
 from utilities.utilities import get_data_directory

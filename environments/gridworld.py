@@ -1,12 +1,11 @@
 import math
 from collections import defaultdict
-import time
 
 import numpy as np
 
+from environments.generate_gridworld import generate_gridworld
 from environments.gridworldvisualizer import GridWorldVisualizer
-from environments.presetgridworlds import *
-from environments.generate_maze import generate_maze
+from environments.presets import *
 
 
 class GridWorld(object):
@@ -16,8 +15,8 @@ class GridWorld(object):
     EXTREME = 3
     IMPOSSIBRUUHHH = 4
 
-    def __init__(self, name, layout, T_prob=0.  , wall_reset=False, visualizer=None, scale=5):
-        self.name = name
+    def __init__(self, name, layout, T_prob=0., wall_reset=False, visualizer=None, scale=5):
+        self.name = self.__class__.__name__ + name
         layout = np.asarray(layout)
         self.T_prob = T_prob
 
@@ -35,11 +34,10 @@ class GridWorld(object):
 
         self.wall_reset = wall_reset
 
-        if visualizer is None:
-            self.visualizer = GridWorldVisualizer(self.name)
-            self.visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT)
-        else:
+        if visualizer is not None:
             self.visualizer = visualizer
+        else:
+            self._visualizer = None
 
     def get_all_states(self):
         h, w = self.grid_world.shape
@@ -90,7 +88,7 @@ class GridWorld(object):
             self.state = start_state
         else:
             self.state = self.start_state.copy()
-        return self.start_state
+        return self.state
 
     def _move(self, state, action):
         if action == 0:
@@ -128,87 +126,81 @@ class GridWorld(object):
     def possible_actions(self, state):
         return [0, 1, 2, 3]
 
-    def _get_grid(self):
+    def get_grid(self):
         grid_copy = self.grid_world.copy()
-        grid_copy[tuple(self.state)] = 4
         return grid_copy
 
     def close_render(self):
-        return self.visualizer.render(self._get_grid(), close=True)
+        return self.visualizer.render(close=True)
 
     def render(self, **kwargs):
         if self._visualizer is None:
-            self._visualizer = GridWorldVisualizer()
-            self._visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
-                                      GridWorldVisualizer.VALUE_FUNCTION,
-                                      GridWorldVisualizer.DENSITY,
-                                      GridWorldVisualizer.CONSOLE)
-        return self.visualizer.render(self._get_grid(), **kwargs)
+            print("No visualizer attached")
+            return False
+        return self.visualizer.render(**kwargs)
 
-    @staticmethod
-    def generate(type=EASY, size=None):
+    @classmethod
+    def generate(cls, type=EASY, size=None):
         if type == GridWorld.EASY:
-            name, layout, scale = gridworld_easy()
+            name, layout, scale = easy()
         elif type == GridWorld.MEDIUM:
-            name, layout, scale = gridworld_medium()
+            name, layout, scale = medium()
         elif type == GridWorld.HARD:
-            name, layout, scale = gridworld_hard()
+            name, layout, scale = hard()
         elif type == GridWorld.EXTREME:
-            name, layout, scale = gridworld_extreme()
+            name, layout, scale = extreme()
         elif type == GridWorld.IMPOSSIBRUUHHH:
-            name, layout, scale = generate_maze(size=size)
+            name, layout, scale = generate_gridworld(size=size)
         else:
             raise NotImplementedError("Please choose from the available GridWorld implementations or build one your self.")
 
-        return GridWorld(name, layout, scale=scale)
+        return cls(name, layout, scale=scale)
 
 
 if __name__ == "__main__":
-    env = GridWorld.generate(GridWorld.EASY)
+    import time
 
-    # print(env.get_all_states())
-    T, R = env.get_T_R()
+    env = GridWorld.generate(GridWorld.MEDIUM)
+    vis = GridWorldVisualizer(env)
+    vis.add_visualizer(GridWorldVisualizer.LIVE_AGENT)
+    env.visualizer = vis
 
-    for key, value in R.items():
-        print(key, T[key][(2, 2)])
-        print("")
+    obs = env.reset()
 
-    # env.wall_reset = True
-    #
-    # obs = env.reset()
-    #
-    # steps = []
-    # num_episodes = 50
-    # reached_goal = False
-    # i_episode = 0
-    # while not reached_goal:
-    #     obs = env.reset()
-    #     start = time.time()
-    #     i_step = 0
-    #     while True:
-    #         action = np.random.randint(4)
-    #
-    #         # env.render()
-    #
-    #         obs_tp1, r, done, _ = env.step(action)
-    #
-    #         obs = obs_tp1
-    #         i_step += 1
-    #
-    #         # if i_step % 10000 == 0:
-    #         #     elapsed = time.time() - start
-    #         #     print("%d steps in %.2f seconds" % (i_step, elapsed))
-    #
-    #         if done:
-    #             if r > 0:
-    #                 reached_goal = True
-    #             break
-    #
-    #     elapsed = time.time() - start
-    #     print("Episode %d finished in %d steps and %.2f seconds" % (i_episode, i_step, elapsed))
-    #     steps.append(i_step)
-    #     i_episode += 1
-    #
-    # print("")
-    # print("GOAL REACHED IN %d EPISODES" % i_episode)
-    # print("Average number of steps over %d episodes is %.f" % (num_episodes, sum(steps) / len(steps)))
+    steps = []
+    num_episodes = 50
+    reached_goal = False
+    i_episode = 0
+    render = True
+    while not reached_goal:
+        obs = env.reset()
+        start = time.time()
+        i_step = 0
+        while True:
+            action = np.random.randint(4)
+
+            if render:
+                render = env.render()
+
+            obs_tp1, r, done, _ = env.step(action)
+
+            obs = obs_tp1
+            i_step += 1
+
+            # if i_step % 10000 == 0:
+            #     elapsed = time.time() - start
+            #     print("%d steps in %.2f seconds" % (i_step, elapsed))
+
+            if done:
+                if r > 0:
+                    reached_goal = True
+                break
+
+        elapsed = time.time() - start
+        print("Episode %d finished in %d steps and %.2f seconds" % (i_episode, i_step, elapsed))
+        steps.append(i_step)
+        i_episode += 1
+
+    print("")
+    print("GOAL REACHED IN %d EPISODES" % i_episode)
+    print("Average number of steps over %d episodes is %.f" % (num_episodes, sum(steps) / len(steps)))

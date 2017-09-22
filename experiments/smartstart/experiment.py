@@ -1,20 +1,19 @@
-import os
+import time
 
 import numpy as np
+from algorithms.tabular.qlearning import QLearning
+from algorithms.tabular.tdlearning import TDLearning
 
-from algorithms.tdlearning import TDLearning
-from algorithms.qlearning import QLearning
-from algorithms.sarsa import SARSA, SARSALamba
-from algorithms.smartstart import SmartStart
-from environments.gridworld import GridWorldVisualizer, GridWorld
+from algorithms.tabular.sarsa import SARSA, SARSALambda
+from environments.gridworld import GridWorld
+from smartexploration.tabularss import SmartStart
 from utilities.experimenter import run_experiment
-from utilities.plot import plot_mean_std
 from utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
 gridworlds = [GridWorld.EASY, GridWorld.MEDIUM]
-algorithms = [QLearning, SARSA, SARSALamba]
+algorithms = [QLearning, SARSA, SARSALambda]
 exploration_strategies = [TDLearning.COUNT_BASED, TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.NONE]
 use_smart_start = [True, False]
 num_exp = 25
@@ -44,21 +43,24 @@ def task(params):
                            epsilon=0.05,
                            num_episodes=num_episodes,
                            max_steps=max_steps,
+                           exploration=params['exploration_strategy'],
                            exploration_steps=exploration_steps,
-                           w_value=0.)
+                           exploitation_param=0.)
     else:
         agent = params['algorithm'](env,
                                     alpha=0.1,
                                     gamma=0.99,
                                     epsilon=0.05,
                                     num_episodes=num_episodes,
-                                    max_steps=max_steps)
+                                    max_steps=max_steps,
+                                    exploration=params['exploration_strategy'])
 
     post_fix = "exploration=%s_%d" % (params['exploration_strategy'], params['run'])
 
     summary = agent.train(render=False, render_episode=False, print_results=False)
 
-    summary.save_to_gcloud("smartstart", post_fix)
+    # summary.save(directory, post_fix)
+    summary.save_to_gcloud("smartstart/%.0f" % (time.time()), post_fix)
 
 
 param_grid = {'task': task,

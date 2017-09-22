@@ -1,18 +1,17 @@
 import numpy as np
 
-from algorithms.tdlearning import TDLearning, TDLearningLambda
+from algorithms.tabular.tdlearning import TDLearning, TDLearningLambda
 
 
-class QLearning(TDLearning):
+class SARSA(TDLearning):
 
     def __init__(self, env, *args, **kwargs):
-        super(QLearning, self).__init__(env, *args, **kwargs)
+        super(SARSA, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):
         if not done:
-            next_q_values, _ = self.get_q_values(obs_tp1)
-            next_q_value = max(next_q_values)
             action_tp1 = self.get_action(obs_tp1)
+            next_q_value = self.get_q_value(obs_tp1, action_tp1)
         else:
             next_q_value = 0.
             action_tp1 = None
@@ -20,16 +19,15 @@ class QLearning(TDLearning):
         return next_q_value, action_tp1
 
 
-class QLearningLambda(TDLearningLambda):
+class SARSALambda(TDLearningLambda):
 
     def __init__(self, env, *args, **kwargs):
-        super(QLearningLambda, self).__init__(env, *args, **kwargs)
+        super(SARSALambda, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):
         if not done:
-            next_q_values, _ = self.get_q_values(obs_tp1)
-            next_q_value = max(next_q_values)
             action_tp1 = self.get_action(obs_tp1)
+            next_q_value = self.get_q_value(obs_tp1, action_tp1)
         else:
             next_q_value = 0.
             action_tp1 = None
@@ -39,9 +37,6 @@ class QLearningLambda(TDLearningLambda):
 
 if __name__ == "__main__":
     from environments.gridworld import GridWorld, GridWorldVisualizer
-    import time
-
-    start = time.time()
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 
@@ -52,16 +47,13 @@ if __name__ == "__main__":
                               GridWorldVisualizer.CONSOLE,
                               GridWorldVisualizer.VALUE_FUNCTION,
                               GridWorldVisualizer.DENSITY)
-    env = GridWorld.generate(GridWorld.EASY)
+    env = GridWorld.generate(GridWorld.EXTREME)
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = QLearning(env, alpha=0.3, num_episodes=1000, max_steps=1000, exploration=QLearning.E_GREEDY)
+    agent = SARSALambda(env, alpha=0.3, num_episodes=1000, max_steps=10000)
 
-    summary = agent.train(render=False, render_episode=True, print_results=False)
+    summary = agent.train(render=False, render_episode=True)
 
     summary.save(directory=directory)
-
-    print("Time elapsed: %.0f seconds" % (time.time() - start))
-
 

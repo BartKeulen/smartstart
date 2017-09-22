@@ -1,14 +1,12 @@
 import os
 
 import numpy as np
-
-from algorithms.tdlearning import TDLearning
 from algorithms.qlearning import QLearning
-from algorithms.sarsa import SARSA, SARSALamba
-from algorithms.smartstart import SmartStart
-from environments.gridworld import GridWorldVisualizer, GridWorld
-from utilities.experimenter import run_experiment
-from utilities.plot import plot_mean_std
+from algorithms.tdlearning import TDLearning
+
+from environments.gridworld import GridWorld
+from smartexploration.tabularss import SmartStart
+from utilities.plot import mean_reward_std_episode
 from utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
@@ -88,5 +86,5 @@ files = [os.path.join(directory, 'QLearning_%s' % maze),
          # os.path.join(directory, 'QLearning_%s_boltzmann' % maze),
          os.path.join(directory, 'SmartStart_QLearning_%s_egreedy' % maze)]
          # os.path.join(directory, 'SmartStart_QLearning_%s_boltzmann' % maze)]
-plot_mean_std(files, 5, [r'None', r'$\epsilon$-greedy', r'SmartStart $\epsilon$-greedy'])
+mean_reward_std_episode(files, 5, [r'None', r'$\epsilon$-greedy', r'SmartStart $\epsilon$-greedy'])
 

@@ -1,21 +1,19 @@
 import os
 
-import numpy as np
 import matplotlib.pyplot as plt
-
-from algorithms.tdlearning import TDLearning
+import numpy as np
 from algorithms.qlearning import QLearning
-from algorithms.sarsa import SARSA, SARSALamba
-from algorithms.smartstart import SmartStart
-from environments.gridworld import GridWorldVisualizer, GridWorld
-from utilities.experimenter import run_experiment
-from utilities.plot import plot_mean_std
+from algorithms.tdlearning import TDLearning
+
+from algorithms.tabular.sarsa import SARSA, SARSALambda
+from environments.gridworld import GridWorld
+from utilities.plot import mean_reward_std_episode
 from utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
 maze_type = [GridWorld.EASY, GridWorld.MEDIUM]
-algorithms = [QLearning, SARSA, SARSALamba]
+algorithms = [QLearning, SARSA, SARSALambda]
 exploration_strategies = [TDLearning.COUNT_BASED, TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.NONE]
 num_exp = 10
 
@@ -76,7 +74,7 @@ for maze in mazes:
                  os.path.join(directory, "%s_%s_boltzmann" % (algo, maze)),
                  os.path.join(directory, "%s_%s_countbased" % (algo, maze))]
         legend = [r'None', r'$\epsilon$-greedy', r'Boltzmann', r'Count-Based']
-        plot_mean_std(files, num_exp, legend)
+        mean_reward_std_episode(files, num_exp, legend)
 
 plt.show()
 
