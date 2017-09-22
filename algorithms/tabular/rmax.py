@@ -111,7 +111,7 @@ class RMax(Counter):
 
 
 if __name__ == "__main__":
-    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
+    from environments.gridworld import GridWorld, GridWorldVisualizer
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 

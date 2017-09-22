@@ -1,6 +1,12 @@
 
 
-class LinearScheduler(object):
+class Scheduler(object):
+
+    def sample(self):
+        raise NotImplementedError
+
+
+class LinearScheduler(Scheduler):
 
     def __init__(self, start, end):
         assert end > start

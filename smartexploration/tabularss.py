@@ -1,6 +1,6 @@
 import numpy as np
-from algorithms.valueiteration import ValueIteration
 
+from algorithms.tabular.valueiteration import ValueIteration
 from utilities.datacontainers import Episode, Summary
 
 
@@ -114,7 +114,7 @@ def SmartStart(base, env, *args, **kwargs):
                     if finished:
                         max_steps = 0
 
-                print("Smart start / Actual state --- %s / %s" % (tuple(start_state), tuple(obs)))
+                # print("Smart start / Actual state --- %s / %s" % (tuple(start_state), tuple(obs)))
                 if render or render_episode:
                     value_map = self.Q.copy()
                     value_map = np.max(value_map, axis=2)
@@ -168,26 +168,26 @@ def SmartStart(base, env, *args, **kwargs):
 
 
 if __name__ == "__main__":
-    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
-    from algorithms.tabular.sarsa import SARSALamba
+    from environments.gridworld import GridWorld, GridWorldVisualizer
+    from algorithms.tabular.sarsa import SARSALambda
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 
     np.random.seed()
 
-    visualizer = GridWorldVisualizer()
+    env = GridWorld.generate(GridWorld.EASY)
+    visualizer = GridWorldVisualizer(env)
     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
                               GridWorldVisualizer.CONSOLE,
                               GridWorldVisualizer.VALUE_FUNCTION,
                               GridWorldVisualizer.DENSITY)
-    env = GridWorld.generate(GridWorld.EXTREME)
     env.visualizer = visualizer
     # env.T_prob = 0.1
 
     # env.wall_reset = True
 
-    agent = SmartStart(SARSALamba, env, eta=0.75, alpha=0.3, num_episodes=1000, max_steps=10000, exploitation_param=0.)
+    agent = SmartStart(SARSALambda, env, eta=0.75, alpha=0.3, num_episodes=1000, max_steps=10000, exploitation_param=0.)
 
-    summary = agent.train(render=False, render_episode=True)
+    summary = agent.train(render=True, render_episode=True)
 
     summary.save(directory=directory)

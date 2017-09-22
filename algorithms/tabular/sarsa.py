@@ -1,6 +1,6 @@
 import numpy as np
 
-from algorithms.tdlearning import TDLearning, TDLearningLambda
+from algorithms.tabular.tdlearning import TDLearning, TDLearningLambda
 
 
 class SARSA(TDLearning):
@@ -19,10 +19,10 @@ class SARSA(TDLearning):
         return next_q_value, action_tp1
 
 
-class SARSALamba(TDLearningLambda):
+class SARSALambda(TDLearningLambda):
 
     def __init__(self, env, *args, **kwargs):
-        super(SARSALamba, self).__init__(env, *args, **kwargs)
+        super(SARSALambda, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):
         if not done:
@@ -36,7 +36,7 @@ class SARSALamba(TDLearningLambda):
 
 
 if __name__ == "__main__":
-    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
+    from environments.gridworld import GridWorld, GridWorldVisualizer
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = SARSALamba(env, alpha=0.3, num_episodes=1000, max_steps=10000)
+    agent = SARSALambda(env, alpha=0.3, num_episodes=1000, max_steps=10000)
 
     summary = agent.train(render=False, render_episode=True)
 

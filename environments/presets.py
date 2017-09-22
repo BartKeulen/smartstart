@@ -1,7 +1,7 @@
 
 
-def gridworld_easy():
-    name = "GridWorldEasy"
+def easy():
+    name = "Easy"
     layout = [[3, 0, 0],
               [1, 1, 0],
               [1, 1, 0],
@@ -10,8 +10,8 @@ def gridworld_easy():
     return name, layout, scale
 
 
-def gridworld_medium():
-    name = "GridWorldMedium"
+def medium():
+    name = "Medium"
     layout = [[3, 0, 0, 0, 0],
               [1, 1, 1, 1, 0],
               [0, 0, 0, 0, 0],
@@ -21,8 +21,8 @@ def gridworld_medium():
     return name, layout, scale
 
 
-def gridworld_hard():
-    name = "GridWorldHard"
+def hard():
+    name = "Hard"
     layout = [[3, 0, 0, 0, 0, 0, 0],
               [1, 1, 1, 1, 1, 1, 0],
               [0, 0, 0, 0, 0, 0, 0],
@@ -34,8 +34,8 @@ def gridworld_hard():
     return name, layout, scale
 
 
-def gridworld_extreme():
-    name = "GridWorldExtreme"
+def extreme():
+    name = "Extreme"
     layout = [[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3],
               [1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
               [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],

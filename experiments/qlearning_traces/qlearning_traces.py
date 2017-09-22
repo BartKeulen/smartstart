@@ -3,10 +3,10 @@ import os
 import numpy as np
 from algorithms.qlearning import QLearning, QLearningLambda
 
-from environments.tabular.gridworld import GridWorld
+from environments.gridworld import GridWorld
 from smartexploration.tabularss import SmartStart
 from utilities.experimenter import run_experiment
-from utilities.plot import plot_mean_std
+from utilities.plot import mean_reward_std_episode
 from utilities.scheduler import LinearScheduler
 from utilities.utilities import get_data_directory
 
@@ -71,4 +71,4 @@ files = [os.path.join(directory, 'QLearning_%s' % maze),
          os.path.join(directory, 'QLearningLambda_%s' % maze),
          os.path.join(directory, 'QLearning_%s_smartstart' % maze),
          os.path.join(directory, 'QLearningLambda_%s_smartstart' % maze)]
-plot_mean_std(files, num_exp, [r'Q-Learning', r'Q-Learning($\lambda$)', r'Q-Learning SmartStart', r'Q-Learning($\lambda$) SmartStart'])
+mean_reward_std_episode(files, num_exp, [r'Q-Learning', r'Q-Learning($\lambda$)', r'Q-Learning SmartStart', r'Q-Learning($\lambda$) SmartStart'])

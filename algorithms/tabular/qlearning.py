@@ -1,6 +1,6 @@
 import numpy as np
 
-from algorithms.tdlearning import TDLearning, TDLearningLambda
+from algorithms.tabular.tdlearning import TDLearning, TDLearningLambda
 
 
 class QLearning(TDLearning):
@@ -38,7 +38,7 @@ class QLearningLambda(TDLearningLambda):
 
 
 if __name__ == "__main__":
-    from environments.tabular.gridworld import GridWorld, GridWorldVisualizer
+    from environments.gridworld import GridWorld, GridWorldVisualizer
     import time
 
     start = time.time()
@@ -47,16 +47,16 @@ if __name__ == "__main__":
 
     np.random.seed()
 
-    visualizer = GridWorldVisualizer()
+    env = GridWorld.generate(GridWorld.EASY)
+    visualizer = GridWorldVisualizer(env)
     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
                               GridWorldVisualizer.CONSOLE,
                               GridWorldVisualizer.VALUE_FUNCTION,
                               GridWorldVisualizer.DENSITY)
-    env = GridWorld.generate(GridWorld.EASY)
     env.visualizer = visualizer
     # env.wall_reset = True
 
-    agent = QLearning(env, alpha=0.3, num_episodes=1000, max_steps=1000, exploration=QLearning.E_GREEDY)
+    agent = QLearning(env, alpha=0.3, num_episodes=10000, max_steps=1000, exploration=QLearning.E_GREEDY)
 
     summary = agent.train(render=False, render_episode=True, print_results=False)
 

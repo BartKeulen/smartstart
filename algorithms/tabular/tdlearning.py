@@ -5,6 +5,7 @@ import numpy as np
 
 from .counter import Counter
 from utilities.datacontainers import Summary, Episode
+from utilities.scheduler import Scheduler
 
 
 class TDLearning(Counter, metaclass=ABCMeta):
@@ -145,7 +146,12 @@ class TDLearning(Counter, metaclass=ABCMeta):
     def _epsilon_greedy(self, obs):
         q_values, actions = self.get_q_values(obs)
 
-        if random.random() < self.epsilon:
+        if Scheduler in self.epsilon.__class__.__bases__:
+            epsilon = self.epsilon.sample()
+        else:
+            epsilon = self.epsilon
+
+        if random.random() < epsilon:
             return random.choice(actions)
 
         max_q = -float('inf')

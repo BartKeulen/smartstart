@@ -89,6 +89,9 @@ class Summary(object):
     def average_episode_reward(self):
         return [reward/steps for steps, reward in self._episodes]
 
+    def steps_episode(self):
+        return [steps for steps, _ in self._episodes]
+
     def to_json(self):
         return json.dumps(self.__dict__)
 
