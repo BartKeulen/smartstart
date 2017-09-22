@@ -18,8 +18,8 @@ def mean_reward_std_episode(summaries, ma_window=10, color=None, linestyle=None)
     upper = moving_average(mean + std)
     lower = moving_average(mean - std)
 
-    plt.fill_between(range(len(upper)), lower, upper, alpha=0.3, color=color, linestyle=linestyle, linewidth=1.)
-    plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle)
+    plt.fill_between(range(len(upper)), lower, upper, alpha=0.3, color=color)
+    plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle, linewidth=1.)
 
 
 def mean_reward_episode(summaries, ma_window=10, color=None, linestyle=None):
@@ -58,17 +58,20 @@ labels = {
 
 
 def plot(files, plot_type, ma_window=10, title=None, legend=None, output_dir=None, colors=None, linestyles=None,
-         format="eps"):
+         format="eps", baseline=None):
     if colors is not None:
         assert len(colors) == len(files)
     if linestyles is not None:
         assert len(linestyles) == len(files)
 
     plt.figure()
+    xmax = 0
     for file in files:
         fps = glob.glob("%s*.json" % file)
 
         summaries = [Summary.load(fp) for fp in fps]
+
+        xmax = max(xmax, len(summaries[0]))
 
         color, linestyle = None, None
         if colors is not None:
@@ -77,6 +80,9 @@ def plot(files, plot_type, ma_window=10, title=None, legend=None, output_dir=Non
             linestyle = linestyles.pop()
 
         plot_type(summaries, ma_window, color, linestyle)
+
+    if baseline is not None:
+        plt.hlines(y=baseline, xmin=0, xmax=xmax, color="black", linestyle="dotted")
 
     if title is not None and output_dir is None:
         plt.title(title)
@@ -100,4 +106,5 @@ def save_plot(output_dir, title, format="eps"):
     fp = os.path.join(output_dir, title + "." + format)
     plt.savefig(fp,
                 format=format,
-                dpi=1200)
+                dpi=1200,
+                bbox_inches="tight")
