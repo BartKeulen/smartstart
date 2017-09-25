@@ -90,7 +90,7 @@ def delete_instance(compute, project, zone, name):
 
 
 def wait_for_operation(compute, project, zone, operation):
-    print('Starting up server...')
+    print('Starting up server..')
     while True:
         result = compute.zoneOperations().get(
             project=project,

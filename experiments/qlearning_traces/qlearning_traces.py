@@ -1,14 +1,14 @@
 import os
 
 import numpy as np
-from algorithms.qlearning import QLearning, QLearningLambda
-
-from environments.gridworld import GridWorld
-from smartexploration.tabularss import SmartStart
 from utilities.experimenter import run_experiment
-from utilities.plot import mean_reward_std_episode
 from utilities.scheduler import LinearScheduler
 from utilities.utilities import get_data_directory
+
+from smartexploration.algorithms import QLearning, QLearningLambda
+from smartexploration.environments.gridworld import GridWorld
+from smartexploration.smartexploration.smartexploration import SmartStart
+from smartexploration.utilities.plot import mean_reward_std_episode
 
 directory = get_data_directory(__file__)
 

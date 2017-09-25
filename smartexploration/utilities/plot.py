@@ -1,12 +1,12 @@
-import os
 import glob
+import os
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
-
-from utilities.datacontainers import Summary
 from utilities.numerical import moving_average
+
+from smartexploration.utilities.datacontainers import Summary
 
 
 def mean_reward_std_episode(summaries, ma_window=10, color=None, linestyle=None):

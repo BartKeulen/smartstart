@@ -77,7 +77,7 @@ def generate_gridworld(size=None):
 
 
 if __name__ == "__main__":
-    from environments.gridworldvisualizer import GridWorldVisualizer
+    from smartexploration.environments.gridworldvisualizer import GridWorldVisualizer
     maze = generate_gridworld()
 
     render = True

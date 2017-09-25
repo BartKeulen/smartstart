@@ -1,9 +1,7 @@
-import time
-
 import numpy as np
 
-from algorithms.tabular.valueiteration import ValueIteration
-from environments.gridworld import GridWorld, GridWorldVisualizer
+from smartexploration.algorithms import ValueIteration
+from smartexploration.environments.gridworld import GridWorld, GridWorldVisualizer
 
 gridworlds = [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD, GridWorld.EXTREME]
 

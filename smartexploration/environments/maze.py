@@ -1,7 +1,7 @@
 import numpy as np
 from Box2D import *
 
-from environments.gridworld import GridWorld
+from smartexploration.environments.gridworld import GridWorld
 
 
 class Maze(GridWorld):
@@ -119,7 +119,7 @@ class Maze(GridWorld):
         return x_new.copy()
 
 if __name__ == "__main__":
-    from environments.mazevisualizer import MazeVisualizer
+    from smartexploration.environments import MazeVisualizer
     import pygame
     from pygame.locals import *
 

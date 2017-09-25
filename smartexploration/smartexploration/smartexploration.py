@@ -1,7 +1,7 @@
 import numpy as np
 
-from algorithms.tabular.valueiteration import ValueIteration
-from utilities.datacontainers import Episode, Summary
+from smartexploration.algorithms import ValueIteration
+from smartexploration.utilities.datacontainers import Episode, Summary
 
 
 def SmartStart(base, env, *args, **kwargs):
@@ -168,10 +168,10 @@ def SmartStart(base, env, *args, **kwargs):
 
 
 if __name__ == "__main__":
-    from environments.gridworld import GridWorld, GridWorldVisualizer
-    from algorithms.tabular.sarsa import SARSALambda
+    from smartexploration.environments.gridworld import GridWorld, GridWorldVisualizer
+    from smartexploration.algorithms import SARSALambda
 
-    directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
+    directory = '/home/bartkeulen/repositories/smartexploration/data/tmp'
 
     np.random.seed()
 

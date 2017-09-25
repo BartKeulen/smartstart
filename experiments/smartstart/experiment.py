@@ -1,14 +1,14 @@
 import time
 
 import numpy as np
-from algorithms.tabular.qlearning import QLearning
-from algorithms.tabular.tdlearning import TDLearning
-
-from algorithms.tabular.sarsa import SARSA, SARSALambda
-from environments.gridworld import GridWorld
-from smartexploration.tabularss import SmartStart
 from utilities.experimenter import run_experiment
-from utilities.utilities import get_data_directory
+
+from smartexploration.algorithms import QLearning
+from smartexploration.algorithms import SARSA, SARSALambda
+from smartexploration.algorithms import TDLearning
+from smartexploration.environments.gridworld import GridWorld
+from smartexploration.smartexploration.smartexploration import SmartStart
+from smartexploration.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
@@ -66,7 +66,7 @@ def task(params):
     summary = agent.train(render=False, render_episode=False, print_results=False)
 
     # summary.save(directory, post_fix)
-    summary.save_to_gcloud("smartstart/%.0f/%s" % (cur_time, env.name), post_fix)
+    summary.save_to_gcloud("smartexploration/%.0f/%s" % (cur_time, env.name), post_fix)
 
 
 param_grid = {'task': task,

@@ -1,11 +1,9 @@
 import os
 
 import matplotlib.pyplot as plt
-import seaborn as sns
-
-from utilities.plot import mean_reward_episode
 
 from experiments.test_experiment.experiment import alphas, directory, num_exp
+from smartexploration.utilities.plot import mean_reward_episode
 
 maze = "GridWorldEasy"
 algo = "QLearning"

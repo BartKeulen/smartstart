@@ -1,10 +1,10 @@
 import numpy as np
-from algorithms.tabular.qlearning import QLearning
-from algorithms.tabular.tdlearning import TDLearning
-
-from environments.gridworld import GridWorld
 from utilities.experimenter import run_experiment
-from utilities.utilities import get_data_directory
+
+from smartexploration.algorithms import QLearning
+from smartexploration.algorithms import TDLearning
+from smartexploration.environments.gridworld import GridWorld
+from smartexploration.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 

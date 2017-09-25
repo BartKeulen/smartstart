@@ -1,14 +1,13 @@
 import os
 
-import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 
-from utilities.plot import plot, mean_reward_episode, mean_reward_std_episode, steps_episode
+from smartexploration.utilities.plot import plot, mean_reward_episode, \
+    mean_reward_std_episode, steps_episode
 
 sns.set_context("paper")
 
-directory = "/home/bartkeulen/repositories/smartstart/data/smartstart"
+directory = "/home/bartkeulen/repositories/smartexploration/data/smartexploration"
 
 mazes = ["GridWorldEasy", "GridWorldMedium"]
 baselines = [31, 72]

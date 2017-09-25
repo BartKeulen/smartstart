@@ -2,10 +2,10 @@ import math
 from collections import defaultdict
 
 import numpy as np
-
 from environments.generate_gridworld import generate_gridworld
-from environments.gridworldvisualizer import GridWorldVisualizer
 from environments.presets import *
+
+from smartexploration.environments.gridworldvisualizer import GridWorldVisualizer
 
 
 class GridWorld(object):

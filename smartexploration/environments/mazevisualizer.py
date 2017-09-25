@@ -1,6 +1,6 @@
 import numpy as np
 
-from environments.gridworldvisualizer import GridWorldVisualizer
+from smartexploration.environments.gridworldvisualizer import GridWorldVisualizer
 
 
 class MazeVisualizer(GridWorldVisualizer):

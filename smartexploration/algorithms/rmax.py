@@ -2,10 +2,10 @@ import random
 from collections import defaultdict
 
 import numpy as np
-from algorithms.counter import Counter
-from algorithms.valueiteration import ValueIteration
 
-from utilities.datacontainers import Summary, Episode
+from smartexploration.algorithms import Counter
+from smartexploration.algorithms import ValueIteration
+from smartexploration.utilities.datacontainers import Summary, Episode
 
 
 class RMax(Counter):
@@ -20,6 +20,9 @@ class RMax(Counter):
                  max_itr=100,
                  R_max=1.,
                  seed=None):
+
+        raise NotImplementedError("Not implemented yet.")
+
         super(RMax, self).__init__(env)
         random.seed(seed)
         np.random.seed(seed)
@@ -110,27 +113,27 @@ class RMax(Counter):
         return self.policy.get_value_map()
 
 
-if __name__ == "__main__":
-    from environments.gridworld import GridWorld, GridWorldVisualizer
-
-    directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
-
-    np.random.seed()
-
-    visualizer = GridWorldVisualizer()
-    visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
-                              GridWorldVisualizer.DENSITY,
-                              GridWorldVisualizer.VALUE_FUNCTION,
-                              GridWorldVisualizer.CONSOLE)
-    env = GridWorld.generate(GridWorld.EASY)
-    env.visualizer = visualizer
-    # env.wall_reset = True
-
-    agent = RMax(env,
-                 num_episodes=1000,
-                 max_steps=1000,
-                 m=1)
-
-    summary = agent.train(render_episode=True)
-
-    summary.save(directory=directory)
+# if __name__ == "__main__":
+#     from smartexploration.environments.gridworld import GridWorld, GridWorldVisualizer
+#
+#     directory = '/home/bartkeulen/repositories/smartexploration/data/tmp'
+#
+#     np.random.seed()
+#
+#     visualizer = GridWorldVisualizer()
+#     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
+#                               GridWorldVisualizer.DENSITY,
+#                               GridWorldVisualizer.VALUE_FUNCTION,
+#                               GridWorldVisualizer.CONSOLE)
+#     env = GridWorld.generate(GridWorld.EASY)
+#     env.visualizer = visualizer
+#     # env.wall_reset = True
+#
+#     agent = RMax(env,
+#                  num_episodes=1000,
+#                  max_steps=1000,
+#                  m=1)
+#
+#     summary = agent.train(render_episode=True)
+#
+#     summary.save(directory=directory)

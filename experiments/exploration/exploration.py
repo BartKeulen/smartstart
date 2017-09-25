@@ -2,13 +2,13 @@ import os
 
 import matplotlib.pyplot as plt
 import numpy as np
-from algorithms.qlearning import QLearning
-from algorithms.tdlearning import TDLearning
-
-from algorithms.tabular.sarsa import SARSA, SARSALambda
-from environments.gridworld import GridWorld
-from utilities.plot import mean_reward_std_episode
 from utilities.utilities import get_data_directory
+
+from smartexploration.algorithms import QLearning
+from smartexploration.algorithms import SARSA, SARSALambda
+from smartexploration.algorithms import TDLearning
+from smartexploration.environments.gridworld import GridWorld
+from smartexploration.utilities.plot import mean_reward_std_episode
 
 directory = get_data_directory(__file__)
 
