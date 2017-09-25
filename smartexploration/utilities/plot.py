@@ -4,8 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from utilities.numerical import moving_average
 
+from smartexploration.utilities.numerical import moving_average
 from smartexploration.utilities.datacontainers import Summary
 
 

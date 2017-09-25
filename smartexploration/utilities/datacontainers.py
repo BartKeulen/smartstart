@@ -5,14 +5,12 @@ import os
 import numpy as np
 from google.cloud import storage
 
-from .utilities import DIR
+from smartexploration.utilities.utilities import DIR
 
+# TODO: Move project settings to config file
 project_id = 'infra-rhino-169522'
 zone = 'us-east1-c'
 bucket_name = 'drl-data'
-
-summary_variables = dict()
-summary_variables['reward'] = 0
 
 
 class Episode(object):
@@ -66,7 +64,6 @@ class Episode(object):
 
 
 class Summary(object):
-    REWARD = 0
 
     def __init__(self, name=None):
         super().__init__()
