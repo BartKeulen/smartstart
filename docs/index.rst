@@ -6,6 +6,9 @@
 Welcome to Smart Exploration's documentation!
 =============================================
 
+This website provides a guide on how to install and use the Smart Exploration
+package and provides documentation of the full api.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

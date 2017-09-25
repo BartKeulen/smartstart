@@ -80,8 +80,6 @@ class TDLearning(Counter, metaclass=ABCMeta):
         """Resets internal state
 
         The Q-function is set to the initial q-value for very state-action pair.
-        Seeds for python's build in library random and numpy's random package
-        are set to self.seed.
         """
         self.Q = np.ones(
             (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
@@ -118,7 +116,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
     @abstractmethod
     def get_next_q_action(self, obs_tp1, done):
-        """ Returns next Q-Value and action
+        """ Returns next Q-Value and next action
 
         Note:
             Has to be implemented in child class.
@@ -128,8 +126,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
             done:       True when obs_tp1 is terminal
 
         Raises:
-            NotImplementedError: Use a subclass of TDLearning like QLearning or
-            SARSA.
+            NotImplementedError: Use a subclass of TDLearning like QLearning
+            or SARSA.
         """
         raise NotImplementedError(
             "Use a subclass of TDLearning like QLearning or SARSA.")
@@ -223,10 +221,12 @@ class TDLearning(Counter, metaclass=ABCMeta):
             render:     True when rendering every time-step
 
         Returns:
-            Array:      next observation
-            Int:        next action
-            Bool:       done
-            Bool:       render
+            tuple:      tuple containing:
+
+                Array:      next observation
+                Int:        next action
+                Bool:       done
+                Bool:       render
         """
         obs_tp1, reward, done, _ = self.env.step(action)
 
