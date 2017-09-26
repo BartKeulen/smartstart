@@ -1,7 +1,7 @@
 import numpy as np
 
-from smartexploration.algorithms import ValueIteration
-from smartexploration.environments.gridworld import GridWorld, GridWorldVisualizer
+from smartstart.algorithms import ValueIteration
+from smartstart.environments.gridworld import GridWorld, GridWorldVisualizer
 
 gridworlds = [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD, GridWorld.EXTREME]
 

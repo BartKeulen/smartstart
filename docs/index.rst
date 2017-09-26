@@ -16,7 +16,7 @@ package and provides documentation of the full api.
    setup
    tutorial
    examples
-   source/smartexploration
+   source/smartstart
 
 
 Indices and tables

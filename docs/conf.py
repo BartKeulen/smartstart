@@ -36,7 +36,7 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
 
 # Napoleon settings
 napoleon_google_docstring = True
-napoleon_numpy_docstring = False
+napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
 napoleon_include_special_with_doc = True
@@ -66,7 +66,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Smart Exploration'
-copyright = '2017, IHMC'
+copyright = '2017, IHMC & Bart Keulen'
 author = 'Bart Keulen'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -107,6 +107,7 @@ add_module_names = False
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+# html_theme = 'classic'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -175,7 +176,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'smartexploration', 'Smart Exploration Documentation',
+    (master_doc, 'smartstart', 'Smart Exploration Documentation',
      [author], 1)
 ]
 

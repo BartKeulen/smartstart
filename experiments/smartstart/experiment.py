@@ -3,15 +3,16 @@ import time
 import numpy as np
 from utilities.experimenter import run_experiment
 
-from smartexploration.algorithms import QLearning
-from smartexploration.algorithms import SARSA, SARSALambda
-from smartexploration.algorithms import TDLearning
-from smartexploration.environments.gridworld import GridWorld
-from smartexploration.smartexploration.smartexploration import SmartStart
-from smartexploration.utilities.utilities import get_data_directory
+from smartstart.algorithms import QLearning
+from smartstart.algorithms import SARSA, SARSALambda
+from smartstart.algorithms import TDLearning
+from smartstart.environments.gridworld import GridWorld
+from smartstart.smartexploration.smartexploration import generate_smartstart_object
+from smartstart.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
+bucket_name = 'drl-data'
 gridworlds = [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD]
 algorithms = [QLearning, SARSA, SARSALambda]
 exploration_strategies = [TDLearning.COUNT_BASED, TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.NONE]
@@ -42,16 +43,16 @@ def task(params):
     env = GridWorld.generate(params['gridworld'])
 
     if params['use_smart_start']:
-        agent = SmartStart(params['algorithm'],
-                           env,
-                           alpha=0.1,
-                           gamma=0.99,
-                           epsilon=0.05,
-                           num_episodes=num_episodes,
-                           max_steps=max_steps,
-                           exploration=params['exploration_strategy'],
-                           exploration_steps=exploration_steps,
-                           exploitation_param=0.)
+        agent = generate_smartstart_object(params['algorithm'],
+                                           env,
+                                           alpha=0.1,
+                                           gamma=0.99,
+                                           epsilon=0.05,
+                                           num_episodes=num_episodes,
+                                           max_steps=max_steps,
+                                           exploration=params['exploration_strategy'],
+                                           exploration_steps=exploration_steps,
+                                           exploitation_param=0.)
     else:
         agent = params['algorithm'](env,
                                     alpha=0.1,
@@ -66,7 +67,10 @@ def task(params):
     summary = agent.train(render=False, render_episode=False, print_results=False)
 
     # summary.save(directory, post_fix)
-    summary.save_to_gcloud("smartexploration/%.0f/%s" % (cur_time, env.name), post_fix)
+    summary.save_to_gcloud(bucket_name=bucket_name,
+                           directory="smartstart/%.0f/%s" % (cur_time,
+                                                             env.name), \
+                           post_fix=post_fix)
 
 
 param_grid = {'task': task,

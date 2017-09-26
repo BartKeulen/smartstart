@@ -1,10 +1,10 @@
 import numpy as np
 
-from smartexploration.algorithms import QLearning
-from smartexploration.algorithms import TDLearning
-from smartexploration.environments.gridworld import GridWorld
-from smartexploration.smartexploration.smartexploration import SmartStart
-from smartexploration.utilities.utilities import get_data_directory
+from smartstart.algorithms import QLearning
+from smartstart.algorithms import TDLearning
+from smartstart.environments.gridworld import GridWorld
+from smartstart.smartexploration.smartexploration import generate_smartstart_object
+from smartstart.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
@@ -38,13 +38,13 @@ def task(params):
     env = GridWorld.generate(params['maze_type'])
 
     if params['use_smart_start']:
-        agent = SmartStart(params['algorithm'],
-                           env,
-                           alpha=0.3,
-                           num_episodes=num_episodes,
-                           max_steps=max_steps,
-                           exploration=params['exploration_strategy'],
-                           exploration_steps=exploration_steps)
+        agent = generate_smartstart_object(params['algorithm'],
+                                           env,
+                                           alpha=0.3,
+                                           num_episodes=num_episodes,
+                                           max_steps=max_steps,
+                                           exploration=params['exploration_strategy'],
+                                           exploration_steps=exploration_steps)
     else:
         agent = params['algorithm'](env,
                                     alpha=0.3,

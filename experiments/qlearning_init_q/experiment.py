@@ -1,16 +1,18 @@
 import numpy as np
 from utilities.experimenter import run_experiment
 
-from smartexploration.algorithms import QLearning
-from smartexploration.algorithms import TDLearning
-from smartexploration.environments.gridworld import GridWorld
-from smartexploration.utilities.utilities import get_data_directory
+from smartstart.algorithms import QLearning
+from smartstart.algorithms import TDLearning
+from smartstart.environments.gridworld import GridWorld
+from smartstart.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
 init_q_values = [0., 0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1.]
 exploration_strategies = [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.NONE]
 num_exp = 25
+
+bucket_name = 'drl-data'
 
 
 def task(params):
@@ -34,7 +36,8 @@ def task(params):
 
     summary = agent.train(render=False, render_episode=False, print_results=False)
 
-    summary.save_to_gcloud(directory='qlearning_init_q', post_fix=post_fix)
+    summary.save_to_gcloud(bucket_name=bucket_name,
+                           directory='qlearning_init_q', post_fix=post_fix)
 
 
 param_grid = {'task': task,

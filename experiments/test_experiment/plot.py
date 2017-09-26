@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 
 from experiments.test_experiment.experiment import alphas, directory, num_exp
-from smartexploration.utilities.plot import mean_reward_episode
+from smartstart.utilities.plot import mean_reward_episode
 
 maze = "GridWorldEasy"
 algo = "QLearning"

@@ -5,10 +5,10 @@ from utilities.experimenter import run_experiment
 from utilities.scheduler import LinearScheduler
 from utilities.utilities import get_data_directory
 
-from smartexploration.algorithms import QLearning, QLearningLambda
-from smartexploration.environments.gridworld import GridWorld
-from smartexploration.smartexploration.smartexploration import SmartStart
-from smartexploration.utilities.plot import mean_reward_std_episode
+from smartstart.algorithms import QLearning, QLearningLambda
+from smartstart.environments.gridworld import GridWorld
+from smartstart.smartexploration.smartexploration import generate_smartstart_object
+from smartstart.utilities.plot import mean_reward_std_episode
 
 directory = get_data_directory(__file__)
 
@@ -24,7 +24,7 @@ def task(params):
 
     env = GridWorld.generate(maze_type)
 
-    smart_start = SmartStart(env, exploration_steps=1000, alpha=0.)
+    smart_start = generate_smartstart_object(env, exploration_steps=1000, alpha=0.)
     ss_scheduler = LinearScheduler(1000, 1500)
 
     if params['use_traces'] and params['smart_start']:

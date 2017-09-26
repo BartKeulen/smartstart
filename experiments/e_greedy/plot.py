@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 
 from experiments.e_greedy.experiment import alphas, directory, gammas, epsilons
-from smartexploration.utilities.plot import plot, mean_reward_episode
+from smartstart.utilities.plot import plot, mean_reward_episode
 
 mazes = ["GridWorldEasy", "GridWorldMedium"]
 algo = "QLearning"

@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 from experiments.qlearning_init_q.experiment import num_exp, init_q_values, \
     exploration_strategies
-from smartexploration.utilities.plot import mean_reward_episode
+from smartstart.utilities.plot import mean_reward_episode
 
 maze = "GridWorldEasy"
 algo = "QLearning"
 
-directory = "/home/bartkeulen/repositories/smartexploration/data/qlearning_init_q"
+directory = "/home/bartkeulen/repositories/smartstart/data/qlearning_init_q"
 
 for exploration_strategy in exploration_strategies:
     files = []

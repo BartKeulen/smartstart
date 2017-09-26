@@ -1,7 +1,7 @@
-smartexploration
-================
+smartstart
+==========
 
 .. toctree::
    :maxdepth: 4
 
-   smartexploration
+   smartstart

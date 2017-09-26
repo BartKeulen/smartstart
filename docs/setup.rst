@@ -1,3 +1,5 @@
+:github_url: https://github.com/BartKeulen/smartstart
+
 ######
 Setup
 ######
@@ -16,7 +18,7 @@ Anaconda is a package management tool for python that makes it easy to manage
 packages, dependencies and environments.
 
 The recommended version of python is ``3.5`` or higher. Follow the
-instructions for you system on the Anaconda site.
+instructions for you system on the `Anaconda <https://www.anaconda.com/download/>`_ site.
 
 ==================
 Setting up Python
@@ -44,12 +46,17 @@ immediate effect.
 ================
 Generating Docs
 ================
+Sphinx can be used to automatically generate documentation. This is done by
+creating a link between the documentation and the source files. When source
+files are created, deleted or the name is changed the link has to be updated.
+First go into the docs directory
 
-from the docs folder execute the following command for generating the
-necessary files for the api
+``cd /path/to/smartstart/docs/``
 
-``sphinx-apidoc -o source/ ../smartexploration/``
+Execute the following command for generating/updating the necessary files
 
-After the files have been generated the documentation can be build with
+``sphinx-apidoc -f -o source/ ../smartstart/``
 
-``make html``
+After the files have been generated/updated the documentation can be build with
+
+``make clean && make html``

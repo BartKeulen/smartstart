@@ -1,6 +1,6 @@
 import argparse
 
-from smartexploration.utilities.gcloud import run_on_gcloud
+from smartstart.utilities.gcloud import run_on_gcloud
 
 parser = argparse.ArgumentParser(description="Runs experiment on Google Compute Cloud. A new instance is created and deleted after completion. Results are saved on google cloud storage.")
 parser.add_argument('experiment', type=str, help='Name of the experiment. The experiment must have its own folder with the provided name within the experiments folder. Within the provided experiment folder should be a python file experiment.py that is going to be executed on the instance.')

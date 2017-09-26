@@ -1,10 +1,10 @@
 import numpy as np
 from utilities.experimenter import run_experiment
 
-from smartexploration.algorithms import QLearning
-from smartexploration.algorithms import TDLearning
-from smartexploration.environments.gridworld import GridWorld
-from smartexploration.utilities.utilities import get_data_directory
+from smartstart.algorithms import QLearning
+from smartstart.algorithms import TDLearning
+from smartstart.environments.gridworld import GridWorld
+from smartstart.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
 
