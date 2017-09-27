@@ -34,8 +34,12 @@ def run_experiment(param_grid, n_processes=-1):
             # accessed like this
             alpha = params['alpha']
 
+            # a run parameter, useful when num_exp > 1
+            run = param['run']
+
             # and the unique id
-            id = params['run']
+            id = params['id']
+
 
     In total the task function will be executed 10 times. 5 times with each
     alpha parameter. See tutorial or examples for a full example.

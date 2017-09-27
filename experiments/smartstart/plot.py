@@ -2,7 +2,7 @@ import os
 
 import seaborn as sns
 
-from smartstart.utilities.plot import plot, mean_reward_episode, \
+from smartstart.utilities.plot import plot_summary, mean_reward_episode, \
     mean_reward_std_episode, steps_episode
 
 sns.set_context("paper")
@@ -40,13 +40,13 @@ for maze, baseline in zip(mazes, baselines):
                 legendname += "%s" % exploration_strategy
                 legend.append(legendname)
         title = "%s_%s" % (algo, maze)
-        plot(files, plot_type=steps_episode, ma_window=1, title=title + "_steps_episode", legend=legend,
-             output_dir="/home/bartkeulen/IHMC/thesis/img/tmp", baseline=baseline)
+        plot_summary(files, plot_type=steps_episode, ma_window=1, title=title + "_steps_episode", legend=legend,
+                     output_dir="/home/bartkeulen/IHMC/thesis/img/tmp", baseline=baseline)
 
-        plot(files, plot_type=mean_reward_std_episode, ma_window=1, title=title + "_mean_reward_std_episode",
-             legend=legend, output_dir="/home/bartkeulen/IHMC/thesis/img/tmp", format="png", baseline=1/baseline)
+        plot_summary(files, plot_type=mean_reward_std_episode, ma_window=1, title=title + "_mean_reward_std_episode",
+                     legend=legend, output_dir="/home/bartkeulen/IHMC/thesis/img/tmp", format="png", baseline=1/baseline)
 
-        plot(files, plot_type=mean_reward_episode, ma_window=1, title=title + "_mean_reward_episode", legend=legend,
-             output_dir="/home/bartkeulen/IHMC/thesis/img/tmp", baseline=1/baseline)
+        plot_summary(files, plot_type=mean_reward_episode, ma_window=1, title=title + "_mean_reward_episode", legend=legend,
+                     output_dir="/home/bartkeulen/IHMC/thesis/img/tmp", baseline=1/baseline)
 
 # plt.show()

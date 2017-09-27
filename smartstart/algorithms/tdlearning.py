@@ -111,7 +111,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         self.beta = beta
 
     def reset(self):
-        """Resets internal state
+        """Resets Q-function
         
         The Q-function is set to the initial q-value for very state-action pair.
         """
@@ -119,7 +119,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
 
     def get_q_values(self, obs):
-        """Returns Q-values and actions for observation
+        """Returns Q-values and actions for observation obs
 
         Parameters
         ----------

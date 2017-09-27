@@ -155,4 +155,5 @@ fabric.properties
 .idea
 *.bin
 *.json
+**/*/data/
 

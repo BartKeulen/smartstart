@@ -21,5 +21,7 @@ def moving_average(values, window=10):
         values after applying moving average filter (length = orignal_length
         - window + 1)
     """
+    if window == 1:
+        return values
     weights = np.repeat(1.0, window) / window
     return np.convolve(values, weights, 'valid')

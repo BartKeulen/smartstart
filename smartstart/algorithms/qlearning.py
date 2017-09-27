@@ -9,7 +9,7 @@ from smartstart.algorithms import TDLearning, TDLearningLambda
 
 
 class QLearning(TDLearning):
-    """Q-Learning
+    """
 
     Parameters
     ----------
@@ -54,8 +54,7 @@ class QLearning(TDLearning):
 
 
 class QLearningLambda(TDLearningLambda):
-    """Q(lambda)
-    
+    """
     Note:
         Does not work properly, because q-learning is off-policy standard
         eligibility traces might fail.
@@ -103,34 +102,6 @@ class QLearningLambda(TDLearningLambda):
 
         return next_q_value, action_tp1
 
-#
-# if __name__ == "__main__":
-#     from smartstart.environments.gridworld import GridWorld, GridWorldVisualizer
-#     import time
-#
-#     start = time.time()
-#
-#     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
-#
-#     np.random.seed()
-#
-#     grid_world = GridWorld.generate(GridWorld.EASY)
-#     visualizer = GridWorldVisualizer(grid_world)
-#     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
-#                               GridWorldVisualizer.CONSOLE,
-#                               GridWorldVisualizer.VALUE_FUNCTION,
-#                               GridWorldVisualizer.DENSITY)
-#     grid_world.visualizer = visualizer
-#     # env.wall_reset = True
-#
-#     agent = QLearning(grid_world, alpha=0.3, num_episodes=10000, max_steps=1000,
-#                       exploration=QLearning.E_GREEDY)
-#
-#     summary = agent.train(render=False, render_episode=True,
-#                           print_results=False)
-#
-#     summary.save(directory=directory)
-#
-#     print("Time elapsed: %.0f seconds" % (time.time() - start))
+
 
 

@@ -18,7 +18,7 @@ from smartstart.utilities.numerical import moving_average
 from smartstart.utilities.datacontainers import Summary
 
 
-def mean_reward_std_episode(summaries, ma_window=10, color=None, linestyle=None):
+def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None):
     """Plot mean reward with standard deviation per episode
 
     Parameters
@@ -26,7 +26,7 @@ def mean_reward_std_episode(summaries, ma_window=10, color=None, linestyle=None)
     summaries : :obj:`list` of :obj:`~smartstart.utilities.datacontainers.Summary`
         summaries to average and plot
     ma_window : :obj:`int`
-        moving average window size (Default value = 10)
+        moving average window size (Default value = 1)
     color :
         color (Default value = None)
     linestyle :
@@ -45,7 +45,7 @@ def mean_reward_std_episode(summaries, ma_window=10, color=None, linestyle=None)
     plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle, linewidth=1.)
 
 
-def mean_reward_episode(summaries, ma_window=10, color=None, linestyle=None):
+def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None):
     """Plot mean reward per episode
 
     Parameters
@@ -53,7 +53,7 @@ def mean_reward_episode(summaries, ma_window=10, color=None, linestyle=None):
     summaries : :obj:`list` of :obj:`~smartstart.utilities.datacontainers.Summary`
         summaries to average and plot
     ma_window : :obj:`int`
-        moving average window size (Default value = 10)
+        moving average window size (Default value = 1)
     color :
         color (Default value = None)
     linestyle :
@@ -68,7 +68,7 @@ def mean_reward_episode(summaries, ma_window=10, color=None, linestyle=None):
     plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle, linewidth=1.)
 
 
-def steps_episode(summaries, ma_window=10, color=None, linestyle=None):
+def steps_episode(summaries, ma_window=1, color=None, linestyle=None):
     """Plot number of steps per episode
 
 
@@ -77,7 +77,7 @@ def steps_episode(summaries, ma_window=10, color=None, linestyle=None):
     summaries : :obj:`list` of :obj:`~smartstart.utilities.datacontainers.Summary`
         summaries to average and plot
     ma_window : :obj:`int`
-        moving average window size (Default value = 10)
+        moving average window size (Default value = 1)
     color :
         color (Default value = None)
     linestyle :
@@ -99,18 +99,40 @@ labels = {
 }
 
 
-def plot(files, plot_type, ma_window=10, title=None, legend=None, output_dir=None, colors=None, linestyles=None,
-         format="eps", baseline=None):
+def plot_summary(files, plot_type, ma_window=1, title=None, legend=None,
+                 output_dir=None, colors=None, linestyles=None,
+                 format="eps", baseline=None):
     """Main plot function to be used
+
+    The files parameter can be a list of files or a list of
+    :obj:`~smartstart.utilities.datacontainers.Summary` objects that you
+    want to compare in a single plot. A single file or single
+    :obj:`~smartstart.utilities.datacontainers.Summary` can also be provided.
+    Please read the instructions below when supplying a list of files.
+
+    The files list provided must contain filenames without the ``.json``
+    extension. For example: ``['file/path/to/experiment']`` is correct but ``[
+    'file/path/to/experiment.json']`` not! The reason for this is when the
+    folder contains multiple summary files from the same experiment (same
+    parameters) it will use all the files and average them. For example when
+    the folder contains the following three files ``[
+    'file/path/to/experiment_1.json', 'file/path/to/experiment_2.json',
+    'file/path/to/experiment_3.json']``. By providing ``[
+    'file/path/to/experiment']`` all three summaries will be loaded and averaged.
 
     Note:
         The entries in files have to be defined without ``.json`` at the end.
 
+    Note:
+        Don't forget to run the show_plot() function after initializing the
+        plots. Else nothing will be rendered on screen
+
     Parameters
     ----------
-    files : :obj:`list` of :obj:`str`
-        each entry is the filepath to a saved summary without ``.json`` at
-        the end.
+    files : :obj:`list` of :obj:`str` or :obj:`list` of
+    :obj:`~smartstart.utilities.datacontainers.Summary`
+        Option 1: each entry is the filepath to a saved summary without
+        ``.json`` at the end. Option 2: each entry is a Summary object.
     plot_type :
         one of the plot functions defined in this module
     ma_window : :obj:`int`
@@ -135,13 +157,17 @@ def plot(files, plot_type, ma_window=10, title=None, legend=None, output_dir=Non
         assert len(colors) == len(files)
     if linestyles is not None:
         assert len(linestyles) == len(files)
+    if type(files) is not list:
+        files = [files]
 
     plt.figure()
     xmax = 0
     for file in files:
-        fps = glob.glob("%s*.json" % file)
-
-        summaries = [Summary.load(fp) for fp in fps]
+        if type(file) is Summary:
+            summaries = [file]
+        else:
+            fps = glob.glob("%s*.json" % file)
+            summaries = [Summary.load(fp) for fp in fps]
 
         xmax = max(xmax, len(summaries[0]))
 
@@ -191,8 +217,17 @@ def save_plot(output_dir, title, format="eps"):
         raise Exception("Please give a title when saving a figure.")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    fp = os.path.join(output_dir, title + "." + format)
+    filename = title.replace(" ", "_")
+    fp = os.path.join(output_dir, filename + "." + format)
     plt.savefig(fp,
                 format=format,
                 dpi=1200,
                 bbox_inches="tight")
+
+
+def show_plot():
+    """Render the plots on screen
+
+    Must be run after initializing the plots to actually show them on screen.
+    """
+    plt.show()

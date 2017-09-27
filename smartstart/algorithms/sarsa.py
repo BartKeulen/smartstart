@@ -9,7 +9,7 @@ from smartstart.algorithms import TDLearning, TDLearningLambda
 
 
 class SARSA(TDLearning):
-    """SARSA
+    """
 
     Parameters
     ----------
@@ -53,7 +53,7 @@ class SARSA(TDLearning):
 
 
 class SARSALambda(TDLearningLambda):
-    """SARSA(lambda)
+    """
 
     Parameters
     ----------

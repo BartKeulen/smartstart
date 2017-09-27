@@ -61,6 +61,10 @@ class Environment(metaclass=ABCMeta):
 
 
 class Visualizer(metaclass=ABCMeta):
+    CONSOLE = 0
+    LIVE_AGENT = 1
+    VALUE_FUNCTION = 2
+    DENSITY = 3
 
     @abstractmethod
     def add_visualizer(self, *args):

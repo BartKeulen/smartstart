@@ -58,12 +58,9 @@ class GridWorldVisualizer(Visualizer):
     active_visualizers : :obj:`set`
         contain the visualizers to be used
     """
-    CONSOLE = 0
-    LIVE_AGENT = 1
-    VALUE_FUNCTION = 2
-    DENSITY = 3
 
     def __init__(self, env, name="GridWorld", size=None, fps=60):
+        env.visualizer = self
         self.env = env
         self.name = name
         if size is None:

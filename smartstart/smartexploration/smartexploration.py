@@ -82,6 +82,12 @@ def generate_smartstart_object(base, env, *args, **kwargs):
         m : :obj:`int`
             number of state-action visitation counts needed before the
             state-action pair is used in fitting the transition model.
+        vi_gamma : :obj:`float`
+            discount factor for value iteration
+        vi_min_error : :obj:`float`
+            minimum error for convergence of value iteration
+        vi_max_itr : :obj:`int`
+            maximum number of iteration of value iteration
         *args :
             see the base class for possible parameters
         **kwargs :
@@ -109,6 +115,9 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                      exploration_param=2.,
                      eta=0.5,
                      m=1,
+                     vi_gamma=0.99,
+                     vi_min_error=1e-5,
+                     vi_max_itr=1000,
                      *args,
                      **kwargs):
             super(SmartStart, self).__init__(env, *args, **kwargs)
@@ -118,7 +127,8 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             self.eta = eta
             self.m = m
 
-            self.policy = ValueIteration(self.env)
+            self.policy = ValueIteration(self.env, vi_gamma, vi_min_error,
+                                         vi_max_itr)
 
         def get_start(self):
             """Determines the smart start state
@@ -193,23 +203,16 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 obs = self.env.reset()
 
                 max_steps = self.max_steps
+
+                # eta probability of using smart start
                 if i_episode > 0 and np.random.rand() <= self.eta:
+                    # Step 1: Choose smart start
                     start_state = self.get_start()
 
-                    self.policy.reset()
+                    # Step 2: Guide to smart start
+                    self.dynamic_programming(start_state)
+
                     finished = False
-                    for obs_c, obs_count in self.count_map.items():
-                        for action, action_count in obs_count.items():
-                            for obs_tp1, count in action_count.items():
-                                self.policy.add_obs(obs_c)
-                                if obs_tp1 == tuple(start_state):
-                                    self.policy.R[obs_c + action][obs_tp1] = 1.
-                                self.policy.T[obs_c + action][obs_tp1] = \
-                                    count / sum(self.count_map[obs_c][action].
-                                                values())
-
-                    self.policy.optimize()
-
                     for i in range(self.max_steps):
                         action = self.policy.get_action(obs)
                         obs, _, done, render = self.take_step(obs, action,
@@ -227,16 +230,14 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     if finished:
                         max_steps = 0
 
-                    # input()
-
                 if render or render_episode:
                     value_map = self.Q.copy()
                     value_map = np.max(value_map, axis=2)
                     render_episode = self.env.render(value_map=value_map,
                                                      density_map=self.get_density_map())
 
+                # Perform normal reinforcement learning
                 action = self.get_action(obs)
-
                 for step in range(max_steps):
                     obs, action, done, render = self.take_step(obs, action,
                                                                episode, render)
@@ -264,6 +265,45 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                                          density_map=self.get_density_map())
 
             return summary
+
+        def dynamic_programming(self, start_state):
+            """Fits transition model, reward function and performs dynamic
+            programming
+
+            Transition model is fitted using the following equation
+
+                T(s,a,s') = \frac{C(s,a,s'}{C(s,a)}
+
+            Where C(*) is the visitation count. The reward function is zero
+            everywhere except for the transition that results in the smart start
+
+                R(s,a,s') = 1 if s' == s_{ss}
+                R(s,a,s') = 0 otherwise
+
+            Dynamic programming is done using value iteration.
+
+            Parameters
+            ----------
+            start_state : :obj:`np.ndarray`
+                SmartStart state
+
+            """
+            # Reset policy
+            self.policy.reset()
+
+            # Fit transition model and reward function
+            for obs_c, obs_count in self.count_map.items():
+                for action, action_count in obs_count.items():
+                    for obs_tp1, count in action_count.items():
+                        self.policy.add_obs(obs_c)
+                        if obs_tp1 == tuple(start_state):
+                            self.policy.R[obs_c + action][obs_tp1] = 1.
+                        self.policy.T[obs_c + action][obs_tp1] = \
+                            count / sum(self.count_map[obs_c][action].
+                                        values())
+
+            # Perform dynamic programming
+            self.policy.optimize()
 
     # Create the actual object and return it
     return SmartStart(env, *args, **kwargs)
