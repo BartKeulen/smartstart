@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Examples &mdash; Smart Exploration 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Smart Exploration 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="smartstart package" href="source/smartstart.html"/>
+        <link rel="prev" title="Tutorial" href="tutorial.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Smart Exploration
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#q-learning">Q-Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#smartstart">SmartStart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experimenter">Experimenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-results">Plotting Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/smartstart.html">smartstart package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Smart Exploration</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/BartKeulen/smartstart/tree/develop/examples" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="examples">
+<span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="q-learning">
+<span id="qlearning-example"></span><h2>Q-Learning<a class="headerlink" href="#q-learning" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">smartstart.algorithms.qlearning</span> <span class="k">import</span> <span class="n">QLearning</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworld</span> <span class="k">import</span> <span class="n">GridWorld</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworldvisualizer</span> <span class="k">import</span> <span class="n">GridWorldVisualizer</span>
+<span class="kn">from</span> <span class="nn">smartstart.utilities.plot</span> <span class="k">import</span> <span class="n">plot_summary</span><span class="p">,</span> <span class="n">show_plot</span><span class="p">,</span> \
+    <span class="n">mean_reward_episode</span><span class="p">,</span> <span class="n">steps_episode</span>
+
+<span class="c1"># Reset the seed for random number generation</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+
+<span class="c1"># Create environment and visualizer</span>
+<span class="n">grid_world</span> <span class="o">=</span> <span class="n">GridWorld</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">GridWorld</span><span class="o">.</span><span class="n">EASY</span><span class="p">)</span>
+<span class="n">visualizer</span> <span class="o">=</span> <span class="n">GridWorldVisualizer</span><span class="p">(</span><span class="n">grid_world</span><span class="p">)</span>
+<span class="n">visualizer</span><span class="o">.</span><span class="n">add_visualizer</span><span class="p">(</span><span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">LIVE_AGENT</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">CONSOLE</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">VALUE_FUNCTION</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">)</span>
+
+<span class="c1"># Initialize agent, see class for available parameters</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">QLearning</span><span class="p">(</span><span class="n">grid_world</span><span class="p">,</span>
+                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                  <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                  <span class="n">num_episodes</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                  <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                  <span class="n">exploration</span><span class="o">=</span><span class="n">QLearning</span><span class="o">.</span><span class="n">E_GREEDY</span><span class="p">)</span>
+
+<span class="c1"># Train the agent, summary contains training data</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">render_episode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">print_results</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plot results</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">mean_reward_episode</span><span class="p">,</span> <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Easy GridWorld Q-Learning Average Reward per Episode&quot;</span><span class="p">)</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">steps_episode</span><span class="p">,</span> <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Easy GridWorld Q-Learning Steps per Episode&quot;</span><span class="p">)</span>
+<span class="n">show_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="smartstart">
+<span id="smartstart-example"></span><h2>SmartStart<a class="headerlink" href="#smartstart" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">smartstart.algorithms.qlearning</span> <span class="k">import</span> <span class="n">QLearning</span>
+<span class="kn">from</span> <span class="nn">smartstart.smartexploration.smartexploration</span> <span class="k">import</span> <span class="n">generate_smartstart_object</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworld</span> <span class="k">import</span> <span class="n">GridWorld</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworldvisualizer</span> <span class="k">import</span> <span class="n">GridWorldVisualizer</span>
+<span class="kn">from</span> <span class="nn">smartstart.utilities.plot</span> <span class="k">import</span> <span class="n">plot_summary</span><span class="p">,</span> <span class="n">show_plot</span><span class="p">,</span> \
+    <span class="n">mean_reward_episode</span><span class="p">,</span> <span class="n">steps_episode</span>
+
+<span class="c1"># Reset the seed for random number generation</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+
+<span class="c1"># Create environment and visualizer</span>
+<span class="n">grid_world</span> <span class="o">=</span> <span class="n">GridWorld</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">GridWorld</span><span class="o">.</span><span class="n">EASY</span><span class="p">)</span>
+<span class="n">visualizer</span> <span class="o">=</span> <span class="n">GridWorldVisualizer</span><span class="p">(</span><span class="n">grid_world</span><span class="p">)</span>
+<span class="n">visualizer</span><span class="o">.</span><span class="n">add_visualizer</span><span class="p">(</span><span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">LIVE_AGENT</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">CONSOLE</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">VALUE_FUNCTION</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">)</span>
+
+<span class="c1"># Initialize agent, see class for available parameters</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">generate_smartstart_object</span><span class="p">(</span><span class="n">QLearning</span><span class="p">,</span>
+                                   <span class="n">env</span><span class="o">=</span><span class="n">grid_world</span><span class="p">,</span>
+                                   <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                                   <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                                   <span class="n">num_episodes</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                                   <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                   <span class="n">exploration</span><span class="o">=</span><span class="n">QLearning</span><span class="o">.</span><span class="n">E_GREEDY</span><span class="p">)</span>
+
+<span class="c1"># Train the agent, summary contains training data</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">render_episode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">print_results</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plot results</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">mean_reward_episode</span><span class="p">,</span> <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Easy GridWorld Q-Learning Average Reward per Episode&quot;</span><span class="p">)</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">steps_episode</span><span class="p">,</span> <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Easy GridWorld Q-Learning Steps per Episode&quot;</span><span class="p">)</span>
+<span class="n">show_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="experimenter">
+<span id="experimenter-example"></span><h2>Experimenter<a class="headerlink" href="#experimenter" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">smartstart.algorithms.qlearning</span> <span class="k">import</span> <span class="n">QLearning</span>
+<span class="kn">from</span> <span class="nn">smartstart.smartexploration.smartexploration</span> <span class="k">import</span> <span class="n">generate_smartstart_object</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworld</span> <span class="k">import</span> <span class="n">GridWorld</span>
+<span class="kn">from</span> <span class="nn">smartstart.utilities.experimenter</span> <span class="k">import</span> <span class="n">run_experiment</span>
+<span class="kn">from</span> <span class="nn">smartstart.utilities.utilities</span> <span class="k">import</span> <span class="n">get_data_directory</span>
+
+<span class="c1"># Get the path to the data folder in the same directory as this file.</span>
+<span class="c1"># If the folder does not exists it will be created</span>
+<span class="n">summary_dir</span> <span class="o">=</span> <span class="n">get_data_directory</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+
+<span class="c1"># Define the task function for the experiment</span>
+<span class="k">def</span> <span class="nf">task</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="c1"># Reset the seed for random number generation</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+
+    <span class="c1"># Create environment</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">GridWorld</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">GridWorld</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">)</span>
+
+    <span class="c1"># Here we use a dict to define the parameters, this makes it easy to</span>
+    <span class="c1"># make sure the experiments use the same parameters</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="s1">&#39;num_episodes&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s1">&#39;max_steps&#39;</span><span class="p">:</span> <span class="mi">2500</span><span class="p">,</span>
+        <span class="s1">&#39;exploration&#39;</span><span class="p">:</span> <span class="n">QLearning</span><span class="o">.</span><span class="n">E_GREEDY</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Initialize agent, check params if it needs to use SmartStart or not</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;use_smart_start&#39;</span><span class="p">]:</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">generate_smartstart_object</span><span class="p">(</span><span class="n">QLearning</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">QLearning</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Train the agent, summary contains training data. Make sure to set the</span>
+    <span class="c1"># rendering and printing to False when multiple experiments run in</span>
+    <span class="c1"># parallel. Else it will consume a lot of computation power.</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">render_episode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">print_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Save the summary. The post_fix parameter can be used to create a unique</span>
+    <span class="c1">#  file name.</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">summary_dir</span><span class="p">,</span> <span class="n">post_fix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">])</span>
+
+
+<span class="c1"># Define a parameter grid that can be supplied to the run_experiment method</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span>
+    <span class="s1">&#39;num_exp&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">run_experiment</span><span class="p">(</span><span class="n">param_grid</span><span class="p">,</span> <span class="n">n_processes</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plotting-results">
+<span id="plotting-example"></span><h2>Plotting Results<a class="headerlink" href="#plotting-results" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">smartstart.utilities.plot</span> <span class="k">import</span> <span class="n">plot_summary</span><span class="p">,</span> \
+    <span class="n">mean_reward_std_episode</span><span class="p">,</span> <span class="n">steps_episode</span><span class="p">,</span> <span class="n">show_plot</span>
+<span class="kn">from</span> <span class="nn">smartstart.utilities.utilities</span> <span class="k">import</span> <span class="n">get_data_directory</span>
+
+<span class="c1"># Get directory where the summaries are saved. Since it is the same folder as</span>
+<span class="c1">#  the experimenter we can use the get_data_directory method</span>
+<span class="n">summary_dir</span> <span class="o">=</span> <span class="n">get_data_directory</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+<span class="c1"># Define the files list</span>
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">summary_dir</span><span class="p">,</span> <span class="s2">&quot;QLearning_GridWorldMedium&quot;</span><span class="p">),</span>
+         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">summary_dir</span><span class="p">,</span> <span class="s2">&quot;SmartStart_QLearning_GridWorldMedium&quot;</span><span class="p">)]</span>
+
+<span class="n">legend</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Q-Learning&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartStart Q-Learning&quot;</span><span class="p">]</span>
+
+<span class="c1"># We are going to save the plots in img folder</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;img&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot average reward and standard deviation per episode</span>
+<span class="c1"># When an output directory is supplied the plots will not be rendered with</span>
+<span class="c1"># a title. The title is used as filename for the plot.</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">files</span><span class="p">,</span>
+             <span class="n">mean_reward_std_episode</span><span class="p">,</span>
+             <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Q-Learning GridWorldMedium Average Reward per Episode&quot;</span><span class="p">,</span>
+             <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+             <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">files</span><span class="p">,</span>
+             <span class="n">steps_episode</span><span class="p">,</span>
+             <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Q-Learning GridWorldMedium Steps per Episode&quot;</span><span class="p">,</span>
+             <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+             <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;.png&quot;</span><span class="p">,</span>
+             <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+
+<span class="n">show_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="source/smartstart.html" class="btn btn-neutral float-right" title="smartstart package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, IHMC &amp; Bart Keulen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

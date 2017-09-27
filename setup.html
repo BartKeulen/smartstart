@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setup &mdash; Smart Exploration 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Smart Exploration 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Tutorial" href="tutorial.html"/>
+        <link rel="prev" title="Welcome to Smart Exploration’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Smart Exploration
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-python">Installing Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-python">Setting up Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-smart-exploration-package">Installing Smart Exploration Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-package">Updating Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-docs">Generating Docs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/smartstart.html">smartstart package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Smart Exploration</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Setup</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/BartKeulen/smartstart" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<p>This page describes how to setup a computer with the smart exploration package.</p>
+<div class="section" id="installing-python">
+<h2>Installing Python<a class="headerlink" href="#installing-python" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to install python on your computer. Most Unix distributions (Debian, Ubuntu, Mac OS X) come with python pre-installed. Even if python comes pre-installed on your system I still recommend installing it through <a class="reference external" href="https://www.anaconda.com/download/">Anaconda</a>. Anaconda is a package management tool for python that makes it easy to manage packages, dependencies and environments.</p>
+<p>The recommended version of python is <code class="docutils literal"><span class="pre">3.5</span></code> or higher. Follow the instructions for you system on the <a class="reference external" href="https://www.anaconda.com/download/">Anaconda</a> site.</p>
+</div>
+<div class="section" id="setting-up-python">
+<h2>Setting up Python<a class="headerlink" href="#setting-up-python" title="Permalink to this headline">¶</a></h2>
+<p>It is good practice to make use of virtual environments in Python. A virtual environment is a sandbox with it’s own python interpreter and package list, using virtual environments makes it easy to keep your python installation clean. Anaconda makes it really easy to create and manage virtual environments. First we create a virtual environment</p>
+<p><code class="docutils literal"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">--name</span> <span class="pre">smartstart</span> <span class="pre">python=3.5</span></code></p>
+<p>The environment will get it is own directory from Anaconda in which the interpreter and packages will be installed. To use the environment we simply have to activate it</p>
+<p><code class="docutils literal"><span class="pre">source</span> <span class="pre">activate</span> <span class="pre">smartstart</span></code></p>
+<p>Now our terminal will automatically use the interpreter and packages from this environment. You can see if your environment is activated by looking at your terminal, it will look like this:</p>
+<p><code class="docutils literal"><span class="pre">(smartstart)</span> <span class="pre">bartkeulen&#64;ihmc:~$</span></code></p>
+<p>The environment can be deactivated by running</p>
+<p><code class="docutils literal"><span class="pre">source</span> <span class="pre">deactivate</span></code></p>
+<p>For more information on environments go <a class="reference external" href="https://conda.io/docs/user-guide/tasks/manage-environments.html">here</a>.</p>
+</div>
+<div class="section" id="installing-smart-exploration-package">
+<h2>Installing Smart Exploration Package<a class="headerlink" href="#installing-smart-exploration-package" title="Permalink to this headline">¶</a></h2>
+<p>To get started with the Smart Exploration package clone the <a class="reference external" href="https://github.com/BartKeulen/smartstart">git repository</a> in a local directory on you file system</p>
+<p><code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/BartKeulen/smartstart.git</span></code></p>
+<p>The package and its dependencies can now be installed by running</p>
+<p><code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">/path/to/smartstart/requirements.txt</span> <span class="pre">-e</span> <span class="pre">/path/to/smartstart/</span></code></p>
+<p>The <code class="docutils literal"><span class="pre">-r</span> <span class="pre">**/requirements.txt</span></code> option will install all dependencies needed by the SmartStart package that are listed in the requirements.txt file. The <code class="docutils literal"><span class="pre">-e</span> <span class="pre">**/</span></code> option installs the package in editable mode, all code changes have immediate effect.</p>
+</div>
+<div class="section" id="updating-package">
+<h2>Updating Package<a class="headerlink" href="#updating-package" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="generating-docs">
+<h2>Generating Docs<a class="headerlink" href="#generating-docs" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx can be used to automatically generate documentation. This is done by creating a link between the documentation and the source files. When source files are created, deleted or the name is changed the link has to be updated. First go into the docs directory</p>
+<p><code class="docutils literal"><span class="pre">cd</span> <span class="pre">/path/to/smartstart/docs/</span></code></p>
+<p>Execute the following command for generating/updating the necessary files</p>
+<p><code class="docutils literal"><span class="pre">sphinx-apidoc</span> <span class="pre">-f</span> <span class="pre">-o</span> <span class="pre">source/</span> <span class="pre">../smartstart/</span></code></p>
+<p>After the files have been generated/updated the documentation can be build with</p>
+<p><code class="docutils literal"><span class="pre">make</span> <span class="pre">clean</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">html</span></code></p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Smart Exploration’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, IHMC &amp; Bart Keulen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

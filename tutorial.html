@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial &mdash; Smart Exploration 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Smart Exploration 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Examples" href="examples.html"/>
+        <link rel="prev" title="Setup" href="setup.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Smart Exploration
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#q-learning">Q-Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#smartstart">SmartStart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experimenter">Experimenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-results">Plotting Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/smartstart.html">smartstart package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Smart Exploration</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/BartKeulen/smartstart" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This page contains tutorials on how to use the SmartStart package. The tutorial starts with running Q-Learning on a GridWorld environment and visualizing the results. After that the example is extended to using SmartStart. The last two parts of the tutorial cover running multiple experiments in parallel and saving the data before plotting all the results.</p>
+<p>What modules to import is discussed in the parts of the tutorial where they are first presented. It is good practice to group all the import statements at the top of your file in the following order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Standard libraries (e.g. time, random)</li>
+<li>3d party libraries (e.g. numpy)</li>
+<li>Own package (in this case smartstart)</li>
+</ol>
+</div></blockquote>
+<p>Full code examples of the tutorial can be found in the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Examples</span></a> section.</p>
+<div class="section" id="q-learning">
+<h2>Q-Learning<a class="headerlink" href="#q-learning" title="Permalink to this headline">¶</a></h2>
+<p>Q-Learning is a temporal difference method that works with tabular environments, i.e. discrete states and actions. For more information on Q-Learning I recommend reading ‘Reinforcement Learning: An Introduction by Richard S. Sutton and Andrew G. Barto`.</p>
+<p>Before starting I’ll first explain the general structure for running an algorithm and visualizing the results.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>The first step is to construct the environment</li>
+<li>Initialize the learning agent (e.g. Q-Learning)</li>
+<li>Run the training</li>
+<li>Save/Visualize the results</li>
+</ol>
+</div></blockquote>
+<p>Lets start by constructing the <a class="reference internal" href="source/smartstart.environments.html#smartstart.environments.gridworld.GridWorld" title="smartstart.environments.gridworld.GridWorld"><code class="xref py py-class docutils literal"><span class="pre">GridWorld</span></code></a> environment and the <code class="xref py py-class docutils literal"><span class="pre">GridWorldvisualizer</span></code>. First we have to import the necessary modules. The following code snippets imports the modules and creates the environment and visualizer</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smartstart.environments.gridworld</span> <span class="kn">import</span> <span class="n">GridWorld</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworldvisualizer</span> <span class="kn">import</span> <span class="n">GridWorldVisualizer</span>
+
+<span class="c1"># Create environment and visualizer</span>
+<span class="n">grid_world</span> <span class="o">=</span> <span class="n">GridWorld</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">GridWorld</span><span class="o">.</span><span class="n">EASY</span><span class="p">)</span>
+<span class="n">visualizer</span> <span class="o">=</span> <span class="n">GridWorldVisualizer</span><span class="p">(</span><span class="n">grid_world</span><span class="p">)</span>
+<span class="n">visualizer</span><span class="o">.</span><span class="n">add_visualizer</span><span class="p">(</span><span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">LIVE_AGENT</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">CONSOLE</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">VALUE_FUNCTION</span><span class="p">,</span>
+                          <span class="n">GridWorldVisualizer</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first two lines import the necessary modules. After that the GridWorld is constructed first. The visualizer is constructed separately and has to be given a reference to the environment, this gives the visualizer access to information and state about the environment. The visualizer will automatically give a reference of it self to the environment. Next visualizers have to be add to the visualizer. You can choose from four visualizers:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><a class="reference internal" href="source/smartstart.environments.html#smartstart.environments.environment.Visualizer.LIVE_AGENT" title="smartstart.environments.environment.Visualizer.LIVE_AGENT"><code class="xref py py-attr docutils literal"><span class="pre">LIVE_AGENT</span></code></a>, renders the location of the agent</li>
+<li><a class="reference internal" href="source/smartstart.environments.html#smartstart.environments.environment.Visualizer.CONSOLE" title="smartstart.environments.environment.Visualizer.CONSOLE"><code class="xref py py-attr docutils literal"><span class="pre">CONSOLE</span></code></a>, prints results in a console</li>
+<li><a class="reference internal" href="source/smartstart.environments.html#smartstart.environments.environment.Visualizer.VALUE_FUNCTION" title="smartstart.environments.environment.Visualizer.VALUE_FUNCTION"><code class="xref py py-attr docutils literal"><span class="pre">VALUE_FUNCTION</span></code></a>, renders the value function as a heath map</li>
+<li><a class="reference internal" href="source/smartstart.environments.html#smartstart.environments.environment.Visualizer.DENSITY" title="smartstart.environments.environment.Visualizer.DENSITY"><code class="xref py py-attr docutils literal"><span class="pre">DENSITY</span></code></a>, renders the density as a heath map</li>
+</ol>
+</div></blockquote>
+<p>Now we can go to initializing the agent and running the training. In this example only a few parameters of the agent are used, look at the class or read the documentation to see what parameters are available. Add the following code to your python file (remember to put import statement at the top of your file)</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smartstart.algorithms.qlearning</span> <span class="kn">import</span> <span class="n">QLearning</span>
+
+<span class="c1"># Initialize agent, see class for available parameters</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">QLearning</span><span class="p">(</span><span class="n">grid_world</span><span class="p">,</span>
+                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                  <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                  <span class="n">num_episodes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                  <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                  <span class="n">exploration</span><span class="o">=</span><span class="n">QLearning</span><span class="o">.</span><span class="n">E_GREEDY</span><span class="p">)</span>
+
+<span class="c1"># Train the agent, summary contains training data</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                      <span class="n">render_episode</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                      <span class="n">print_results</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="source/smartstart.algorithms.html#smartstart.algorithms.qlearning.QLearning" title="smartstart.algorithms.qlearning.QLearning"><code class="xref py py-class docutils literal"><span class="pre">QLearning</span></code></a> agent has one parameter that must be set, which is the environment. All the other parameters have default values but can be set to whatever value you want. The available exploration strategies can be found in the class, there it is also explained how to add more. After initializing the agent the training can be run by calling the <a class="reference internal" href="source/smartstart.algorithms.html#smartstart.algorithms.tdlearning.TDLearning.train" title="smartstart.algorithms.tdlearning.TDLearning.train"><code class="xref py py-meth docutils literal"><span class="pre">train()</span></code></a> method on the agent. Three parameters can be supplied to the train method:</p>
+<blockquote>
+<div><ul class="simple">
+<li>render, if <code class="docutils literal"><span class="pre">True</span></code> every time-step will be rendered</li>
+<li>render_episode, if <code class="docutils literal"><span class="pre">True</span></code> only once after every episode will be rendered</li>
+<li>print_results, if <code class="docutils literal"><span class="pre">True</span></code> the results will be printed to the terminal. Often set to <code class="docutils literal"><span class="pre">False</span></code> when <a class="reference internal" href="source/smartstart.environments.html#smartstart.environments.environment.Visualizer.CONSOLE" title="smartstart.environments.environment.Visualizer.CONSOLE"><code class="xref py py-attr docutils literal"><span class="pre">CONSOLE</span></code></a> is active.</li>
+</ul>
+</div></blockquote>
+<p>The <a class="reference internal" href="source/smartstart.algorithms.html#smartstart.algorithms.tdlearning.TDLearning.train" title="smartstart.algorithms.tdlearning.TDLearning.train"><code class="xref py py-meth docutils literal"><span class="pre">train()</span></code></a> method returns a <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></a> object containing the results. THe results can be plotted easily using the <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.plot_summary" title="smartstart.utilities.plot.plot_summary"><code class="xref py py-meth docutils literal"><span class="pre">plot_summary()</span></code></a> method. Two parameters have to be provided. The first one is a list of files or a list of <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></a> objects, a single file or <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></a> object can also be provided. See <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.plot_summary" title="smartstart.utilities.plot.plot_summary"><code class="xref py py-meth docutils literal"><span class="pre">plot_summary()</span></code></a> method documentation for The second parameter is the plot type, three plot types are provided</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.mean_reward_episode" title="smartstart.utilities.plot.mean_reward_episode"><code class="xref py py-meth docutils literal"><span class="pre">mean_reward_episode()</span></code></a> plots the average reward per episode</li>
+<li><a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.mean_reward_std_episode" title="smartstart.utilities.plot.mean_reward_std_episode"><code class="xref py py-meth docutils literal"><span class="pre">mean_reward_std_episode()</span></code></a> plots the average reward per episode and the standard deviation</li>
+<li><a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.steps_episode" title="smartstart.utilities.plot.steps_episode"><code class="xref py py-meth docutils literal"><span class="pre">steps_episode()</span></code></a> plots the number of steps per episode</li>
+</ul>
+</div></blockquote>
+<p>The plotting types also work for a single file or summary object. Now we are going to plot the <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></a> object directly, later in the tutorial we will plot from files. We are going to plot the average reward per episode and the number of steps per episode.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smartstart.utilities.plot</span> <span class="kn">import</span> <span class="n">plot_summary</span><span class="p">,</span> <span class="n">show_plot</span><span class="p">,</span> \
+<span class="n">mean_reward_episode</span><span class="p">,</span> <span class="n">steps_episode</span>
+
+<span class="c1"># Plot results</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">mean_reward_episode</span><span class="p">,</span> <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Easy GridWorld Q-Learning Average Reward per Episode&quot;</span><span class="p">)</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">steps_episode</span><span class="p">,</span> <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Easy GridWorld Q-Learning Steps per Episode&quot;</span><span class="p">)</span>
+<span class="n">show_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>First of it’s important to call the <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.show_plot" title="smartstart.utilities.plot.show_plot"><code class="xref py py-meth docutils literal"><span class="pre">show_plot()</span></code></a> after initializing all your plots, this call will actually render the figures and keep them open. In this tutorial we only use a few of the parameters that can be provided to the <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.plot_summary" title="smartstart.utilities.plot.plot_summary"><code class="xref py py-meth docutils literal"><span class="pre">plot_summary()</span></code></a> method. The first two are the summary and the plot type. The <code class="docutils literal"><span class="pre">ma_window=5</span></code> parameter applies a moving average filter to the data with window size 5. The title parameter adds a title to the plot. In later tutorials we will also cover how to automatically save the plots.</p>
+<p>Now you should be able to run the full algorithm and visualize the results. The training can be very slow when every time-step is rendered, you can either supply <code class="docutils literal"><span class="pre">render=False</span></code> to the <a class="reference internal" href="source/smartstart.algorithms.html#smartstart.algorithms.tdlearning.TDLearning.train" title="smartstart.algorithms.tdlearning.TDLearning.train"><code class="xref py py-meth docutils literal"><span class="pre">train()</span></code></a> method or close the visualization window, when <code class="docutils literal"><span class="pre">render_episode=True</span></code> it will still be rendered once per episode, otherwise it closes and continues without rendering.</p>
+<p>A full code example can be found here: <a class="reference internal" href="examples.html#qlearning-example"><span class="std std-ref">Q-Learning</span></a>.</p>
+</div>
+<div class="section" id="smartstart">
+<h2>SmartStart<a class="headerlink" href="#smartstart" title="Permalink to this headline">¶</a></h2>
+<p>Now we are going to run the same experiment but with SmartStart turned on. There is not much difference, so you can either make a copy of the file you have made for the Q-Learning tutorial or make changes in that file. For running an algorithm with SmartStart we only have to change the agent</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smartstart.smartexploration.smartexploration</span> <span class="kn">import</span> <span class="n">generate_smartstart_object</span>
+
+<span class="c1"># Initialize agent, see class for available parameters</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">generate_smartstart_object</span><span class="p">(</span><span class="n">QLearning</span><span class="p">,</span>
+                                   <span class="n">env</span><span class="o">=</span><span class="n">grid_world</span><span class="p">,</span>
+                                   <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                                   <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                                   <span class="n">num_episodes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                   <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                   <span class="n">exploration</span><span class="o">=</span><span class="n">QLearning</span><span class="o">.</span><span class="n">E_GREEDY</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instead of defining a separate SmartStart class for every learning algorithm we generate that class using the <a class="reference internal" href="source/smartstart.smartexploration.html#smartstart.smartexploration.smartexploration.generate_smartstart_object" title="smartstart.smartexploration.smartexploration.generate_smartstart_object"><code class="xref py py-meth docutils literal"><span class="pre">generate_smartstart_object()</span></code></a> method. This method takes in the base algorithm to be used (e.g. Q-Learning, SARSA), some specific parameters to SmartStart (see note below) and the usual parameters for the base algorithm. The <a class="reference internal" href="source/smartstart.smartexploration.html#smartstart.smartexploration.smartexploration.generate_smartstart_object" title="smartstart.smartexploration.smartexploration.generate_smartstart_object"><code class="xref py py-meth docutils literal"><span class="pre">generate_smartstart_object()</span></code></a> method will then construct a SmartStart class that inherits the base class. The object returned will work in the same way as the base algorithm but with the SmartStart extension.</p>
+<p>A full code example can be found here: <a class="reference internal" href="examples.html#smartstart-example"><span class="std std-ref">SmartStart</span></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The SmartStart class does not show up in documentation, I haven’t been able to figure out how to fix this. See the source code for the documentation on the SmartStart class. The SmartStart class is defined within the <a class="reference internal" href="source/smartstart.smartexploration.html#smartstart.smartexploration.smartexploration.generate_smartstart_object" title="smartstart.smartexploration.smartexploration.generate_smartstart_object"><code class="xref py py-meth docutils literal"><span class="pre">generate_smartstart_object()</span></code></a> method.</p>
+</div>
+</div>
+<div class="section" id="experimenter">
+<h2>Experimenter<a class="headerlink" href="#experimenter" title="Permalink to this headline">¶</a></h2>
+<p>Now we are able to run single experiments and visualize the training and results. But often you don’t want to run one experiment but multiple experiments. The <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.experimenter.run_experiment" title="smartstart.utilities.experimenter.run_experiment"><code class="xref py py-meth docutils literal"><span class="pre">run_experiment()</span></code></a> method makes it easy to this. The idea is you define a task function that takes one dictionary as argument, this dictionary contains the specific parameters for that experiment. You then define a dictionary called the parameter grid containing the task and all the different parameters to be used. The <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.experimenter.run_experiment" title="smartstart.utilities.experimenter.run_experiment"><code class="xref py py-meth docutils literal"><span class="pre">run_experiment()</span></code></a> method will take this parameter grid and turn it into individual sets of parameters and run the task function with each set of parameters. Lets first see what happens to the parameter grid:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Original parameter grid</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span>
+  <span class="s1">&#39;num_exp&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="c1"># Will turn into 4 sets of parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span> <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span> <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span> <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span> <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="mi">3</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>As you can see the original parameter grid turns into 4 separate dictionaries. The <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.experimenter.run_experiment" title="smartstart.utilities.experimenter.run_experiment"><code class="xref py py-meth docutils literal"><span class="pre">run_experiment()</span></code></a> method will run 4 experiments with each experiment using one of the dictionaries from the params list. Now we can start with our full example, open a new python file and in which we are going to define the experiment.</p>
+<p>Since we are running multiple experiments in parallel we have to save the data, so we start by defining a directory to save the data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smartstart.utilities.utilities</span> <span class="kn">import</span> <span class="n">get_data_directory</span>
+
+<span class="c1"># Get the path to the data folder in the same directory as this file.</span>
+<span class="c1"># If the folder does not exists it will be created</span>
+<span class="n">summary_dir</span> <span class="o">=</span> <span class="n">get_data_directory</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">__file__</span></code> tag is the reference to the current file. The <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.utilities.get_data_directory" title="smartstart.utilities.utilities.get_data_directory"><code class="xref py py-meth docutils literal"><span class="pre">smartstart.utilities.utilities.get_data_directory()</span></code></a> method takes this reference to the file and creates a directory with the name data in the same folder. The path to the data folder is then returned.</p>
+<p>Now we define our task function. Since we have covered most of the parts on how to run a training session we fill in the whole function immediately.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">smartstart.algorithms.qlearning</span> <span class="kn">import</span> <span class="n">QLearning</span>
+<span class="kn">from</span> <span class="nn">smartstart.smartexploration.smartexploration</span> <span class="kn">import</span> <span class="n">generate_smartstart_object</span>
+<span class="kn">from</span> <span class="nn">smartstart.environments.gridworld</span> <span class="kn">import</span> <span class="n">GridWorld</span>
+
+<span class="c1"># Define the task function for the experiment</span>
+<span class="k">def</span> <span class="nf">task</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="c1"># Reset the seed for random number generation</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+
+    <span class="c1"># Create environment</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">GridWorld</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">GridWorld</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">)</span>
+
+    <span class="c1"># Here we use a dict to define the parameters, this makes it easy to</span>
+    <span class="c1"># make sure the experiments use the same parameters</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="s1">&#39;epsilon&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="s1">&#39;num_episodes&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s1">&#39;max_steps&#39;</span><span class="p">:</span> <span class="mi">2500</span><span class="p">,</span>
+        <span class="s1">&#39;exploration&#39;</span><span class="p">:</span> <span class="n">QLearning</span><span class="o">.</span><span class="n">E_GREEDY</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Initialize agent, check params if it needs to use SmartStart or not</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;use_smart_start&#39;</span><span class="p">]:</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">generate_smartstart_object</span><span class="p">(</span><span class="n">QLearning</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">QLearning</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Train the agent, summary contains training data. Make sure to set the</span>
+    <span class="c1"># rendering and printing to False when multiple experiments run in</span>
+    <span class="c1"># parallel. Else it will consume a lot of computation power.</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                          <span class="n">render_episode</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                          <span class="n">print_results</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="c1"># Save the summary. The post_fix parameter can be used to create a unique</span>
+    <span class="c1">#  file name.</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">summary_dir</span><span class="p">,</span> <span class="n">post_fix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Some important things to note here are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>We set the seed of the <code class="xref py py-mod docutils literal"><span class="pre">random</span></code> and <code class="xref py py-mod docutils literal"><span class="pre">np.random</span></code> modules at the begin of our task. The reason for this is the way how multiprocessing works in python. When a function is ran in parallel, each process needs access to the already defined values and imported modules. Python makes a snapshot of the current state and uses that snapshot for each process. <code class="xref py py-mod docutils literal"><span class="pre">random</span></code> and <code class="xref py py-mod docutils literal"><span class="pre">np.random</span></code> have already been imported when the snapshot is taken, so is the state of their random number generator! So each process will generate the exact same numbers when the seed is not reset.</li>
+<li>We use an if loop to choose between using SmartStart and not. Since we want the rest of the parameters to be equal it is better to use a dictionary to supply the keyword arguments then filling them in two times.</li>
+<li>The summary is saved in the directory. The default name of a summary is algorithm plus environment name and with SmartStart prefixed with SmartStart. In this example the summaries will be named <cite>QLearning_GridWorldMedium</cite> and <cite>SmartStart_QLearning_GridWorldMedium</cite>. With the post_fix argument a unique filename can be created. In this case we only add the <code class="docutils literal"><span class="pre">params['run']</span></code> parameter, which is useful when each experiment is performed multiple times. Since all the parameters are the same for that case <code class="docutils literal"><span class="pre">params['run]</span></code> is added to give it a unique identifier. When you are using different alpha’s for example you would add <code class="docutils literal"><span class="pre">alpha=params['alpha']</span></code> to the post-fix for example.</li>
+</ul>
+</div></blockquote>
+<p>We can now define our parameter grid and run the experiment. The <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.experimenter.run_experiment" title="smartstart.utilities.experimenter.run_experiment"><code class="xref py py-meth docutils literal"><span class="pre">run_experiment()</span></code></a> method takes next to the parameter grid the number of processes to run in parallel, when this value is set to <code class="docutils literal"><span class="pre">-1</span></code> the number of processes will be equal to the number of cpu-cores. This means all the cores will be used for the experiment.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smartstart.utilities.experimenter</span> <span class="kn">import</span> <span class="n">run_experiment</span>
+
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span>
+    <span class="s1">&#39;num_exp&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s1">&#39;use_smart_start&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">run_experiment</span><span class="p">(</span><span class="n">param_grid</span><span class="p">,</span> <span class="n">n_processes</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A full code example can be found here: <a class="reference internal" href="examples.html#experimenter-example"><span class="std std-ref">Experimenter</span></a>.</p>
+</div>
+<div class="section" id="plotting-results">
+<h2>Plotting Results<a class="headerlink" href="#plotting-results" title="Permalink to this headline">¶</a></h2>
+<p>After we have run our experiment we want to visualize the results. This can again be done with our <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.plot_summary" title="smartstart.utilities.plot.plot_summary"><code class="xref py py-meth docutils literal"><span class="pre">plot_summary()</span></code></a> method. We have discussed all the methods used for plotting results, this time there are a few differences. The code below shows how to plot the results obtained with the previous experiment</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">smartstart.utilities.plot</span> <span class="kn">import</span> <span class="n">plot_summary</span><span class="p">,</span> \
+    <span class="n">mean_reward_std_episode</span><span class="p">,</span> <span class="n">steps_episode</span><span class="p">,</span> <span class="n">show_plot</span>
+<span class="kn">from</span> <span class="nn">smartstart.utilities.utilities</span> <span class="kn">import</span> <span class="n">get_data_directory</span>
+
+<span class="c1"># Get directory where the summaries are saved. Since it is the same folder as</span>
+<span class="c1">#  the experimenter we can use the get_data_directory method</span>
+<span class="n">summary_dir</span> <span class="o">=</span> <span class="n">get_data_directory</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+<span class="c1"># Define the files list</span>
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">summary_dir</span><span class="p">,</span> <span class="s2">&quot;QLearning_GridWorldMedium&quot;</span><span class="p">),</span>
+         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">summary_dir</span><span class="p">,</span> <span class="s2">&quot;SmartStart_QLearning_GridWorldMedium&quot;</span><span class="p">)]</span>
+
+<span class="n">legend</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Q-Learning&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartStart Q-Learning&quot;</span><span class="p">]</span>
+
+<span class="c1"># We are going to save the plots in img folder</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;img&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot average reward and standard deviation per episode</span>
+<span class="c1"># When an output directory is supplied the plots will not be rendered with</span>
+<span class="c1"># a title. The title is used as filename for the plot.</span>
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">files</span><span class="p">,</span>
+             <span class="n">mean_reward_std_episode</span><span class="p">,</span>
+             <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Q-Learning GridWorldMedium Average Reward per Episode&quot;</span><span class="p">,</span>
+             <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+             <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+
+<span class="n">plot_summary</span><span class="p">(</span><span class="n">files</span><span class="p">,</span>
+             <span class="n">steps_episode</span><span class="p">,</span>
+             <span class="n">ma_window</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Q-Learning GridWorldMedium Steps per Episode&quot;</span><span class="p">,</span>
+             <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+             <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+
+<span class="n">show_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Things to note here:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The filenames in the file directory are defined without the <code class="docutils literal"><span class="pre">_*.json</span></code> where the asterix is any of the numbers. You have to supply the filenames like this. The <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.plot_summary" title="smartstart.utilities.plot.plot_summary"><code class="xref py py-meth docutils literal"><span class="pre">plot_summary()</span></code></a> method will search for all files that start with the provided filepath and anything after that until the .json. All the files found with that pattern will be averaged and plotted as one line.</li>
+<li>We have added a legend to the plots</li>
+<li>An output directory for the plots is defined, when the output_dir argument is used in the <a class="reference internal" href="source/smartstart.utilities.html#smartstart.utilities.plot.plot_summary" title="smartstart.utilities.plot.plot_summary"><code class="xref py py-meth docutils literal"><span class="pre">plot_summary()</span></code></a> method the figures will be automatically saved in that directory.</li>
+<li>This time we use the <code class="xref py py-meth docutils literal"><span class="pre">average_reward_std_episode()</span></code> type instead of <code class="xref py py-meth docutils literal"><span class="pre">average_reward_episode()</span></code>. Since we have multiple results per experiment this is a good way to show the variation in the results.</li>
+<li>The format for the step per episode plot is .png instead of the standard and preferred format .eps. The reason for this is the that .eps can’t save the transparent area around the mean and will become opaque. You can try it out to see for yourself.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="setup.html" class="btn btn-neutral" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, IHMC &amp; Bart Keulen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

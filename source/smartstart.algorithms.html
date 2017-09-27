@@ -1,0 +1,1335 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smartstart.algorithms package &mdash; Smart Exploration 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Smart Exploration 0.0.1 documentation" href="../index.html"/>
+        <link rel="up" title="smartstart package" href="smartstart.html"/>
+        <link rel="next" title="smartstart.environments package" href="smartstart.environments.html"/>
+        <link rel="prev" title="smartstart package" href="smartstart.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Smart Exploration
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="smartstart.html">smartstart package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="smartstart.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smartstart.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.algorithms.counter">smartstart.algorithms.counter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.algorithms.qlearning">smartstart.algorithms.qlearning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.algorithms.sarsa">smartstart.algorithms.sarsa module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.algorithms.tdlearning">smartstart.algorithms.tdlearning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.algorithms.valueiteration">smartstart.algorithms.valueiteration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.environments.html">smartstart.environments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.smartexploration.html">smartstart.smartexploration package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.utilities.html">smartstart.utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smartstart.html#module-smartstart">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Smart Exploration</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="smartstart.html">smartstart package</a> &raquo;</li>
+        
+      <li>smartstart.algorithms package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/smartstart.algorithms.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="smartstart-algorithms-package">
+<h1>smartstart.algorithms package<a class="headerlink" href="#smartstart-algorithms-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-smartstart.algorithms.counter">
+<span id="smartstart-algorithms-counter-module"></span><h2>smartstart.algorithms.counter module<a class="headerlink" href="#module-smartstart.algorithms.counter" title="Permalink to this headline">¶</a></h2>
+<p>Counter module</p>
+<p>Describes Counter base class for TD-learning algorithms</p>
+<dl class="class">
+<dt id="smartstart.algorithms.counter.Counter">
+<em class="property">class </em><code class="descname">Counter</code><span class="sig-paren">(</span><em>env</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.counter.Counter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for visitation counts.</p>
+<p>Base class for keeping track of obs-action-obs_tp1 visitation counts in
+discrete state and discrete action reinforcement learning algorithms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env</strong> (<a class="reference internal" href="smartstart.environments.html#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-obj docutils literal"><span class="pre">Environment</span></code></a>) – environment</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.algorithms.counter.Counter.env">
+<code class="descname">env</code><a class="headerlink" href="#smartstart.algorithms.counter.Counter.env" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="smartstart.environments.html#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-obj docutils literal"><span class="pre">Environment</span></code></a> – environment</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.counter.Counter.count_map">
+<code class="descname">count_map</code><a class="headerlink" href="#smartstart.algorithms.counter.Counter.count_map" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">collections.defaultdict</span></code> (nested) – visitation counts for each obs-action-obs_tp1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.counter.Counter.total">
+<code class="descname">total</code><a class="headerlink" href="#smartstart.algorithms.counter.Counter.total" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – total number of visitation counts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.counter.Counter.get_count">
+<code class="descname">get_count</code><span class="sig-paren">(</span><em>obs</em>, <em>action=None</em>, <em>obs_tp1=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.counter.Counter.get_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns visitation count</p>
+<p>Visitation count for obs, obs-action or obs-action-obs_tp1 is returned.
+User can leave action and/or obs_tp1 empty to return a higher level
+count.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When action is None and obs_tp1 is not None, the count for just obs
+will be returned and obs_tp1 will not be taken into account.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action (Default value = None)</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation (Default value = None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Visitation count</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.counter.Counter.get_count_map">
+<code class="descname">get_count_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.counter.Counter.get_count_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns state count map for environment.</p>
+<p>Count-map will be a numpy array equal to the width (w) and height (h)
+of the environment. Each entry (state) will hold the count associated
+with that state.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only works for 2D-environments that have a w and h attribute.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Count map</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.counter.Counter.get_density">
+<code class="descname">get_density</code><span class="sig-paren">(</span><em>obs</em>, <em>action=None</em>, <em>obs_tp1=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.counter.Counter.get_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density for obs, obs-action or obs-action-obs_tp1 is returned.</p>
+<p>Density is calculated by dividing the count with the total count.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action (Default value = None)</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation (Default value = None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Density</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.counter.Counter.get_density_map">
+<code class="descname">get_density_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.counter.Counter.get_density_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns state density map for environment</p>
+<p>Density-map will be a numpy array equal to the width (w) and height (h)
+of the environment. Each entry (state) will hold the density
+associated with that state.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only works for 2D-environments that have a w and h attribute.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Density map</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.counter.Counter.increment">
+<code class="descname">increment</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>obs_tp1</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.counter.Counter.increment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment count for obs-action-obs_tp1 transition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – current observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – current action</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.algorithms.qlearning">
+<span id="smartstart-algorithms-qlearning-module"></span><h2>smartstart.algorithms.qlearning module<a class="headerlink" href="#module-smartstart.algorithms.qlearning" title="Permalink to this headline">¶</a></h2>
+<p>Q-Learning module</p>
+<p>Module defining classes for Q-Learning and Q(lambda).</p>
+<p>See ‘Reinforcement Learning: An Introduction by Richard S. Sutton and
+Andrew G. Barto for more information.</p>
+<dl class="class">
+<dt id="smartstart.algorithms.qlearning.QLearning">
+<em class="property">class </em><code class="descname">QLearning</code><span class="sig-paren">(</span><em>env</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.qlearning.QLearning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">smartstart.algorithms.tdlearning.TDLearning</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-obj docutils literal"><span class="pre">TDLearning</span></code></a>) – environment</li>
+<li><strong>*args</strong> – see parent <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">TDLearning</span></code></a></li>
+<li><strong>**kwargs</strong> – see parent <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">TDLearning</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smartstart.algorithms.qlearning.QLearning.get_next_q_action">
+<code class="descname">get_next_q_action</code><span class="sig-paren">(</span><em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.qlearning.QLearning.get_next_q_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Off-policy action selection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – Next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – Boolean is True for terminal state</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – Q-value for obs_tp1</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – action_tp1</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smartstart.algorithms.qlearning.QLearningLambda">
+<em class="property">class </em><code class="descname">QLearningLambda</code><span class="sig-paren">(</span><em>env</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.qlearning.QLearningLambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearningLambda" title="smartstart.algorithms.tdlearning.TDLearningLambda"><code class="xref py py-class docutils literal"><span class="pre">smartstart.algorithms.tdlearning.TDLearningLambda</span></code></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Does not work properly, because q-learning is off-policy standard
+eligibility traces might fail.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-obj docutils literal"><span class="pre">TDLearning</span></code></a>) – environment</li>
+<li><strong>*args</strong> – see parent <code class="xref py py-class docutils literal"><span class="pre">TDLearningLambda</span></code></li>
+<li><strong>**kwargs</strong> – see parent <code class="xref py py-class docutils literal"><span class="pre">TDLearningLambda</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smartstart.algorithms.qlearning.QLearningLambda.get_next_q_action">
+<code class="descname">get_next_q_action</code><span class="sig-paren">(</span><em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.qlearning.QLearningLambda.get_next_q_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Off-policy action selection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – Next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – Boolean is True for terminal state</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – Q-value for obs_tp1</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – action_tp1</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.algorithms.sarsa">
+<span id="smartstart-algorithms-sarsa-module"></span><h2>smartstart.algorithms.sarsa module<a class="headerlink" href="#module-smartstart.algorithms.sarsa" title="Permalink to this headline">¶</a></h2>
+<p>SARSA module</p>
+<p>Module defining classes for SARSA and SARSA(lambda).</p>
+<p>See ‘Reinforcement Learning: An Introduction by Richard S. Sutton and
+Andrew G. Barto for more information.</p>
+<dl class="class">
+<dt id="smartstart.algorithms.sarsa.SARSA">
+<em class="property">class </em><code class="descname">SARSA</code><span class="sig-paren">(</span><em>env</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.sarsa.SARSA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">smartstart.algorithms.tdlearning.TDLearning</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-obj docutils literal"><span class="pre">TDLearning</span></code></a>) – environment</li>
+<li><strong>*args</strong> – see parent <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">TDLearning</span></code></a></li>
+<li><strong>**kwargs</strong> – see parent <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">TDLearning</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smartstart.algorithms.sarsa.SARSA.get_next_q_action">
+<code class="descname">get_next_q_action</code><span class="sig-paren">(</span><em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.sarsa.SARSA.get_next_q_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>On-policy action selection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – Next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – Boolean is True for terminal state</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – Q-value for obs_tp1</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – action_tp1</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smartstart.algorithms.sarsa.SARSALambda">
+<em class="property">class </em><code class="descname">SARSALambda</code><span class="sig-paren">(</span><em>env</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.sarsa.SARSALambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearningLambda" title="smartstart.algorithms.tdlearning.TDLearningLambda"><code class="xref py py-class docutils literal"><span class="pre">smartstart.algorithms.tdlearning.TDLearningLambda</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-obj docutils literal"><span class="pre">TDLearning</span></code></a>) – environment</li>
+<li><strong>*args</strong> – see parent <code class="xref py py-class docutils literal"><span class="pre">TDLearningLambda</span></code></li>
+<li><strong>**kwargs</strong> – see parent <code class="xref py py-class docutils literal"><span class="pre">TDLearningLambda</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smartstart.algorithms.sarsa.SARSALambda.get_next_q_action">
+<code class="descname">get_next_q_action</code><span class="sig-paren">(</span><em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.sarsa.SARSALambda.get_next_q_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>On-policy action selection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – Next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – Boolean is True for terminal state</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – Q-value for obs_tp1</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – action_tp1</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.algorithms.tdlearning">
+<span id="smartstart-algorithms-tdlearning-module"></span><h2>smartstart.algorithms.tdlearning module<a class="headerlink" href="#module-smartstart.algorithms.tdlearning" title="Permalink to this headline">¶</a></h2>
+<p>Temporal-Difference module</p>
+<p>Describes TDLearning and TDLearningLambda base classes for temporal
+difference learning without and with eligibility traces.</p>
+<p>See ‘Reinforcement Learning: An Introduction by Richard S. Sutton and
+Andrew G. Barto for more information.</p>
+<dl class="class">
+<dt id="smartstart.algorithms.tdlearning.TDLearning">
+<em class="property">class </em><code class="descname">TDLearning</code><span class="sig-paren">(</span><em>env</em>, <em>num_episodes=1000</em>, <em>max_steps=1000</em>, <em>alpha=0.1</em>, <em>gamma=0.99</em>, <em>init_q_value=0.0</em>, <em>exploration='E-Greedy'</em>, <em>epsilon=0.1</em>, <em>temp=0.5</em>, <em>beta=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.algorithms.counter.Counter" title="smartstart.algorithms.counter.Counter"><code class="xref py py-class docutils literal"><span class="pre">smartstart.algorithms.counter.Counter</span></code></a></p>
+<p>Base class for temporal-difference methods</p>
+<p>Base class for temporal difference methods Q-Learning, SARSA,
+SARSA(lambda) and Q(lambda). Implements all common methods, specific
+methods to each algorithm have to be implemented in the child class.</p>
+<p>All the exploration methods are defined in this class and can be added by
+adding a new method that describes the exploration strategy. The
+exploration strategy must be added to the class attribute below and
+inserted in the get_action method.</p>
+<p>Currently 5 exploration methods are implemented; no exploration,
+epsilon-greedy, boltzmann, count-based and ucb. Another exploration
+method is optimism in the face of uncertainty which can be used by
+setting the init_q_value &gt; 0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="smartstart.environments.html#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-obj docutils literal"><span class="pre">Environment</span></code></a>) – environment</li>
+<li><strong>num_episodes</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – number of episodes</li>
+<li><strong>max_steps</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – maximum number of steps per episode</li>
+<li><strong>alpha</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – learning step-size</li>
+<li><strong>gamma</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – discount factor</li>
+<li><strong>init_q_value</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – initial q-value</li>
+<li><strong>exploration</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – exploration strategy, see class attributes for available options</li>
+<li><strong>epsilon</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">Scheduler</span></code>) – epsilon-greedy parameter</li>
+<li><strong>temp</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – temperature parameter for Boltzmann exploration</li>
+<li><strong>beta</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – count-based exploration parameter</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.num_episodes">
+<code class="descname">num_episodes</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.num_episodes" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – number of episodes</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.max_steps">
+<code class="descname">max_steps</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.max_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – maximum number of steps per episode</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.alpha">
+<code class="descname">alpha</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – learning step-size</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.gamma">
+<code class="descname">gamma</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – discount factor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.init_q_value">
+<code class="descname">init_q_value</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.init_q_value" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – initial q-value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.Q">
+<code class="descname">Q</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.Q" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code> – Numpy ndarray holding the q-values for all state-action pairs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.exploration">
+<code class="descname">exploration</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.exploration" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – exploration strategy, see class attributes for available options</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.epsilon">
+<code class="descname">epsilon</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">Scheduler</span></code> – epsilon-greedy parameter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.temp">
+<code class="descname">temp</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.temp" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – temperature parameter for Boltzmann exploration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.beta">
+<code class="descname">beta</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.beta" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – count-based exploration parameter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.BOLTZMANN">
+<code class="descname">BOLTZMANN</code><em class="property"> = 'Boltzmann'</em><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.BOLTZMANN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.COUNT_BASED">
+<code class="descname">COUNT_BASED</code><em class="property"> = 'Count-Based'</em><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.COUNT_BASED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.E_GREEDY">
+<code class="descname">E_GREEDY</code><em class="property"> = 'E-Greedy'</em><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.E_GREEDY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.NONE">
+<code class="descname">NONE</code><em class="property"> = 'None'</em><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.NONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.UCB">
+<code class="descname">UCB</code><em class="property"> = 'UCB'</em><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.UCB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.get_action">
+<code class="descname">get_action</code><span class="sig-paren">(</span><em>obs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.get_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns action for obs</p>
+<p>Return policy based on exploration strategy of the TDLearning object.</p>
+<p>When an exploration method is added make sure the method is added in
+the class attributes and below for ease of usage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <cite>np.ndarray</cite>) – observation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">next action</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">NotImplementedError</span></code> – Please choose from the available exploration methods, see class
+attributes.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.get_next_q_action">
+<code class="descname">get_next_q_action</code><span class="sig-paren">(</span><em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.get_next_q_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns next Q-Value and next action</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Has to be implemented in child class.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation</li>
+<li><strong>done</strong> (<em>bool</em>) – True when obs_tp1 is terminal</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">NotImplementedError</span></code> – use a subclass of TDLearning like QLearning or SARSA.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.get_q_map">
+<code class="descname">get_q_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.get_q_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns value map for environment</p>
+<p>Value-map will be a numpy array equal to the width and height
+of the environment. Each entry (state) will hold the maximum
+action-value function associated with that state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">value map</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.get_q_value">
+<code class="descname">get_q_value</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.get_q_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Q-value for obs-action pair</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<em>int</em>) – action</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Q-Value</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.get_q_values">
+<code class="descname">get_q_values</code><span class="sig-paren">(</span><em>obs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.get_q_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Q-values and actions for observation obs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – Q-values</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – actions associated with each q-value in q_values</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets Q-function</p>
+<p>The Q-function is set to the initial q-value for very state-action pair.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.take_step">
+<code class="descname">take_step</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>episode</em>, <em>render=False</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.take_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a step and updates</p>
+<p>Action action is executed and response is observed. Response is then
+used to update the value function. Data is stored in Episode object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</li>
+<li><strong>episode</strong> (<code class="xref py py-obj docutils literal"><span class="pre">Episode</span></code>) – Data container for all the episode data</li>
+<li><strong>render</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when rendering every time-step (Default value = False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <cite>np.ndarray</cite> – next observation</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – next action</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code> – done, True when obs_tp1 is terminal state</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code> – render, True when rendering must continue</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>render=False</em>, <em>render_episode=False</em>, <em>print_results=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a training experiment</p>
+<p>Training experiment runs for self.num_episodes and each episode takes
+a maximum of self.max_steps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>render</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when rendering every time-step (Default value = False)</li>
+<li><strong>render_episode</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when rendering every episode (Default value = False)</li>
+<li><strong>print_results</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when printing results to console (Default value = True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Summary Object containing the training data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearning.update_q_value">
+<code class="descname">update_q_value</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>reward</em>, <em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearning.update_q_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Q-value for obs-action pair</p>
+<p>Updates Q-value according to the Bellman equation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</li>
+<li><strong>reward</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – reward</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when obs_tp1 is terminal</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">updated Q-value and next action</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda">
+<em class="property">class </em><code class="descname">TDLearningLambda</code><span class="sig-paren">(</span><em>env</em>, <em>lamb=0.75</em>, <em>threshold_traces=0.001</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.algorithms.tdlearning.TDLearning" title="smartstart.algorithms.tdlearning.TDLearning"><code class="xref py py-class docutils literal"><span class="pre">smartstart.algorithms.tdlearning.TDLearning</span></code></a></p>
+<p>Base class for temporal difference methods using eligibility traces</p>
+<p>Child class of TDLearning, update_q_value and train method are modified
+for using eligibility traces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<code class="xref py py-obj docutils literal"><span class="pre">Environment</span></code>) – environment</li>
+<li><strong>lamb</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – eligibility traces decay parameter</li>
+<li><strong>threshold_traces</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – threshold for activation of trace</li>
+<li><strong>*args</strong> – see parent class TDLearning</li>
+<li><strong>**kwargs</strong> – see parent class TDLearning</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda.lamb">
+<code class="descname">lamb</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda.lamb" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – eligibility traces decay parameter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda.threshold_traces">
+<code class="descname">threshold_traces</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda.threshold_traces" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – threshold for activation of trace</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda.traces">
+<code class="descname">traces</code><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda.traces" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code> – numpy ndarray holding the traces for each state-action pair</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda.get_next_q_action">
+<code class="descname">get_next_q_action</code><span class="sig-paren">(</span><em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda.get_next_q_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns next Q-Value and action</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Has to be implemented in child class.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <cite>np.ndarray</cite>) – next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when obs_tp1 is terminal</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li>Use a subclass of TDLearning like</li>
+<li>QLearningLambda or SARSALambda.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>render=False</em>, <em>render_episode=False</em>, <em>print_results=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a training experiment</p>
+<p>Training experiment runs for self.num_episodes and each episode takes
+a maximum of self.max_steps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>render</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when rendering every time-step (Default value = False)</li>
+<li><strong>render_episode</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when rendering every episode (Default value = False)</li>
+<li><strong>print_results</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when printing results to console (Default value = True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Summary Object containing the training data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.tdlearning.TDLearningLambda.update_q_value">
+<code class="descname">update_q_value</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>reward</em>, <em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.tdlearning.TDLearningLambda.update_q_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Q-value for obs-action pair</p>
+<p>Updates Q-value according to the Bellman equation with eligibility
+traces included.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <cite>np.ndarray</cite>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</li>
+<li><strong>reward</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – reward</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <cite>np.ndarray</cite>) – next observation</li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True when obs_tp1 is terminal</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">updated Q-value and next action</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.algorithms.valueiteration">
+<span id="smartstart-algorithms-valueiteration-module"></span><h2>smartstart.algorithms.valueiteration module<a class="headerlink" href="#module-smartstart.algorithms.valueiteration" title="Permalink to this headline">¶</a></h2>
+<p>Value Iteration module</p>
+<p>Describes ValueIteration class.</p>
+<p>See ‘Reinforcement Learning: An Introduction by Richard S. Sutton and
+Andrew G. Barto for more information.</p>
+<dl class="class">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration">
+<em class="property">class </em><code class="descname">ValueIteration</code><span class="sig-paren">(</span><em>env</em>, <em>gamma=0.99</em>, <em>min_error=1e-05</em>, <em>max_itr=1000</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Value Iteration method</p>
+<p>Value iteration is a dynamic programming method. Requires full knowledge
+of the environment, i.e. transition model and reward function.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This implementation only works with one goal (terminal) state</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="smartstart.environments.html#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-obj docutils literal"><span class="pre">Environment</span></code></a>) – environment</li>
+<li><strong>gamma</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – discount factor</li>
+<li><strong>min_error</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – minimum error for convergence of value iteration</li>
+<li><strong>max_itr</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – maximum number of iteration of value iteration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.env">
+<code class="descname">env</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.env" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="smartstart.environments.html#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-obj docutils literal"><span class="pre">Environment</span></code></a> – environment</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.gamma">
+<code class="descname">gamma</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – discount factor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.min_error">
+<code class="descname">min_error</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.min_error" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – minimum error for convergence of value iteration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.max_itr">
+<code class="descname">max_itr</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.max_itr" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – maximum number of iteration of value iteration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.V">
+<code class="descname">V</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.V" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">collections.defaultdict</span></code> – value function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.T">
+<code class="descname">T</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.T" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">collections.defaultdict</span></code> – transition model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.R">
+<code class="descname">R</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.R" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">collections.defaultdict</span></code> – reward function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.obses">
+<code class="descname">obses</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.obses" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">set</span></code> – visited states</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.goal">
+<code class="descname">goal</code><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.goal" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code> – goal state (terminal state)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.add_obs">
+<code class="descname">add_obs</code><span class="sig-paren">(</span><em>obs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.add_obs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds observation to the obses set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.get_action">
+<code class="descname">get_action</code><span class="sig-paren">(</span><em>obs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.get_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the policy for a certain observation</p>
+<p>Chooses the action that has the highest value function. When multiple
+actions have the same value function a random action is chosen from
+them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">action</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.get_transition">
+<code class="descname">get_transition</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>obs_tp1=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.get_transition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns transition probability of obs-action-obs_tp1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation (Default value = None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Transition probability</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.get_value_map">
+<code class="descname">get_value_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.get_value_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns value map for environment</p>
+<p>Value-map will be a numpy array equal to the width (w) and height (h) of the environment.
+Each entry (state) will hold the value function associated with that
+state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">value map</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run value iteration method</p>
+<p>Runs value iteration until converged or maximum number of iterations is
+reached. Method iterates through all visited states (self.obses).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset internal state</p>
+<p>The following attributes are cleared:
+- self.V: Value function
+- self.T: Transition model
+- self.R: Reward function
+- self.obses: Visited observation
+- self.goal: Goal state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.set_goal">
+<code class="descname">set_goal</code><span class="sig-paren">(</span><em>obs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.set_goal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set goal state</p>
+<p>Goal state is added to the obses list and value function for the goal
+state is set to zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.set_reward">
+<code class="descname">set_reward</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>obs_tp1</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.set_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set reward for obs-action-obs_tp1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation</li>
+<li><strong>value</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – reward</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.algorithms.valueiteration.ValueIteration.set_transition">
+<code class="descname">set_transition</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>obs_tp1</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.algorithms.valueiteration.ValueIteration.set_transition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set transition of obs-action-obs_tp1</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All transitions for a obs-action pair should add up to 1. This
+is not checked!</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – observation</li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – next observation</li>
+<li><strong>value</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – transition probability</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.algorithms">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-smartstart.algorithms" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smartstart.environments.html" class="btn btn-neutral float-right" title="smartstart.environments package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smartstart.html" class="btn btn-neutral" title="smartstart package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, IHMC &amp; Bart Keulen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

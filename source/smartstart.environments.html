@@ -1,0 +1,911 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smartstart.environments package &mdash; Smart Exploration 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Smart Exploration 0.0.1 documentation" href="../index.html"/>
+        <link rel="up" title="smartstart package" href="smartstart.html"/>
+        <link rel="next" title="smartstart.smartexploration package" href="smartstart.smartexploration.html"/>
+        <link rel="prev" title="smartstart.algorithms package" href="smartstart.algorithms.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Smart Exploration
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="smartstart.html">smartstart package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="smartstart.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smartstart.algorithms.html">smartstart.algorithms package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smartstart.environments package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.environments.environment">smartstart.environments.environment module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.environments.generate_gridworld">smartstart.environments.generate_gridworld module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.environments.gridworld">smartstart.environments.gridworld module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.environments.gridworldvisualizer">smartstart.environments.gridworldvisualizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.environments.presets">smartstart.environments.presets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.environments">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.smartexploration.html">smartstart.smartexploration package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.utilities.html">smartstart.utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smartstart.html#module-smartstart">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Smart Exploration</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="smartstart.html">smartstart package</a> &raquo;</li>
+        
+      <li>smartstart.environments package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/smartstart.environments.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="smartstart-environments-package">
+<h1>smartstart.environments package<a class="headerlink" href="#smartstart-environments-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-smartstart.environments.environment">
+<span id="smartstart-environments-environment-module"></span><h2>smartstart.environments.environment module<a class="headerlink" href="#module-smartstart.environments.environment" title="Permalink to this headline">¶</a></h2>
+<p>Environment module</p>
+<p>Contains base classes for constructing environments and visualizers</p>
+<dl class="class">
+<dt id="smartstart.environments.environment.Environment">
+<em class="property">class </em><code class="descname">Environment</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for constructing environments</p>
+<dl class="method">
+<dt id="smartstart.environments.environment.Environment.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><em>start_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.environment.Environment.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the agent to the start state</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>start_state</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>, optional) – Start state, if not supplied standard start state is used</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.environment.Environment.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.environment.Environment.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a step in the environment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">float</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – action</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">NotImplementedError</span></code> – use a subclass of
+<a class="reference internal" href="#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-class docutils literal"><span class="pre">Environment</span></code></a> like
+<a class="reference internal" href="#smartstart.environments.gridworld.GridWorld" title="smartstart.environments.gridworld.GridWorld"><code class="xref py py-class docutils literal"><span class="pre">GridWorld</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.environment.Environment.visualizer">
+<code class="descname">visualizer</code><a class="headerlink" href="#smartstart.environments.environment.Environment.visualizer" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#smartstart.environments.environment.Visualizer" title="smartstart.environments.environment.Visualizer"><code class="xref py py-obj docutils literal"><span class="pre">Visualizer</span></code></a> – visualizer of the agent, value function, density and/or console.</p>
+<p>Sets the name of the visualizer to be equal to the environments name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smartstart.environments.environment.Visualizer">
+<em class="property">class </em><code class="descname">Visualizer</code><a class="headerlink" href="#smartstart.environments.environment.Visualizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="smartstart.environments.environment.Visualizer.CONSOLE">
+<code class="descname">CONSOLE</code><em class="property"> = 0</em><a class="headerlink" href="#smartstart.environments.environment.Visualizer.CONSOLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.environment.Visualizer.DENSITY">
+<code class="descname">DENSITY</code><em class="property"> = 3</em><a class="headerlink" href="#smartstart.environments.environment.Visualizer.DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.environment.Visualizer.LIVE_AGENT">
+<code class="descname">LIVE_AGENT</code><em class="property"> = 1</em><a class="headerlink" href="#smartstart.environments.environment.Visualizer.LIVE_AGENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.environment.Visualizer.VALUE_FUNCTION">
+<code class="descname">VALUE_FUNCTION</code><em class="property"> = 2</em><a class="headerlink" href="#smartstart.environments.environment.Visualizer.VALUE_FUNCTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.environment.Visualizer.add_visualizer">
+<code class="descname">add_visualizer</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.environment.Visualizer.add_visualizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a window to the visualizer</p>
+<p>Available windows can be found in the implemented class attributes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – visualizers to add. Possible visualizers are defined in the
+class attributes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">NotImplementedError</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.environment.Visualizer.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>value_map=None</em>, <em>density_map=None</em>, <em>message=None</em>, <em>close=False</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.environment.Visualizer.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the current state of the training algorithm</p>
+<p>The render method should include all functionality to close the
+visualizer. When the close parameter is True the visualizer should be
+closed and send back to the learning algorithm to stop rendering.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value_map</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>, optional) – value function map</li>
+<li><strong>density_map</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>, optional) – density map</li>
+<li><strong>message</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>: optional) – message to print to the console window</li>
+<li><strong>close</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – True if the visualizer has to be closed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the agent has to keep rendering</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">NotImplementedError</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.environments.generate_gridworld">
+<span id="smartstart-environments-generate-gridworld-module"></span><h2>smartstart.environments.generate_gridworld module<a class="headerlink" href="#module-smartstart.environments.generate_gridworld" title="Permalink to this headline">¶</a></h2>
+<p>Random GridWorld Generator module</p>
+<p>Defines methods necessary for generating a random gridworld. The generated
+gridworld is a numpy array with dtype int where each entry is a state.</p>
+<dl class="docutils">
+<dt>Attributes in the gridworld are defined with the following types:</dt>
+<dd><ol class="first last arabic simple" start="0">
+<li>State</li>
+<li>Wall</li>
+<li>Start state</li>
+<li>Goal state</li>
+</ol>
+</dd>
+</dl>
+<p>States will have a grid size of 3x3. States are separated by a 1x3 of 3x1
+wall that can be turned in to a state.</p>
+<dl class="function">
+<dt id="smartstart.environments.generate_gridworld.generate_gridworld">
+<code class="descname">generate_gridworld</code><span class="sig-paren">(</span><em>size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.generate_gridworld.generate_gridworld" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a random GridWorld</p>
+<p>Generates a random GridWorld using a depth-first search (see <a class="reference external" href="https://en.wikipedia.org/wiki/Maze_generation_algorithm#Depth-first_search">Wikipedia</a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>) – size of the GridWorld (default = (100, 100))</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – name (= <cite>Random</cite>)</li>
+<li><a class="reference internal" href="#smartstart.environments.gridworld.GridWorld" title="smartstart.environments.gridworld.GridWorld"><code class="xref py py-obj docutils literal"><span class="pre">GridWorld</span></code></a> – new GridWorld object</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – scale (= 1)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.environments.gridworld">
+<span id="smartstart-environments-gridworld-module"></span><h2>smartstart.environments.gridworld module<a class="headerlink" href="#module-smartstart.environments.gridworld" title="Permalink to this headline">¶</a></h2>
+<p>GridWorld module</p>
+<dl class="class">
+<dt id="smartstart.environments.gridworld.GridWorld">
+<em class="property">class </em><code class="descname">GridWorld</code><span class="sig-paren">(</span><em>name</em>, <em>layout</em>, <em>T_prob=0.0</em>, <em>wall_reset=False</em>, <em>scale=5</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.environments.environment.Environment" title="smartstart.environments.environment.Environment"><code class="xref py py-class docutils literal"><span class="pre">smartstart.environments.environment.Environment</span></code></a></p>
+<p>GridWorld environment</p>
+<p>Creates a GridWorld environment with the layout specified by the user. A
+layout is is double numpy array, where each entry is a state with a
+certain type. The possible types are:</p>
+<blockquote>
+<div><ol class="arabic simple" start="0">
+<li>State</li>
+<li>Wall</li>
+<li>Start state</li>
+<li>Goal state</li>
+</ol>
+</div></blockquote>
+<p>Example layout = [[3, 0, 0],[1, 1, 0],[1, 1, 0],[2, 0, 0]]</p>
+<p>The agent can take discrete steps in 4 directions; up, right, down and
+left. When no transition probability is defined (T_prob=0) the
+environment will be deterministic (i.e. action up will bring the agent to
+state above the current state). When a transition probability is defined
+there is T_prob change the agent will choose a random action from the
+four actions.</p>
+<p>When the agent tries to step through the wall it will count as a step but
+the agent will stay in the same state. When wall_reset is set to True the
+environment will return done to the learning algorithm.</p>
+<p>A reward of 1. is given for reaching the goal state and the environment will
+return done=True to the learning algorithm.</p>
+<p>Five different preset gridworlds are defined; EASY, MEDIUM, HARD, EXTREME
+and IMPOSSIBRUUHHH. The first three have a simple layout like,
+the EXTREME maze is a more complicated maze and the IMPOSSIBRUUHHH
+generates a random maze with a specified size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – name for the environment, class name will be prefixed to this name</li>
+<li><strong>layout</strong> (double <code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <cite>int</cite> or <cite>np.ndarray</cite>) – layout of the gridworld</li>
+<li><strong>T_prob</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – transition probability</li>
+<li><strong>wall_reset</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – when True, the environment will return done when a wall is hit</li>
+<li><strong>scale</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – scale factor, gridworld will become layout * scale in size</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.environments.gridworld.GridWorld.EASY">
+<code class="descname">EASY</code><em class="property"> = 0</em><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.EASY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworld.GridWorld.EXTREME">
+<code class="descname">EXTREME</code><em class="property"> = 3</em><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.EXTREME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworld.GridWorld.HARD">
+<code class="descname">HARD</code><em class="property"> = 2</em><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.HARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworld.GridWorld.IMPOSSIBRUUHHH">
+<code class="descname">IMPOSSIBRUUHHH</code><em class="property"> = 4</em><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.IMPOSSIBRUUHHH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworld.GridWorld.MEDIUM">
+<code class="descname">MEDIUM</code><em class="property"> = 1</em><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.MEDIUM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.close_render">
+<code class="descname">close_render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.close_render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the visualizer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the visualizer was closed properly</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="smartstart.environments.gridworld.GridWorld.generate">
+<em class="property">classmethod </em><code class="descname">generate</code><span class="sig-paren">(</span><em>type=0</em>, <em>size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a gridworld according to the presets</p>
+<p>Preset are given in <a class="reference internal" href="#module-smartstart.environments.presets" title="smartstart.environments.presets"><code class="xref py py-mod docutils literal"><span class="pre">smartstart.environments.presets</span></code></a>.
+Presets contain the name, layout and scale of the gridworld.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>type</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – gridworld type as defined in the class attributes (Default
+value = EASY)</li>
+<li><strong>size</strong> (<code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – used for generating a random gridworld when the type is
+IMPOSSIBRUUHH.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">new gridworld environment</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">GridWorld</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.get_T_R">
+<code class="descname">get_T_R</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.get_T_R" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return transition model and reward function</p>
+<p>Creates a the transition model and reward function for the gridworld
+and transition probability. Can be used by dynamic programming, like
+<a class="reference internal" href="smartstart.algorithms.html#smartstart.algorithms.valueiteration.ValueIteration" title="smartstart.algorithms.valueiteration.ValueIteration"><code class="xref py py-class docutils literal"><span class="pre">ValueIteration</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">collections.defaultdict</span></code> – transition model</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">collections.defaultdict</span></code> – reward function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.get_all_states">
+<code class="descname">get_all_states</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.get_all_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the states of the gridworld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">states</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">set</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.get_grid">
+<code class="descname">get_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.get_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns copy of the gridworld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Copy of the gridworld</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.possible_actions">
+<code class="descname">possible_actions</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.possible_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the available actions for state</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">State is not used in this environment, might be necessary for
+more complicated environments where states don’t have the same
+set actions.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – state</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">containing available actions for state</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the environment</p>
+<p>If no visualizer is defined prints it to the console.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – See <code class="xref py py-class docutils literal"><span class="pre">GridWorldVisualizer</span></code> for details</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the agent has to stop rendering</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><em>start_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.reset" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>start_state</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>, optional) – (Default value = None)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">state of the agent (start state)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworld.GridWorld.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworld.GridWorld.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a step in the environment</p>
+<p>Executes action and retrieves the new state. Determines if any wall
+is hit and if so goes back to previous state.</p>
+<p>Calculates the reward using the previous state, action and new state.
+Determines if the new state is terminal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – action</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code> – new state</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – reward</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code> – True if new state is terminal</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">dict</span></code> – Empty info dict (to make it equal to the step method in the OpenAI
+Gym)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.environments.gridworldvisualizer">
+<span id="smartstart-environments-gridworldvisualizer-module"></span><h2>smartstart.environments.gridworldvisualizer module<a class="headerlink" href="#module-smartstart.environments.gridworldvisualizer" title="Permalink to this headline">¶</a></h2>
+<p>GridWorld Visualizer module</p>
+<dl class="class">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer">
+<em class="property">class </em><code class="descname">GridWorldVisualizer</code><span class="sig-paren">(</span><em>env</em>, <em>name='GridWorld'</em>, <em>size=None</em>, <em>fps=60</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.environments.environment.Visualizer" title="smartstart.environments.environment.Visualizer"><code class="xref py py-class docutils literal"><span class="pre">smartstart.environments.environment.Visualizer</span></code></a></p>
+<p>Render the gridworld an optional extra visualizations. Available
+visualizers:</p>
+<blockquote>
+<div><ol class="arabic simple" start="0">
+<li>console</li>
+<li>live agent</li>
+<li>value function</li>
+<li>density</li>
+</ol>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env</strong> (<a class="reference internal" href="#smartstart.environments.gridworld.GridWorld" title="smartstart.environments.gridworld.GridWorld"><code class="xref py py-obj docutils literal"><span class="pre">GridWorld</span></code></a>) – GridWorld environment</li>
+<li><strong>name</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – visualizer name</li>
+<li><strong>size</strong> (<code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>) – size of each window in the visualizer (Default = (450, 450))</li>
+<li><strong>fps</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – frames per second for pygame</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.env">
+<code class="descname">env</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.env" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#smartstart.environments.gridworld.GridWorld" title="smartstart.environments.gridworld.GridWorld"><code class="xref py py-obj docutils literal"><span class="pre">GridWorld</span></code></a> – GridWorld environment</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.name">
+<code class="descname">name</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – visualizer name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.size">
+<code class="descname">size</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.size" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code> – size of each window in the visualizer (Default = (450, 450))</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.fps">
+<code class="descname">fps</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.fps" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – frames per second for pygame</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.screen">
+<code class="descname">screen</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.screen" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">pygame.Surface</span></code> – pygame surface for rendering</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.clock">
+<code class="descname">clock</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.clock" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">pygame.Clock</span></code> – pygame clock</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.grid">
+<code class="descname">grid</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code> – GridWorld grid</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.colors">
+<code class="descname">colors</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.colors" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">dict</span></code> – colors for rendering the GridWorld</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.messages">
+<code class="descname">messages</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.messages" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">collections.deque</span></code> – deque with messages to show in the console window (maxlen=29)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.active_visualizers">
+<code class="descname">active_visualizers</code><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.active_visualizers" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">set</span></code> – contain the visualizers to be used</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.add_visualizer">
+<code class="descname">add_visualizer</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.add_visualizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add visualizer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – visualizers to add, see class attributes for available visualizers</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.environments.gridworldvisualizer.GridWorldVisualizer.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>value_map=None</em>, <em>density_map=None</em>, <em>message=None</em>, <em>close=False</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.gridworldvisualizer.GridWorldVisualizer.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the current state of the GridWorld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value_map</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – (Default value = None)</li>
+<li><strong>density_map</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – (Default value = None)</li>
+<li><strong>message</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – (Default value = None)</li>
+<li><strong>close</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – (Default value = False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the agent has to stop rendering</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.environments.presets">
+<span id="smartstart-environments-presets-module"></span><h2>smartstart.environments.presets module<a class="headerlink" href="#module-smartstart.environments.presets" title="Permalink to this headline">¶</a></h2>
+<p>Preset GridWorlds module</p>
+<p>Are used by the <code class="xref py py-obj docutils literal"><span class="pre">GridWorld</span></code> to
+generate the gridworld.</p>
+<dl class="function">
+<dt id="smartstart.environments.presets.easy">
+<code class="descname">easy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.presets.easy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Easy GridWorld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – name</li>
+<li>double <code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <cite>int</cite> – layout</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – scale</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.environments.presets.extreme">
+<code class="descname">extreme</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.presets.extreme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extreme GridWorld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – name</li>
+<li>double <code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <cite>int</cite> – layout</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – scale</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.environments.presets.hard">
+<code class="descname">hard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.presets.hard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hard GridWorld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – name</li>
+<li>double <code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <cite>int</cite> – layout</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – scale</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.environments.presets.medium">
+<code class="descname">medium</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.environments.presets.medium" title="Permalink to this definition">¶</a></dt>
+<dd><p>Medium GridWorld</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – name</li>
+<li>double <code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <cite>int</cite> – layout</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – scale</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.environments">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-smartstart.environments" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smartstart.smartexploration.html" class="btn btn-neutral float-right" title="smartstart.smartexploration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smartstart.algorithms.html" class="btn btn-neutral" title="smartstart.algorithms package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, IHMC &amp; Bart Keulen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

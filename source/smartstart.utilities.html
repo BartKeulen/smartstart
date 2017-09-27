@@ -1,0 +1,982 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smartstart.utilities package &mdash; Smart Exploration 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Smart Exploration 0.0.1 documentation" href="../index.html"/>
+        <link rel="up" title="smartstart package" href="smartstart.html"/>
+        <link rel="prev" title="smartstart.smartexploration package" href="smartstart.smartexploration.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Smart Exploration
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="smartstart.html">smartstart package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="smartstart.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smartstart.algorithms.html">smartstart.algorithms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.environments.html">smartstart.environments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smartstart.smartexploration.html">smartstart.smartexploration package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smartstart.utilities package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities.datacontainers">smartstart.utilities.datacontainers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities.experimenter">smartstart.utilities.experimenter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities.numerical">smartstart.utilities.numerical module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities.plot">smartstart.utilities.plot module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities.scheduler">smartstart.utilities.scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities.utilities">smartstart.utilities.utilities module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-smartstart.utilities">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smartstart.html#module-smartstart">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Smart Exploration</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="smartstart.html">smartstart package</a> &raquo;</li>
+        
+      <li>smartstart.utilities package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/smartstart.utilities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="smartstart-utilities-package">
+<h1>smartstart.utilities package<a class="headerlink" href="#smartstart-utilities-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-smartstart.utilities.datacontainers">
+<span id="smartstart-utilities-datacontainers-module"></span><h2>smartstart.utilities.datacontainers module<a class="headerlink" href="#module-smartstart.utilities.datacontainers" title="Permalink to this headline">¶</a></h2>
+<p>Datacontainers module</p>
+<p>Defines datacontainer classes training data.</p>
+<dl class="class">
+<dt id="smartstart.utilities.datacontainers.Episode">
+<em class="property">class </em><code class="descname">Episode</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Datacontainer for episode data</p>
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Episode.obs">
+<code class="descname">obs</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.obs" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code> – observations</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Episode.action">
+<code class="descname">action</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.action" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – actions</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Episode.reward">
+<code class="descname">reward</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.reward" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – rewards</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Episode.obs_tp1">
+<code class="descname">obs_tp1</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.obs_tp1" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code> – next observations</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Episode.done">
+<code class="descname">done</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.done" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">bool</span></code> – dones</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Episode.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>obs</em>, <em>action</em>, <em>reward</em>, <em>obs_tp1</em>, <em>done</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add transition to episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obs</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – </li>
+<li><strong>action</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – </li>
+<li><strong>reward</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – </li>
+<li><strong>obs_tp1</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – </li>
+<li><strong>done</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Episode.average_reward">
+<code class="descname">average_reward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.average_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average episode reward</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">average reward</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="smartstart.utilities.datacontainers.Episode.from_json">
+<em class="property">classmethod </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coverts JSON string into
+<a class="reference internal" href="#smartstart.utilities.datacontainers.Episode" title="smartstart.utilities.datacontainers.Episode"><code class="xref py py-class docutils literal"><span class="pre">Episode</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – JSON string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new episode object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#smartstart.utilities.datacontainers.Episode" title="smartstart.utilities.datacontainers.Episode"><code class="xref py py-obj docutils literal"><span class="pre">Episode</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Episode.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert episode data to json string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON string of episode data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Episode.total_reward">
+<code class="descname">total_reward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Episode.total_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total episode reward</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">total reward</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smartstart.utilities.datacontainers.Summary">
+<em class="property">class </em><code class="descname">Summary</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Datacontainer for complete training session</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – name of the summary, used for saving the data (Default = None)</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Summary.name">
+<code class="descname">name</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – name of the summary, used for saving the data (Default = None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.datacontainers.Summary.episodes">
+<code class="descname">episodes</code><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.episodes" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code> with episode data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>episode</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the length and total reward of episode to summary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>episode</strong> (<a class="reference internal" href="#smartstart.utilities.datacontainers.Episode" title="smartstart.utilities.datacontainers.Episode"><code class="xref py py-obj docutils literal"><span class="pre">Episode</span></code></a>) – episode object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.average_episode_reward">
+<code class="descname">average_episode_reward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.average_episode_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average reward per episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">average reward per episode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">float</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.average_reward">
+<code class="descname">average_reward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.average_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average reward of all episodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">average reward</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="smartstart.utilities.datacontainers.Summary.from_json">
+<em class="property">classmethod </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert JSON string into
+<a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – JSON string with summary data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new Summary object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="smartstart.utilities.datacontainers.Summary.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a summary from the defined filepath</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fp</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – filepath to the summary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new summary object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>directory='/home/bartkeulen/repositories/smartstart/smartstart/utilities/../../data/tmp'</em>, <em>post_fix=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save summary as json file</p>
+<p>The summary name is used as filename, an optional postfix can be
+added to the end of the summary name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>directory</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – directory to save the summary (Default value = DIR)</li>
+<li><strong>post_fix</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – post_fix to add to the end of the summary name (Default value =
+None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">full filepath to the saved json summary</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.save_to_gcloud">
+<code class="descname">save_to_gcloud</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>directory</em>, <em>post_fix=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.save_to_gcloud" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save summary in a Google Cloud Bucket</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Google cloud SDK has to be installed and initialized before
+function can be used. Click <a class="reference external" href="https://cloud.google.com/compute/docs/tutorials/python-guide">here</a> for more information.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>directory</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – directory to save the summary (Default value = DIR)</li>
+<li><strong>post_fix</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – post_fix to add to the end of the summary name (Default value =
+None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.steps_episode">
+<code class="descname">steps_episode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.steps_episode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of steps per episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">steps per episode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">int</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert summary data to JSON string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON string of summary data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.total_episode_reward">
+<code class="descname">total_episode_reward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.total_episode_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total reward per episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">total reward per episode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">float</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.datacontainers.Summary.total_reward">
+<code class="descname">total_reward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.datacontainers.Summary.total_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total reward of all episodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">total reward</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.utilities.experimenter">
+<span id="smartstart-utilities-experimenter-module"></span><h2>smartstart.utilities.experimenter module<a class="headerlink" href="#module-smartstart.utilities.experimenter" title="Permalink to this headline">¶</a></h2>
+<p>Module for making it easy to run experiments</p>
+<p>This methods defined in this module make it easy to run multiple experiments
+in parallel and using different sets of parameters.</p>
+<dl class="function">
+<dt id="smartstart.utilities.experimenter.process_task">
+<code class="descname">process_task</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.experimenter.process_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method for executing the task defined in params</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>) – dictionary with the parameters to be used in the experiment</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.utilities.experimenter.run_experiment">
+<code class="descname">run_experiment</code><span class="sig-paren">(</span><em>param_grid</em>, <em>n_processes=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.experimenter.run_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for running experiments</p>
+<p>This method is used for making it easy to run experiments in parallel and
+use different combinations of parameters. The param_grid dictionary
+describes what task or tasks must be executed and what parameters and/or
+parameter combinations must be used. Each experiment receives its own
+unique id.</p>
+<dl class="docutils">
+<dt>The param_grid consists of the following entries:</dt>
+<dd><ul class="first last simple">
+<li>task : function that has to be executed</li>
+<li>num_exp : number of time each experiment has to be executed (optional)</li>
+<li>params : lists holding the params that have to be used</li>
+</ul>
+</dd>
+</dl>
+<p>Example of a param_grid:</p>
+<blockquote>
+<div>param_grid = {‘task’: task_func, ‘num_exp’: 5, ‘alpha’: [0.05, 0.1]}</div></blockquote>
+<p>and the task func should then be in the following format:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def task_func(params):</dt>
+<dd><p class="first"># Define the code that has to be executed params defined can be
+# accessed like this
+alpha = params[‘alpha’]</p>
+<p># a run parameter, useful when num_exp &gt; 1
+run = param[‘run’]</p>
+<p class="last"># and the unique id
+id = params[‘id’]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>In total the task function will be executed 10 times. 5 times with each
+alpha parameter. See tutorial or examples for a full example.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>param_grid</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>) – dictionary containing the parameters to be used during the experiments</li>
+<li><strong>n_processes</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – number of processes to run in parallel (Default value = -1,
+all the cpu_cores in the system are used)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code> – Please define a task function in the param_grid to execute.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.utilities.numerical">
+<span id="smartstart-utilities-numerical-module"></span><h2>smartstart.utilities.numerical module<a class="headerlink" href="#module-smartstart.utilities.numerical" title="Permalink to this headline">¶</a></h2>
+<p>Module for numerical operations</p>
+<dl class="function">
+<dt id="smartstart.utilities.numerical.moving_average">
+<code class="descname">moving_average</code><span class="sig-paren">(</span><em>values</em>, <em>window=10</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.numerical.moving_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moving average filter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>values</strong> (<code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code>) – array the moving average filter has to applied on</li>
+<li><strong>window</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – window size for the moving average filter (Default value = 10)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">values after applying moving average filter (length = orignal_length
+- window + 1)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">np.ndarray</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.utilities.plot">
+<span id="smartstart-utilities-plot-module"></span><h2>smartstart.utilities.plot module<a class="headerlink" href="#module-smartstart.utilities.plot" title="Permalink to this headline">¶</a></h2>
+<p>Module for plotting results</p>
+<p>This module describes methods for generating a few predefined plots. The
+methods make it easy to plot multiple different experiments and average the
+results of experiments with the same parameters.</p>
+<p>The results are <a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-class docutils literal"><span class="pre">Summary</span></code></a> objects
+saved as JSON strings.</p>
+<dl class="function">
+<dt id="smartstart.utilities.plot.mean_reward_episode">
+<code class="descname">mean_reward_episode</code><span class="sig-paren">(</span><em>summaries</em>, <em>ma_window=1</em>, <em>color=None</em>, <em>linestyle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.plot.mean_reward_episode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot mean reward per episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>summaries</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a>) – summaries to average and plot</li>
+<li><strong>ma_window</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – moving average window size (Default value = 1)</li>
+<li><strong>color</strong> – color (Default value = None)</li>
+<li><strong>linestyle</strong> – linestyle (Default value = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.utilities.plot.mean_reward_std_episode">
+<code class="descname">mean_reward_std_episode</code><span class="sig-paren">(</span><em>summaries</em>, <em>ma_window=1</em>, <em>color=None</em>, <em>linestyle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.plot.mean_reward_std_episode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot mean reward with standard deviation per episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>summaries</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a>) – summaries to average and plot</li>
+<li><strong>ma_window</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – moving average window size (Default value = 1)</li>
+<li><strong>color</strong> – color (Default value = None)</li>
+<li><strong>linestyle</strong> – linestyle (Default value = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.utilities.plot.plot_summary">
+<code class="descname">plot_summary</code><span class="sig-paren">(</span><em>files</em>, <em>plot_type</em>, <em>ma_window=1</em>, <em>title=None</em>, <em>legend=None</em>, <em>output_dir=None</em>, <em>colors=None</em>, <em>linestyles=None</em>, <em>format='eps'</em>, <em>baseline=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.plot.plot_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main plot function to be used</p>
+<p>The files parameter can be a list of files or a list of
+<a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a> objects that you
+want to compare in a single plot. A single file or single
+<a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a> can also be provided.
+Please read the instructions below when supplying a list of files.</p>
+<p>The files list provided must contain filenames without the <code class="docutils literal"><span class="pre">.json</span></code>
+extension. For example: <code class="docutils literal"><span class="pre">['file/path/to/experiment']</span></code> is correct but <code class="docutils literal"><span class="pre">[</span>
+<span class="pre">'file/path/to/experiment.json']</span></code> not! The reason for this is when the
+folder contains multiple summary files from the same experiment (same
+parameters) it will use all the files and average them. For example when
+the folder contains the following three files <code class="docutils literal"><span class="pre">[</span>
+<span class="pre">'file/path/to/experiment_1.json',</span> <span class="pre">'file/path/to/experiment_2.json',</span>
+<span class="pre">'file/path/to/experiment_3.json']</span></code>. By providing <code class="docutils literal"><span class="pre">[</span>
+<span class="pre">'file/path/to/experiment']</span></code> all three summaries will be loaded and averaged.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The entries in files have to be defined without <code class="docutils literal"><span class="pre">.json</span></code> at the end.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Don’t forget to run the show_plot() function after initializing the
+plots. Else nothing will be rendered on screen</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of) – </td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:param <a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a>: Option 1: each entry is the filepath to a saved summary without</dt>
+<dd><code class="docutils literal"><span class="pre">.json</span></code> at the end. Option 2: each entry is a Summary object.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>plot_type</strong> – one of the plot functions defined in this module</li>
+<li><strong>ma_window</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – moving average filter window size (Default value = 10)</li>
+<li><strong>title</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – title of the plot, is also used as filename (Default value = None)</li>
+<li><strong>legend</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – one entry per entry in files (Default value = None)</li>
+<li><strong>output_dir</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – if not None the plot will be saved in this directory (Default value =
+None)</li>
+<li><strong>colors</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code>) – one entry per entry in files (Default value = None)</li>
+<li><strong>linestyles</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code>) – one entry per entry in files (Default value = None)</li>
+<li><strong>format</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – output format when saving plot (Default value = “eps”)</li>
+<li><strong>baseline</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>) – plotting a dotted horizontal line as baseline (Default value = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.utilities.plot.save_plot">
+<code class="descname">save_plot</code><span class="sig-paren">(</span><em>output_dir</em>, <em>title</em>, <em>format='eps'</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.plot.save_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method for saving plots</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>output_dir</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – directory where the plot is saved</li>
+<li><strong>title</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – filename of saved plot</li>
+<li><strong>format</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – file format (Default value = “eps”)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code> – Please give a title when saving a figure.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.utilities.plot.show_plot">
+<code class="descname">show_plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.plot.show_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the plots on screen</p>
+<p>Must be run after initializing the plots to actually show them on screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="smartstart.utilities.plot.steps_episode">
+<code class="descname">steps_episode</code><span class="sig-paren">(</span><em>summaries</em>, <em>ma_window=1</em>, <em>color=None</em>, <em>linestyle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.plot.steps_episode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot number of steps per episode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>summaries</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <a class="reference internal" href="#smartstart.utilities.datacontainers.Summary" title="smartstart.utilities.datacontainers.Summary"><code class="xref py py-obj docutils literal"><span class="pre">Summary</span></code></a>) – summaries to average and plot</li>
+<li><strong>ma_window</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – moving average window size (Default value = 1)</li>
+<li><strong>color</strong> – color (Default value = None)</li>
+<li><strong>linestyle</strong> – linestyle (Default value = None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.utilities.scheduler">
+<span id="smartstart-utilities-scheduler-module"></span><h2>smartstart.utilities.scheduler module<a class="headerlink" href="#module-smartstart.utilities.scheduler" title="Permalink to this headline">¶</a></h2>
+<p>Module for schedulers</p>
+<p>Schedulers can be used to gradually decrease a variable over time. The
+scheduler will return a scale parameter that can be multiplied with the
+original value.</p>
+<dl class="class">
+<dt id="smartstart.utilities.scheduler.LinearScheduler">
+<em class="property">class </em><code class="descname">LinearScheduler</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smartstart.utilities.scheduler.Scheduler" title="smartstart.utilities.scheduler.Scheduler"><code class="xref py py-class docutils literal"><span class="pre">smartstart.utilities.scheduler.Scheduler</span></code></a></p>
+<p>Returns a scale parameter that linearly decreases from start to end</p>
+<p>Every time the sample method is called the count is increased. When the
+count = start the scale will decrease from one to zero between
+count = start and count = end.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – start index of the scheduler</li>
+<li><strong>end</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>) – final index of the scheduler</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="smartstart.utilities.scheduler.LinearScheduler.start">
+<code class="descname">start</code><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler.start" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – start index of the scheduler</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.scheduler.LinearScheduler.end">
+<code class="descname">end</code><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler.end" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – final index of the scheduler</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.scheduler.LinearScheduler.count">
+<code class="descname">count</code><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler.count" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – count</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.scheduler.LinearScheduler.scale">
+<code class="descname">scale</code><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – current scale factor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smartstart.utilities.scheduler.LinearScheduler.step">
+<code class="descname">step</code><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler.step" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">float</span></code> – step-size by which scale is decreased</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smartstart.utilities.scheduler.LinearScheduler.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.scheduler.LinearScheduler.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scale factor</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smartstart.utilities.scheduler.Scheduler">
+<em class="property">class </em><code class="descname">Scheduler</code><a class="headerlink" href="#smartstart.utilities.scheduler.Scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base implementation of a Scheduler</p>
+<dl class="method">
+<dt id="smartstart.utilities.scheduler.Scheduler.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.scheduler.Scheduler.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scale factor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.utilities.utilities">
+<span id="smartstart-utilities-utilities-module"></span><h2>smartstart.utilities.utilities module<a class="headerlink" href="#module-smartstart.utilities.utilities" title="Permalink to this headline">¶</a></h2>
+<p>Module that contains random utility functions used in the smartstart package</p>
+<dl class="function">
+<dt id="smartstart.utilities.utilities.get_data_directory">
+<code class="descname">get_data_directory</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#smartstart.utilities.utilities.get_data_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a data directory at the file’s location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> – python file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">filepath to the data directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-smartstart.utilities">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-smartstart.utilities" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="smartstart.smartexploration.html" class="btn btn-neutral" title="smartstart.smartexploration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, IHMC &amp; Bart Keulen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
