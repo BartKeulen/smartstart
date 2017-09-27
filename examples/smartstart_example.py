@@ -26,7 +26,7 @@ agent = generate_smartstart_object(QLearning,
                                    env=grid_world,
                                    alpha=0.1,
                                    epsilon=0.05,
-                                   num_episodes=10,
+                                   num_episodes=500,
                                    max_steps=1000,
                                    exploration=QLearning.E_GREEDY)
 

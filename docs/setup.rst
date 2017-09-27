@@ -37,9 +37,7 @@ For more information on environments go `here <https://conda.io/docs/user-guide/
 =====================================
 Installing Smart Exploration Package
 =====================================
-To get started with the Smart Exploration package clone the `git repository
-<https://github.com/BartKeulen/smartstart>`_ in a local directory on you file
-system
+To get started with the Smart Exploration package clone the `git repository <https://github.com/BartKeulen/smartstart>`_ in a local directory on you file system
 
 ``git clone https://github.com/BartKeulen/smartstart.git``
 
@@ -47,10 +45,7 @@ The package and its dependencies can now be installed by running
 
 ``pip install -r /path/to/smartstart/requirements.txt -e /path/to/smartstart/``
 
-The ``-r **/requirements.txt`` option will install all dependencies needed by
-the SmartStart package that are listed in the requirements.txt file. The ``-e
-**/`` option installs the package in editable mode, all code changes have
-immediate effect.
+The ``-r **/requirements.txt`` option will install all dependencies needed by the SmartStart package that are listed in the requirements.txt file. The ``-e **/`` option installs the package in editable mode, all code changes have immediate effect.
 
 ================
 Updating Package
@@ -59,10 +54,7 @@ Updating Package
 ================
 Generating Docs
 ================
-Sphinx can be used to automatically generate documentation. This is done by
-creating a link between the documentation and the source files. When source
-files are created, deleted or the name is changed the link has to be updated.
-First go into the docs directory
+Sphinx can be used to automatically generate documentation. This is done by creating a link between the documentation and the source files. When source files are created, deleted or the name is changed the link has to be updated. First go into the docs directory
 
 ``cd /path/to/smartstart/docs/``
 

@@ -32,6 +32,7 @@ plot_summary(files,
              ma_window=5,
              title="Q-Learning GridWorldMedium Steps per Episode",
              legend=legend,
+             format=".png",
              output_dir=output_dir)
 
 show_plot()

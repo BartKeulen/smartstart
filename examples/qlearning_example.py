@@ -24,7 +24,7 @@ visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
 agent = QLearning(grid_world,
                   alpha=0.1,
                   epsilon=0.05,
-                  num_episodes=1000,
+                  num_episodes=500,
                   max_steps=1000,
                   exploration=QLearning.E_GREEDY)
 

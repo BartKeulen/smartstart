@@ -282,3 +282,4 @@ Things to note here:
   * We have added a legend to the plots
   * An output directory for the plots is defined, when the output_dir argument is used in the :meth:`~smartstart.utilities.plot.plot_summary` method the figures will be automatically saved in that directory.
   * This time we use the :meth:`~smartstart.utilities.plot.average_reward_std_episode` type instead of :meth:`~smartstart.utilities.plot.average_reward_episode`. Since we have multiple results per experiment this is a good way to show the variation in the results.
+  * The format for the step per episode plot is .png instead of the standard and preferred format .eps. The reason for this is the that .eps can't save the transparent area around the mean and will become opaque. You can try it out to see for yourself.
