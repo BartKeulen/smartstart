@@ -137,12 +137,12 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             algorithm is a well known exploration strategy for multi-arm
             bandit problems. The smart start is chosen according to
 
-            smart_start = \arg\max\limits_s\left(alpha * \max\limits_a Q(s,
-            a) + \sqrt{\frac{beta * \log\sum\limits_{s'} C(s'}{C(s}} \right)
+            :math:`smart_start = \arg\max\limits_s\left(alpha * \max\limits_a
+            Q(s,a) + \sqrt{\frac{beta * \log\sum\limits_{s'} C(s'}{C(s}} \right)`
 
             Where
-                * \alpha = exploitation_param
-                * \beta  = exploration_param
+                * :math:`\alpha` = exploitation_param
+                * :math:`\beta` = exploration_param
 
             Returns
             -------
@@ -272,13 +272,13 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
             Transition model is fitted using the following equation
 
-                T(s,a,s') = \frac{C(s,a,s'}{C(s,a)}
+                :math:`T(s,a,s') = \frac{C(s,a,s'}{C(s,a)}`
 
             Where C(*) is the visitation count. The reward function is zero
             everywhere except for the transition that results in the smart start
 
-                R(s,a,s') = 1 if s' == s_{ss}
-                R(s,a,s') = 0 otherwise
+                :math:`R(s,a,s') = 1 \text{if} s' == s_{ss}`
+                :math:`R(s,a,s') = 0 \text{otherwise}`
 
             Dynamic programming is done using value iteration.
 
