@@ -245,7 +245,6 @@ class ValueIteration(object):
         if tuple(obs) == self.goal:
             return self.V[self.goal]
         value = 0.
-        # print(obs, action, self.get_transition(obs, action).items())
         for obs_prime, transition in self.get_transition(obs, action).items():
             r = self.R[tuple(obs) + (action,)][tuple(obs_prime)]
             value += transition * (r + self.gamma * self.V[obs_prime])
