@@ -35,16 +35,6 @@ class Episode(object):
         self.reward = 0
         self.value_function = None
 
-    def average_reward(self):
-        """Average episode reward
-
-        Returns
-        -------
-        :obj:`float`
-            average reward
-        """
-        return self.reward / self.steps
-
     def append(self, reward):
         """Add transition to episode
 
@@ -66,6 +56,18 @@ class Episode(object):
     def set_value_function(self, value_function):
         self.value_function = value_function.copy()
 
+    def average_reward(self):
+        """Average episode reward
+
+        Returns
+        -------
+        :obj:`float`
+            average reward
+        """
+        if self.steps == 0:
+            return 0.
+        return self.reward / self.steps
+
     def to_json(self):
         """Convert episode data to json string
 
@@ -74,11 +76,9 @@ class Episode(object):
         :obj:`str`
             JSON string of episode data
         """
-        json_dict = {
-            'steps': self.steps,
-            'reward': self.reward,
-            'value_function': np.asarray(self.value_function).tolist()
-        }
+        json_dict = self.__dict__
+        json_dict['value_function'] = np.asarray(self.value_function).tolist()
+
         return json.dumps(json_dict)
 
     @classmethod
@@ -96,16 +96,18 @@ class Episode(object):
         :obj:`~smartstart.utilities.datacontainers.Episode`
             new episode object
         """
-        episode = cls()
-        episode.__dict__.update(json.loads(data))
+        json_dict = json.loads(data)
+        episode = cls(json_dict['iter'])
+        json_dict['value_function'] = np.asarray(json_dict['value_function'])
+        episode.__dict__.update(json_dict)
         return episode
 
     def __len__(self):
         return self.steps
 
     def __repr__(self):
-        return "%s(length=%d, total_reward=%.2f, average_reward=%.2f)" % \
-               (self.__class__.__name__, self.__len__(), self.reward, self.average_reward())
+        return "%s(steps=%d, total_reward=%.2f)" % \
+               (self.__class__.__name__, self.__len__(), self.reward)
 
 
 class Summary(object):
@@ -148,37 +150,12 @@ class Summary(object):
         :obj:`float`
             total reward
         """
-        return sum(self.total_episode_reward())
+        return sum([episode.reward for episode in self.episodes])
 
     def average_reward(self):
-        """Average reward of all episodes
-
-        Returns
-        -------
-        :obj:`float`
-            average reward
-        """
+        if self.__len__() == 0:
+            return 0
         return self.total_reward() / self.__len__()
-
-    def total_episode_reward(self):
-        """Total reward per episode
-
-        Returns
-        -------
-        :obj:`list` of :obj:`float`
-            total reward per episode
-        """
-        return [episode.reward for episode in self.episodes]
-
-    def average_episode_reward(self):
-        """Average reward per episode
-
-        Returns
-        -------
-        :obj:`list` of :obj:`float`
-            average reward per episode
-        """
-        return [episode.average_reward() for episode in self.episodes]
 
     def steps_episode(self):
         """Number of steps per episode
@@ -198,7 +175,12 @@ class Summary(object):
         :obj:`str`
             JSON string of summary data
         """
-        return json.dumps(self.__dict__)
+        json_dict = {
+            'name': self.name,
+            'episodes': [episode.to_json() for episode in self.episodes],
+            'tests': [test.to_json() for test in self.tests]
+        }
+        return json.dumps(json_dict)
 
     @classmethod
     def from_json(cls, data):
@@ -217,6 +199,8 @@ class Summary(object):
         """
         summary = cls()
         data_dict = json.loads(data)
+        data_dict['episodes'] = [Episode.from_json(episode) for episode in data_dict['episodes']]
+        data_dict['tests'] = [Episode.from_json(test) for test in data_dict['tests']]
         summary.__dict__.update(data_dict)
         return summary
 
@@ -301,9 +285,6 @@ class Summary(object):
 
     def __len__(self):
         return len(self.episodes)
-
-    def __getitem__(self, key):
-        return self.episodes[key]
 
     def __repr__(self):
         return "%s(num_episodes=%d, average_reward=%.2f)" % \

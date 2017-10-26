@@ -1,5 +1,5 @@
 tqdm==4.14.0
-setuptools==36.4.0
+setuptools==36.6.0
 numpy==1.12.1
 matplotlib==2.0.2
 protobuf==3.4.0
