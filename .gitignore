@@ -156,4 +156,4 @@ fabric.properties
 *.bin
 *.json
 **/*/data/
-
+scripts/

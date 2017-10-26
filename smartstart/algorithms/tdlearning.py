@@ -83,7 +83,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
     E_GREEDY = "E-Greedy"
     BOLTZMANN = "Boltzmann"
     COUNT_BASED = "Count-Based"
-    UCB = "UCB"
+    UCT = "UCT"
 
     def __init__(self,
                  env,
@@ -352,8 +352,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
             return self._boltzmann(obs)
         elif self.exploration == TDLearning.COUNT_BASED:
             return self._count_based(obs)
-        elif self.exploration == TDLearning.UCB:
-            return self._ucb(obs)
+        elif self.exploration == TDLearning.UCT:
+            return self._uct(obs)
         else:
             raise NotImplementedError(
                 "Please choose from the available exploration methods, "
@@ -460,14 +460,12 @@ class TDLearning(Counter, metaclass=ABCMeta):
             No maximum q-values were found.
         """
         q_values, actions = self.get_q_values(obs)
-        count = self.get_count(obs)
-
-        updated_values = q_values.copy()
-        updated_values += self.beta / (np.sqrt(count) + 1e-20)
+        tot_count = self.get_count(obs)
 
         max_value = -float('inf')
         max_actions = []
-        for action, value in zip(actions, updated_values):
+        for action, value in zip(actions, q_values):
+            value += self.beta * tot_count / (self.get_count(obs, action) + 1e-12)
             if value > max_value:
                 max_value = value
                 max_actions = [action]
@@ -479,8 +477,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return random.choice(max_actions)
 
-    def _ucb(self, obs):
-        """Policy with UCB exploration method
+    def _uct(self, obs):
+        """Policy with UCT exploration method
 
         Parameters
         ----------
@@ -498,15 +496,17 @@ class TDLearning(Counter, metaclass=ABCMeta):
             No maximum q-values were found.
         """
         q_values, actions = self.get_q_values(obs)
-        count = self.get_count(obs)
-
-        ucb = q_values.copy()
-        ucb += self.beta * np.sqrt(
-            2 * np.log(np.sum(self.count_map)) / (count + 1e-20))
+        tot_count = self.get_count(obs)
 
         max_value = -float('inf')
         max_actions = []
-        for action, value in zip(actions, ucb):
+        for action, value in zip(actions, q_values):
+            if tot_count > 0:
+                count = self.get_count(obs, action)
+                if count == 0:
+                    value = np.inf
+                else:
+                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / np.log(self.get_count(obs, action)))
             if value > max_value:
                 max_value = value
                 max_actions = [action]
