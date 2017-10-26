@@ -77,7 +77,7 @@ class RMax(Counter):
                     break
 
             # Render and/or print results
-            message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward())
+            message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward)
             if render or render_episode:
                 render_episode = self.env.render(value_map=self.get_value_map(),
                                                  density_map=self.get_density_map(),
@@ -85,7 +85,7 @@ class RMax(Counter):
 
             if print_results:
                 print(
-                    "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward()))
+                    "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward))
             summary.append(episode)
 
         while render or render_episode:

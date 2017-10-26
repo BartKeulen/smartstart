@@ -198,7 +198,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             summary = Summary(self.__class__.__name__ + "_" + self.env.name)
 
             for i_episode in range(self.num_episodes):
-                episode = Episode()
+                episode = Episode(i_episode)
 
                 obs = self.env.reset()
 
@@ -247,7 +247,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
                 # Render and/or print results
                 message = "Episode: %d, steps: %d, reward: %.2f" % \
-                          (i_episode, len(episode), episode.total_reward())
+                          (i_episode, len(episode), episode.reward)
                 if render or render_episode:
                     value_map = self.Q.copy()
                     value_map = np.max(value_map, axis=2)

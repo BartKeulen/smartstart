@@ -506,7 +506,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                 if count == 0:
                     value = np.inf
                 else:
-                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / np.log(self.get_count(obs, action)))
+                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / (np.log(self.get_count(obs, action)) + 1e-12))
             if value > max_value:
                 max_value = value
                 max_actions = [action]
@@ -688,7 +688,7 @@ class TDLearningLambda(TDLearning):
 
             # Render and/or print results
             message = "Episode: %d, steps: %d, reward: %.2f" % (
-                i_episode, len(episode), episode.total_reward())
+                i_episode, len(episode), episode.reward)
             if render or render_episode:
                 value_map = self.Q.copy()
                 value_map = np.max(value_map, axis=2)
@@ -697,7 +697,7 @@ class TDLearningLambda(TDLearning):
                                                  message=message)
             if print_results:
                 print("Episode: %d, steps: %d, reward: %.2f" % (
-                    i_episode, len(episode), episode.total_reward()))
+                    i_episode, len(episode), episode.reward))
             summary.append(episode)
 
         while render:
