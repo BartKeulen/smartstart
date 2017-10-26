@@ -64,7 +64,7 @@ class RMax(Counter):
         summary = Summary(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
-            episode = Episode()
+            episode = Episode(i_episode)
 
             obs = self.env.reset()
             self.policy.add_obs(obs)
@@ -136,7 +136,7 @@ class RMax(Counter):
 
         self.policy.optimize()
 
-        episode.append(obs, action, r, obs_tp1, done)
+        episode.append(r)
 
         action_tp1 = self.policy.get_action(obs_tp1)
 

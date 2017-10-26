@@ -28,23 +28,12 @@ class Episode(object):
         dones
     """
 
-    def __init__(self):
+    def __init__(self, iter):
         super().__init__()
-        self.obs = []
-        self.action = []
-        self.reward = []
-        self.obs_tp1 = []
-        self.done = []
-
-    def total_reward(self):
-        """Total episode reward
-
-        Returns
-        -------
-        :obj:`float`
-            total reward
-        """
-        return sum(self.reward)
+        self.iter = iter
+        self.steps = 0
+        self.reward = 0
+        self.value_function = None
 
     def average_reward(self):
         """Average episode reward
@@ -54,9 +43,9 @@ class Episode(object):
         :obj:`float`
             average reward
         """
-        return sum(self.reward) / len(self.reward)
+        return self.reward / self.steps
 
-    def append(self, obs, action, reward, obs_tp1, done):
+    def append(self, reward):
         """Add transition to episode
 
         Parameters
@@ -71,11 +60,11 @@ class Episode(object):
             
         done : :obj:`bool`
         """
-        self.obs.append(obs)
-        self.action.append(action)
-        self.reward.append(reward)
-        self.obs_tp1.append(obs_tp1)
-        self.done.append(done)
+        self.steps += 1
+        self.reward += reward
+
+    def set_value_function(self, value_function):
+        self.value_function = value_function.copy()
 
     def to_json(self):
         """Convert episode data to json string
@@ -86,11 +75,9 @@ class Episode(object):
             JSON string of episode data
         """
         json_dict = {
-            'obs': np.asarray(self.obs).tolist(),
-            'action': np.asarray(self.action).tolist(),
-            'reward': np.asarray(self.reward).tolist(),
-            'obs_tp1': np.asarray(self.obs_tp1).tolist(),
-            'done': np.asarray(self.done).tolist()
+            'steps': self.steps,
+            'reward': self.reward,
+            'value_function': np.asarray(self.value_function).tolist()
         }
         return json.dumps(json_dict)
 
@@ -114,14 +101,11 @@ class Episode(object):
         return episode
 
     def __len__(self):
-        return len(self.obs)
-
-    def __getitem__(self, key):
-        return self.obs[key], self.action[key], self.reward[key], self.obs_tp1[key], self.done[key]
+        return self.steps
 
     def __repr__(self):
         return "%s(length=%d, total_reward=%.2f, average_reward=%.2f)" % \
-               (self.__class__.__name__, self.__len__(), self.total_reward(), self.average_reward())
+               (self.__class__.__name__, self.__len__(), self.reward, self.average_reward())
 
 
 class Summary(object):
@@ -143,6 +127,7 @@ class Summary(object):
         super().__init__()
         self.name = name
         self.episodes = []
+        self.tests = []
 
     def append(self, episode):
         """Adds the length and total reward of episode to summary
@@ -153,7 +138,7 @@ class Summary(object):
             episode object
 
         """
-        self.episodes.append((len(episode), episode.total_reward()))
+        self.episodes.append(episode)
 
     def total_reward(self):
         """Total reward of all episodes
@@ -183,7 +168,7 @@ class Summary(object):
         :obj:`list` of :obj:`float`
             total reward per episode
         """
-        return [reward for steps, reward in self.episodes]
+        return [episode.reward for episode in self.episodes]
 
     def average_episode_reward(self):
         """Average reward per episode
@@ -193,7 +178,7 @@ class Summary(object):
         :obj:`list` of :obj:`float`
             average reward per episode
         """
-        return [reward / steps for steps, reward in self.episodes]
+        return [episode.average_reward() for episode in self.episodes]
 
     def steps_episode(self):
         """Number of steps per episode
@@ -203,7 +188,7 @@ class Summary(object):
         :obj:`list` of :obj:`int`
             steps per episode
         """
-        return [steps for steps, _ in self.episodes]
+        return [episode.steps for episode in self.episodes]
 
     def to_json(self):
         """Convert summary data to JSON string

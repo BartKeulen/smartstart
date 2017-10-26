@@ -221,7 +221,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             self.increment(obs, action, obs_tp1)
             # self.policy_map.add_node(obs_tp1, action)
 
-            episode.append(obs, action, r, obs_tp1, done)
+            episode.append(r)
 
             return obs_tp1, action_tp1, done, render
 

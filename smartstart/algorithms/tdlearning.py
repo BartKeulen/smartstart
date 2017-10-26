@@ -240,7 +240,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         summary = Summary(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
-            episode = Episode()
+            episode = Episode(i_episode)
 
             obs = self.env.reset()
             action = self.get_action(obs)
@@ -315,7 +315,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         self.increment(obs, action, obs_tp1)
 
-        episode.append(obs, action, reward, obs_tp1, done)
+        episode.append(reward)
 
         return obs_tp1, action_tp1, done, render
 
@@ -670,7 +670,7 @@ class TDLearningLambda(TDLearning):
         summary = Summary(self.__class__.__name__ + "_" + self.env.name)
 
         for i_episode in range(self.num_episodes):
-            episode = Episode()
+            episode = Episode(i_episode)
 
             obs = self.env.reset()
             action = self.get_action(obs)
