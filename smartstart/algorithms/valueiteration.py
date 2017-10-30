@@ -182,7 +182,7 @@ class ValueIteration(object):
         reached. Method iterates through all visited states (self.obses).
 
         """
-        for _ in range(self.max_itr):
+        for itr in range(self.max_itr):
             delta = 0
             for obs in self.obses:
                 if obs != self.goal:
@@ -193,7 +193,9 @@ class ValueIteration(object):
                     self.V[obs] = max(v_new)
                     delta = max(delta, abs(v - self.V[obs]))
             if delta < self.min_error:
+                # print("Converged in %d iterations" % itr)
                 return
+        # print("Did not converge in %d iterations" % self.max_itr)
 
     def get_action(self, obs):
         """Returns the policy for a certain observation

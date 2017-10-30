@@ -14,7 +14,7 @@ random.seed()
 np.random.seed()
 
 # Create environment and visualizer
-grid_world = GridWorld.generate(GridWorld.EASY)
+grid_world = GridWorld.generate(GridWorld.MEDIUM)
 visualizer = GridWorldVisualizer(grid_world)
 visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
                           GridWorldVisualizer.CONSOLE,

@@ -24,9 +24,9 @@ def task(params):
 
     kwargs = {
         'alpha': 0.1,
-        'gamma':0.99,
+        'gamma': 0.99,
         'epsilon': 0.05,
-        'num_episodes': 1000,
+        'num_episodes': 500,
         'max_steps': 1000,
         'exploration': params['exploration_strategy']
     }
@@ -44,16 +44,18 @@ def task(params):
 
     summary = agent.train(render=False, render_episode=False, print_results=False)
 
-    summary.save_to_gcloud(bucket_name='drl-data',
-                           directory="smartstart/%.0f/%s" % (cur_time,
-                                                             env.name),
-                           post_fix=post_fix)
+    summary.save(directory, post_fix)
+
+    # summary.save_to_gcloud(bucket_name='drl-data',
+    #                        directory="smartstart/%.0f/%s" % (cur_time,
+    #                                                          env.name),
+    #                        post_fix=post_fix)
 
 
-algorithms = [QLearning, SARSA, SARSALambda]
-exploration_strategies = [TDLearning.COUNT_BASED, TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.NONE]
+algorithms = [QLearning]
+exploration_strategies = [TDLearning.E_GREEDY, TDLearning.UCT]
 use_smart_start = [True, False]
-num_exp = 1
+num_exp = 10
 
 param_grid = {'task': task,
               'algorithm': algorithms,
@@ -63,4 +65,4 @@ param_grid = {'task': task,
 
 
 if __name__ == "__main__":
-    run_experiment(param_grid)
+    run_experiment(param_grid, n_processes=4)
