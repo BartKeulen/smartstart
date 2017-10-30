@@ -237,7 +237,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
@@ -251,6 +251,9 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
                 if done:
                     break
+
+            # Save value function
+            episode.set_value_function(self.Q)
 
             # Render and/or print results
             message = "Episode: %d, steps: %d, reward: %.2f" % (
@@ -667,7 +670,7 @@ class TDLearningLambda(TDLearning):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
@@ -681,6 +684,9 @@ class TDLearningLambda(TDLearning):
 
                 if done:
                     break
+
+            # Save value function
+            episode.set_value_function(self.Q)
 
             # Clear traces after episode
             self.traces = np.zeros(

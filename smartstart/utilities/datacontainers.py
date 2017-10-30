@@ -125,9 +125,11 @@ class Summary(object):
     episodes : :obj:`list` of :obj:`tuple` with episode data
     """
 
-    def __init__(self, name=None):
+    def __init__(self, name, env_name, max_steps):
         super().__init__()
         self.name = name
+        self.env_name = env_name
+        self.max_steps = max_steps
         self.episodes = []
         self.tests = []
 
@@ -142,7 +144,17 @@ class Summary(object):
         """
         self.episodes.append(episode)
 
-    def total_reward(self):
+    def append_test(self, episode):
+        self.tests.append(episode)
+
+    def iterations(self, train=True):
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        return [episode.iter for episode in episodes]
+
+    def total_reward(self, train=True):
         """Total reward of all episodes
 
         Returns
@@ -150,14 +162,22 @@ class Summary(object):
         :obj:`float`
             total reward
         """
-        return sum([episode.reward for episode in self.episodes])
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        return sum([episode.reward for episode in episodes])
 
-    def average_reward(self):
-        if self.__len__() == 0:
+    def average_reward(self, train=True):
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        if len(episodes) == 0:
             return 0
-        return self.total_reward() / self.__len__()
+        return self.total_reward(train) / len(episodes)
 
-    def steps_episode(self):
+    def steps_episode(self, train=True):
         """Number of steps per episode
 
         Returns
@@ -165,7 +185,11 @@ class Summary(object):
         :obj:`list` of :obj:`int`
             steps per episode
         """
-        return [episode.steps for episode in self.episodes]
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        return [episode.steps for episode in episodes]
 
     def to_json(self):
         """Convert summary data to JSON string
@@ -175,11 +199,12 @@ class Summary(object):
         :obj:`str`
             JSON string of summary data
         """
-        json_dict = {
-            'name': self.name,
+        json_dict = self.__dict__.copy()
+        update_dict = {
             'episodes': [episode.to_json() for episode in self.episodes],
             'tests': [test.to_json() for test in self.tests]
         }
+        json_dict.update(update_dict)
         return json.dumps(json_dict)
 
     @classmethod
@@ -197,7 +222,7 @@ class Summary(object):
         :obj:`~smartstart.utilities.datacontainers.Summary`
             new Summary object
         """
-        summary = cls()
+        summary = cls(None, None, None)
         data_dict = json.loads(data)
         data_dict['episodes'] = [Episode.from_json(episode) for episode in data_dict['episodes']]
         data_dict['tests'] = [Episode.from_json(test) for test in data_dict['tests']]
@@ -223,7 +248,7 @@ class Summary(object):
         :obj:`str`
             full filepath to the saved json summary
         """
-        name = self.name
+        name = self.name + "_" + self.env_name
         if post_fix is not None:
             name += "_" + str(post_fix)
         name += ".json"
@@ -253,7 +278,7 @@ class Summary(object):
              None)
 
         """
-        name = self.name
+        name = self.name + "_" + self.env_name
         if post_fix is not None:
             name += "_" + str(post_fix)
         name += ".json"
@@ -282,10 +307,3 @@ class Summary(object):
         with open(fp, 'r') as f:
             data = f.read()
             return cls.from_json(data)
-
-    def __len__(self):
-        return len(self.episodes)
-
-    def __repr__(self):
-        return "%s(num_episodes=%d, average_reward=%.2f)" % \
-               (self.__class__.__name__, self.__len__(), self.average_reward())

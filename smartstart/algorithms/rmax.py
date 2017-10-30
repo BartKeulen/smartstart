@@ -61,7 +61,7 @@ class RMax(Counter):
         -------
 
         """
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
