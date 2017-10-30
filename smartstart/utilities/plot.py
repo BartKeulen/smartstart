@@ -33,7 +33,10 @@ def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None):
         linestyle (Default value = None)
 
     """
-    rewards = np.array([np.array(summary.average_episode_reward()) for summary in summaries])
+    rewards = []
+    for summary in summaries:
+        rewards.append(np.asarray([episode.reward / episode.steps for episode in summary.episodes]))
+    rewards = np.asarray(rewards)
 
     mean = np.mean(rewards, axis=0)
     ma_mean = moving_average(mean, ma_window)
@@ -60,7 +63,10 @@ def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None):
         linestyle (Default value = None)
 
     """
-    rewards = np.array([np.array(summary.average_episode_reward()) for summary in summaries])
+    rewards = []
+    for summary in summaries:
+        rewards.append(np.asarray([episode.reward / episode.steps for episode in summary.episodes]))
+    rewards = np.asarray(rewards)
 
     mean = np.mean(rewards, axis=0)
     ma_mean = moving_average(mean, ma_window)
@@ -84,7 +90,10 @@ def steps_episode(summaries, ma_window=1, color=None, linestyle=None):
         linestyle (Default value = None)
 
     """
-    steps = np.array([np.array(summary.steps_episode()) for summary in summaries])
+    steps = []
+    for summary in summaries:
+        steps.append(np.asarray([episode.steps for episode in summary.episodes]))
+    steps = np.asarray(steps)
 
     mean = np.mean(steps, axis=0)
     ma_mean = moving_average(mean, ma_window)

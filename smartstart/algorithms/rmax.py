@@ -61,10 +61,10 @@ class RMax(Counter):
         -------
 
         """
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
         for i_episode in range(self.num_episodes):
-            episode = Episode()
+            episode = Episode(i_episode)
 
             obs = self.env.reset()
             self.policy.add_obs(obs)
@@ -77,7 +77,7 @@ class RMax(Counter):
                     break
 
             # Render and/or print results
-            message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward())
+            message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward)
             if render or render_episode:
                 render_episode = self.env.render(value_map=self.get_value_map(),
                                                  density_map=self.get_density_map(),
@@ -85,7 +85,7 @@ class RMax(Counter):
 
             if print_results:
                 print(
-                    "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward()))
+                    "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward))
             summary.append(episode)
 
         while render or render_episode:
@@ -136,7 +136,7 @@ class RMax(Counter):
 
         self.policy.optimize()
 
-        episode.append(obs, action, r, obs_tp1, done)
+        episode.append(r)
 
         action_tp1 = self.policy.get_action(obs_tp1)
 

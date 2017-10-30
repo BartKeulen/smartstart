@@ -1,5 +1,5 @@
 import numpy as np
-from utilities.experimenter import run_experiment
+from smartstart.utilities.experimenter import run_experiment
 
 from smartstart.algorithms import QLearning
 from smartstart.algorithms import TDLearning

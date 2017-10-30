@@ -237,10 +237,10 @@ class TDLearning(Counter, metaclass=ABCMeta):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
         for i_episode in range(self.num_episodes):
-            episode = Episode()
+            episode = Episode(i_episode)
 
             obs = self.env.reset()
             action = self.get_action(obs)
@@ -251,6 +251,9 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
                 if done:
                     break
+
+            # Save value function
+            episode.set_value_function(self.Q)
 
             # Render and/or print results
             message = "Episode: %d, steps: %d, reward: %.2f" % (
@@ -315,7 +318,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         self.increment(obs, action, obs_tp1)
 
-        episode.append(obs, action, reward, obs_tp1, done)
+        episode.append(reward)
 
         return obs_tp1, action_tp1, done, render
 
@@ -506,7 +509,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                 if count == 0:
                     value = np.inf
                 else:
-                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / np.log(self.get_count(obs, action)))
+                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / (np.log(self.get_count(obs, action)) + 1e-12))
             if value > max_value:
                 max_value = value
                 max_actions = [action]
@@ -667,10 +670,10 @@ class TDLearningLambda(TDLearning):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
         for i_episode in range(self.num_episodes):
-            episode = Episode()
+            episode = Episode(i_episode)
 
             obs = self.env.reset()
             action = self.get_action(obs)
@@ -682,13 +685,16 @@ class TDLearningLambda(TDLearning):
                 if done:
                     break
 
+            # Save value function
+            episode.set_value_function(self.Q)
+
             # Clear traces after episode
             self.traces = np.zeros(
                 (self.env.w, self.env.h, self.env.num_actions))
 
             # Render and/or print results
             message = "Episode: %d, steps: %d, reward: %.2f" % (
-                i_episode, len(episode), episode.total_reward())
+                i_episode, len(episode), episode.reward)
             if render or render_episode:
                 value_map = self.Q.copy()
                 value_map = np.max(value_map, axis=2)
@@ -697,7 +703,7 @@ class TDLearningLambda(TDLearning):
                                                  message=message)
             if print_results:
                 print("Episode: %d, steps: %d, reward: %.2f" % (
-                    i_episode, len(episode), episode.total_reward()))
+                    i_episode, len(episode), episode.reward))
             summary.append(episode)
 
         while render:

@@ -118,10 +118,10 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             -------
 
             """
-            summary = Summary(self.__class__.__name__ + "_" + self.env.name)
+            summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
 
             for i_episode in range(self.num_episodes):
-                episode = Episode()
+                episode = Episode(i_episode)
 
                 obs = self.env.reset()
                 self.policy.add_obs(obs)
@@ -173,14 +173,14 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                         break
 
                 # Render and/or print results
-                message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward())
+                message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward)
                 if render or render_episode:
                     value_map = self.Q.copy()
                     value_map = np.max(value_map, axis=2)
                     render_episode = self.env.render(value_map=value_map, density_map=self.get_density_map(),
                                                      message=message)
                 if print_results:
-                    print("Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.total_reward()))
+                    print("Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward))
                 summary.append(episode)
 
             while render:
@@ -221,7 +221,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             self.increment(obs, action, obs_tp1)
             # self.policy_map.add_node(obs_tp1, action)
 
-            episode.append(obs, action, r, obs_tp1, done)
+            episode.append(r)
 
             return obs_tp1, action_tp1, done, render
 
@@ -229,7 +229,8 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
 
 if __name__ == "__main__":
-    from smartstart.environments.gridworld import GridWorld, GridWorldVisualizer
+    from smartstart.environments.gridworld import GridWorld
+    from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
     from smartstart.algorithms import SARSALambda
 
     directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
