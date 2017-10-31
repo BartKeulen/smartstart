@@ -18,7 +18,7 @@ from smartstart.utilities.numerical import moving_average
 from smartstart.utilities.datacontainers import Summary
 
 
-def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None):
+def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
     """Plot mean reward with standard deviation per episode
 
     Parameters
@@ -34,21 +34,28 @@ def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None):
 
     """
     rewards = []
+    episodes = []
     for summary in summaries:
-        rewards.append(np.asarray([episode.reward / episode.steps for episode in summary.episodes]))
+        rewards.append(summary.mean_reward_episode(train_bool))
+        episodes.append(summary.iterations(train_bool))
     rewards = np.asarray(rewards)
+    episodes = np.asarray(episodes)
 
-    mean = np.mean(rewards, axis=0)
-    ma_mean = moving_average(mean, ma_window)
-    std = np.std(rewards, axis=0)
-    upper = moving_average(mean + std)
-    lower = moving_average(mean - std)
+    x = np.unique(episodes)
+    y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
+    mean_y = np.mean(y, axis=0)
+    std = np.std(y, axis=0)
 
-    plt.fill_between(range(len(upper)), lower, upper, alpha=0.3, color=color)
-    plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle, linewidth=1.)
+    upper = mean_y + std
+    lower = mean_y - std
+
+    plt.fill_between(x, lower, upper, alpha=0.3, color=color)
+    plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
+
+    return max(x)
 
 
-def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None):
+def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
     """Plot mean reward per episode
 
     Parameters
@@ -64,17 +71,23 @@ def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None):
 
     """
     rewards = []
+    episodes = []
     for summary in summaries:
-        rewards.append(np.asarray([episode.reward / episode.steps for episode in summary.episodes]))
+        rewards.append(summary.mean_reward_episode(train_bool))
+        episodes.append(summary.iterations(train_bool))
     rewards = np.asarray(rewards)
+    episodes = np.asarray(episodes)
 
-    mean = np.mean(rewards, axis=0)
-    ma_mean = moving_average(mean, ma_window)
+    x = np.unique(episodes)
+    y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
+    mean_y = np.mean(y, axis=0)
 
-    plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle, linewidth=1.)
+    plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
+
+    return max(x)
 
 
-def steps_episode(summaries, ma_window=1, color=None, linestyle=None):
+def steps_episode(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
     """Plot number of steps per episode
 
 
@@ -91,14 +104,20 @@ def steps_episode(summaries, ma_window=1, color=None, linestyle=None):
 
     """
     steps = []
+    episodes = []
     for summary in summaries:
-        steps.append(np.asarray([episode.steps for episode in summary.episodes]))
+        steps.append(summary.steps_episode(train_bool))
+        episodes.append(summary.iterations(train_bool))
     steps = np.asarray(steps)
+    episodes = np.asarray(episodes)
 
-    mean = np.mean(steps, axis=0)
-    ma_mean = moving_average(mean, ma_window)
+    x = np.unique(episodes)
+    y = np.asarray([np.interp(x, episode, step) for episode, step in zip(episodes, steps)])
+    mean_y = np.mean(y, axis=0)
 
-    plt.plot(range(len(ma_mean)), ma_mean, color=color, linestyle=linestyle, linewidth=1.)
+    plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
+
+    return max(x)
 
 
 labels = {
@@ -108,7 +127,7 @@ labels = {
 }
 
 
-def plot_summary(files, plot_type, ma_window=1, title=None, legend=None,
+def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, legend=None,
                  output_dir=None, colors=None, linestyles=None,
                  format="eps", baseline=None):
     """Main plot function to be used
@@ -178,15 +197,14 @@ def plot_summary(files, plot_type, ma_window=1, title=None, legend=None,
             fps = glob.glob("%s*.json" % file)
             summaries = [Summary.load(fp) for fp in fps]
 
-        xmax = max(xmax, len(summaries[0]))
-
         color, linestyle = None, None
         if colors is not None:
             color = colors.pop()
         if linestyles is not None:
             linestyle = linestyles.pop()
 
-        plot_type(summaries, ma_window, color, linestyle)
+        x = plot_type(summaries, ma_window, color, linestyle, train_bool)
+        xmax = max(xmax, x)
 
     if baseline is not None:
         plt.hlines(y=baseline, xmin=0, xmax=xmax, color="black", linestyle="dotted")

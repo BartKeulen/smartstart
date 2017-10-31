@@ -170,7 +170,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     max_ucb = ucb
             return smart_start
 
-        def train(self, render=False, render_episode=False, print_results=True):
+        def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
             """Runs a training experiment
 
             Training experiment runs for self.num_episodes and each episode
@@ -195,7 +195,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 Summary Object containing the training data
 
             """
-            summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
+            summary = Summary(self.__class__.__name__, self.env.name)
 
             for i_episode in range(self.num_episodes):
                 episode = Episode(i_episode)
@@ -245,6 +245,9 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     if done:
                         break
 
+                # Add training episode to summary
+                summary.append(episode)
+
                 # Render and/or print results
                 message = "Episode: %d, steps: %d, reward: %.2f" % \
                           (i_episode, len(episode), episode.reward)
@@ -256,7 +259,16 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                                                      message=message)
                 if print_results:
                     print(message)
-                summary.append(episode)
+
+                # Run test episode and add tot summary
+                if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+                    test_episode = self.run_test_episode(i_episode)
+                    summary.append_test(test_episode)
+
+                    if print_results:
+                        print(
+                            "TEST Episode: %d, steps: %d, reward: %.2f" % (
+                                i_episode, len(test_episode), test_episode.reward))
 
             while render:
                 value_map = self.Q.copy()

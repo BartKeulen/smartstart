@@ -45,7 +45,7 @@ class RMax(Counter):
             self.policy.set_reward(self.obs_abs, action, self.obs_abs, self.R_max)
             self.policy.set_transition(self.obs_abs, action, self.obs_abs, 1)
 
-    def train(self, render=False, render_episode=False, print_results=True):
+    def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         """
 
         Parameters
@@ -61,7 +61,7 @@ class RMax(Counter):
         -------
 
         """
-        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
+        summary = Summary(self.__class__.__name__, self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
@@ -76,6 +76,9 @@ class RMax(Counter):
                 if done:
                     break
 
+            # Add training episode to summary
+            summary.append(episode)
+
             # Render and/or print results
             message = "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward)
             if render or render_episode:
@@ -86,7 +89,15 @@ class RMax(Counter):
             if print_results:
                 print(
                     "Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(episode), episode.reward))
-            summary.append(episode)
+
+            # # Run test episode and add tot summary
+            # if test_freq != 0 and i_episode / test_freq == 0:
+            #     test_episode = run_test_episode(i_episode)
+            #     summary.append_test(test_episode)
+            #
+            #     if print_results:
+            #         print(
+            #             "TEST Episode: %d, steps: %d, reward: %.2f" % (i_episode, len(test_episode), test_episode.reward))
 
         while render or render_episode:
             render = self.env.render(value_map=self.get_value_map(),

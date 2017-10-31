@@ -216,7 +216,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return self.Q[idx], action_tp1
 
-    def train(self, render=False, render_episode=False, print_results=True):
+    def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         """Runs a training experiment
         
         Training experiment runs for self.num_episodes and each episode takes
@@ -237,7 +237,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
+        summary = Summary(self.__class__.__name__, self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
@@ -252,12 +252,12 @@ class TDLearning(Counter, metaclass=ABCMeta):
                 if done:
                     break
 
-            # Save value function
-            episode.set_value_function(self.Q)
+            # Add training episode to summary
+            summary.append(episode)
 
             # Render and/or print results
             message = "Episode: %d, steps: %d, reward: %.2f" % (
-                i_episode, len(episode), episode.average_reward())
+                i_episode, len(episode), episode.reward)
             if render or render_episode:
                 value_map = self.Q.copy()
                 value_map = np.max(value_map, axis=2)
@@ -266,9 +266,17 @@ class TDLearning(Counter, metaclass=ABCMeta):
                                                  message=message)
 
             if print_results:
-                print("Episode: %d, steps: %d, reward: %.2f" % (
-                    i_episode, len(episode), episode.average_reward()))
-            summary.append(episode)
+                print(message)
+
+            # Run test episode and add tot summary
+            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+                test_episode = self.run_test_episode(i_episode)
+                summary.append_test(test_episode)
+
+                if print_results:
+                    print(
+                        "TEST Episode: %d, steps: %d, reward: %.2f" % (
+                            i_episode, len(test_episode), test_episode.reward))
 
         while render:
             value_map = self.Q.copy()
@@ -321,6 +329,20 @@ class TDLearning(Counter, metaclass=ABCMeta):
         episode.append(reward)
 
         return obs_tp1, action_tp1, done, render
+
+    def run_test_episode(self, i_episode):
+        episode = Episode(i_episode)
+
+        obs = self.env.reset()
+        for step in range(self.max_steps):
+            action = self._no_exploration(obs)
+            obs, reward, done, _ = self.env.step(action)
+            episode.append(reward)
+
+            if done:
+                break
+
+        return episode
 
     def get_action(self, obs):
         """Returns action for obs
@@ -649,7 +671,7 @@ class TDLearningLambda(TDLearning):
 
         return self.Q[idx], action_tp1
 
-    def train(self, render=False, render_episode=False, print_results=True):
+    def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         """Runs a training experiment
         
         Training experiment runs for self.num_episodes and each episode takes
@@ -670,7 +692,7 @@ class TDLearningLambda(TDLearning):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__, self.env.name, self.max_steps)
+        summary = Summary(self.__class__.__name__, self.env.name)
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
@@ -685,8 +707,8 @@ class TDLearningLambda(TDLearning):
                 if done:
                     break
 
-            # Save value function
-            episode.set_value_function(self.Q)
+            # Add training episode to summary
+            summary.append(episode)
 
             # Clear traces after episode
             self.traces = np.zeros(
@@ -702,9 +724,17 @@ class TDLearningLambda(TDLearning):
                                                  density_map=self.get_density_map(),
                                                  message=message)
             if print_results:
-                print("Episode: %d, steps: %d, reward: %.2f" % (
-                    i_episode, len(episode), episode.reward))
-            summary.append(episode)
+                print(messages)
+
+            # Run test episode and add tot summary
+            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+                test_episode = self.run_test_episode(i_episode)
+                summary.append_test(test_episode)
+
+                if print_results:
+                    print(
+                        "TEST Episode: %d, steps: %d, reward: %.2f" % (
+                            i_episode, len(test_episode), test_episode.reward))
 
         while render:
             value_map = self.Q.copy()

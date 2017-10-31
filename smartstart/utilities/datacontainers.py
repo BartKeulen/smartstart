@@ -33,7 +33,6 @@ class Episode(object):
         self.iter = iter
         self.steps = 0
         self.reward = 0
-        self.value_function = None
 
     def append(self, reward):
         """Add transition to episode
@@ -52,9 +51,6 @@ class Episode(object):
         """
         self.steps += 1
         self.reward += reward
-
-    def set_value_function(self, value_function):
-        self.value_function = value_function.copy()
 
     def average_reward(self):
         """Average episode reward
@@ -76,10 +72,7 @@ class Episode(object):
         :obj:`str`
             JSON string of episode data
         """
-        json_dict = self.__dict__
-        json_dict['value_function'] = np.asarray(self.value_function).tolist()
-
-        return json.dumps(json_dict)
+        return json.dumps(self.__dict__)
 
     @classmethod
     def from_json(cls, data):
@@ -98,7 +91,6 @@ class Episode(object):
         """
         json_dict = json.loads(data)
         episode = cls(json_dict['iter'])
-        json_dict['value_function'] = np.asarray(json_dict['value_function'])
         episode.__dict__.update(json_dict)
         return episode
 
@@ -125,11 +117,10 @@ class Summary(object):
     episodes : :obj:`list` of :obj:`tuple` with episode data
     """
 
-    def __init__(self, name, env_name, max_steps):
+    def __init__(self, name, env_name):
         super().__init__()
         self.name = name
         self.env_name = env_name
-        self.max_steps = max_steps
         self.episodes = []
         self.tests = []
 
@@ -146,13 +137,6 @@ class Summary(object):
 
     def append_test(self, episode):
         self.tests.append(episode)
-
-    def iterations(self, train=True):
-        if train:
-            episodes = self.episodes
-        else:
-            episodes = self.tests
-        return [episode.iter for episode in episodes]
 
     def total_reward(self, train=True):
         """Total reward of all episodes
@@ -177,6 +161,13 @@ class Summary(object):
             return 0
         return self.total_reward(train) / len(episodes)
 
+    def iterations(self, train=True):
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        return np.asarray([episode.iter for episode in episodes])
+
     def steps_episode(self, train=True):
         """Number of steps per episode
 
@@ -189,7 +180,14 @@ class Summary(object):
             episodes = self.episodes
         else:
             episodes = self.tests
-        return [episode.steps for episode in episodes]
+        return np.asarray([episode.steps for episode in episodes])
+
+    def mean_reward_episode(self, train=True):
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        return np.asarray([episode.reward / episode.steps for episode in episodes])
 
     def to_json(self):
         """Convert summary data to JSON string
@@ -222,7 +220,7 @@ class Summary(object):
         :obj:`~smartstart.utilities.datacontainers.Summary`
             new Summary object
         """
-        summary = cls(None, None, None)
+        summary = cls(None, None)
         data_dict = json.loads(data)
         data_dict['episodes'] = [Episode.from_json(episode) for episode in data_dict['episodes']]
         data_dict['tests'] = [Episode.from_json(test) for test in data_dict['tests']]

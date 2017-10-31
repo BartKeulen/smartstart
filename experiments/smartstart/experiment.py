@@ -26,7 +26,7 @@ def task(params):
         'alpha': 0.1,
         'gamma': 0.99,
         'epsilon': 0.05,
-        'num_episodes': 500,
+        'num_episodes': 250,
         'max_steps': 1000,
         'exploration': params['exploration_strategy']
     }
@@ -42,7 +42,7 @@ def task(params):
 
     post_fix = "exploration=%s_%d" % (params['exploration_strategy'], params['run'])
 
-    summary = agent.train(render=False, render_episode=False, print_results=False)
+    summary = agent.train(test_freq=10, render=False, render_episode=False, print_results=False)
 
     summary.save(directory, post_fix)
 
@@ -55,7 +55,7 @@ def task(params):
 algorithms = [QLearning]
 exploration_strategies = [TDLearning.E_GREEDY, TDLearning.UCT]
 use_smart_start = [True, False]
-num_exp = 10
+num_exp = 5
 
 param_grid = {'task': task,
               'algorithm': algorithms,
