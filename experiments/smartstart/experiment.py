@@ -78,4 +78,4 @@ if __name__ == "__main__":
     pp = pprint.PrettyPrinter()
     pp.pprint(param_grid)
 
-    # run_experiment(param_grid)
+    run_experiment(param_grid)
