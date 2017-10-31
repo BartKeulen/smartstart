@@ -4,6 +4,7 @@ Defines method for generating a SmartStart object from an algorithm object. The
 SmartStart object will be a subclass of the original algorithm object.
 """
 import numpy as np
+from collections import defaultdict, OrderedDict
 
 from smartstart.algorithms import ValueIteration
 from smartstart.utilities.datacontainers import Episode, Summary
@@ -115,7 +116,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                      exploration_param=2.,
                      eta=0.5,
                      m=1,
-                     vi_gamma=0.99,
+                     vi_gamma=0.999,
                      vi_min_error=1e-5,
                      vi_max_itr=1000,
                      *args,
@@ -303,16 +304,35 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             # Reset policy
             self.policy.reset()
 
+            # Dictionary for reverse searching transitions for optimal observation list
+            transitions = defaultdict(lambda: [])
+
             # Fit transition model and reward function
             for obs_c, obs_count in self.count_map.items():
                 for action, action_count in obs_count.items():
                     for obs_tp1, count in action_count.items():
-                        self.policy.add_obs(obs_c)
+
+                        transitions[obs_tp1].append(obs_c)
+
                         if obs_tp1 == tuple(start_state):
                             self.policy.R[obs_c + action][obs_tp1] = 1.
+                            self.policy.goal = obs_tp1
                         self.policy.T[obs_c + action][obs_tp1] = \
                             count / sum(self.count_map[obs_c][action].
                                         values())
+
+            # Get optimal observation list for dynamic programming
+            obses = []
+            remaining_obses = [tuple(start_state)]
+            while remaining_obses:
+                next_obs = remaining_obses.pop(0)
+                obses.append(next_obs)
+                next_obses = transitions[next_obs]
+                for obs in next_obses:
+                    if obs not in obses and obs not in remaining_obses:
+                        remaining_obses.append(obs)
+
+            self.policy.obses = obses
 
             # Perform dynamic programming
             self.policy.optimize()

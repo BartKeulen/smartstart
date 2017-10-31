@@ -128,7 +128,7 @@ labels = {
 
 
 def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, legend=None,
-                 output_dir=None, colors=None, linestyles=None,
+                 output_dir=None, colors_in=None, linestyles_in=None,
                  format="eps", baseline=None):
     """Main plot function to be used
 
@@ -181,6 +181,8 @@ def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, leg
     baseline : :obj:`float`
         plotting a dotted horizontal line as baseline (Default value = None)
     """
+    colors = colors_in.copy()
+    linestyles = linestyles_in.copy()
     if colors is not None:
         assert len(colors) == len(files)
     if linestyles is not None:

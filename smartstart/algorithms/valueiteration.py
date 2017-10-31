@@ -55,7 +55,7 @@ class ValueIteration(object):
 
     def __init__(self,
                  env,
-                 gamma=0.99,
+                 gamma=0.999,
                  min_error=1e-5,
                  max_itr=1000):
         self.env = env
@@ -66,7 +66,8 @@ class ValueIteration(object):
         self.V = defaultdict(lambda: 0)
         self.T = defaultdict(lambda: defaultdict(lambda: 0))
         self.R = defaultdict(lambda: defaultdict(lambda: 0))
-        self.obses = set()
+        # self.obses = set()
+        self.obses = []
         self.goal = None
 
     def reset(self):
@@ -80,7 +81,7 @@ class ValueIteration(object):
         - self.goal: Goal state
 
         """
-        self.V.clear()
+        # self.V.clear()
         self.T.clear()
         self.R.clear()
         self.goal = None
@@ -108,7 +109,7 @@ class ValueIteration(object):
             observation
 
         """
-        self.add_obs(obs)
+        # self.add_obs(obs)
         self.goal = tuple(obs)
         self.V[self.goal] = 0
 
@@ -131,7 +132,7 @@ class ValueIteration(object):
             transition probability
 
         """
-        self.add_obs(obs)
+        # self.add_obs(obs)
         self.T[tuple(obs) + (action,)][tuple(obs_tp1)] = value
 
     def get_transition(self, obs, action, obs_tp1=None):
@@ -172,7 +173,7 @@ class ValueIteration(object):
             reward
 
         """
-        self.add_obs(obs)
+        # self.add_obs(obs)
         self.R[tuple(obs) + (action,)][tuple(obs_tp1)] = value
 
     def optimize(self):
