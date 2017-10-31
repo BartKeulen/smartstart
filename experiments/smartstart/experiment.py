@@ -1,3 +1,4 @@
+import datetime
 import pprint
 import random
 import argparse
@@ -25,8 +26,8 @@ def task(params):
         'alpha': 0.1,
         'gamma': 0.99,
         'epsilon': 0.05,
-        'num_episodes': 500,
-        'max_steps': 1000,
+        'num_episodes': 1000,
+        'max_steps': params['max_steps'],
         'exploration': params['exploration_strategy']
     }
 
@@ -44,7 +45,7 @@ def task(params):
     summary = agent.train(test_freq=5, render=False, render_episode=False, print_results=False)
 
     summary.save_to_gcloud(bucket_name='smartstart',
-                           directory="smartstart/%s" % env.name,
+                           directory="%s/%s" % (params['directory'], env.name),
                            post_fix=post_fix)
 
 
@@ -53,20 +54,28 @@ if __name__ == "__main__":
     parser.add_argument('environment', type=int, help='An integer for the GridWorld environment (0 = Easy, 1 = Medium, 2 = Hard, 3 = Extreme)')
     args = parser.parse_args()
 
-    env = [args.environment]
-    algorithms = [QLearning, SARSA, SARSALambda]
-    exploration_strategies = [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCT]
-    use_smart_start = [True, False]
-    num_exp = 25
+    env = args.environment
+    if env == 0:
+        max_steps = 1000
+    elif env == 1:
+        max_steps = 2500
+    elif env == 2:
+        max_steps = 5000
+    elif env == 3:
+        max_steps = 10000
+    else:
+        raise NotImplementedError("Choose from available environments (0 = Easy, 1 = Medium, 2 = Hard, 3 = Extreme)")
 
     param_grid = {'task': task,
-                  'env': env,
-                  'algorithm': algorithms,
-                  'exploration_strategy': exploration_strategies,
-                  'use_smart_start': use_smart_start,
-                  'num_exp': num_exp}
+                  'env': [env],
+                  'max_steps': [max_steps],
+                  'algorithm': [QLearning, SARSA, SARSALambda],
+                  'exploration_strategy': [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCT],
+                  'use_smart_start': [True, False],
+                  'num_exp': 25,
+                  'directory': [datetime.datetime.now().strftime('%d%m%Y')]}
 
     pp = pprint.PrettyPrinter()
     pp.pprint(param_grid)
 
-    run_experiment(param_grid)
+    # run_experiment(param_grid)
