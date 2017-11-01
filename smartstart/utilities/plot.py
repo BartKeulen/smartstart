@@ -17,6 +17,8 @@ import seaborn as sns
 from smartstart.utilities.numerical import moving_average
 from smartstart.utilities.datacontainers import Summary
 
+sns.set()
+
 
 def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
     """Plot mean reward with standard deviation per episode
@@ -218,7 +220,7 @@ def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, leg
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     if legend is not None:
-        plt.legend(legend)
+        plt.legend(legend, loc='lower right')
 
     if output_dir:
         save_plot(output_dir, title, format)

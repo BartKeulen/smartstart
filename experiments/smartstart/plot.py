@@ -7,11 +7,12 @@ from smartstart.utilities.plot import plot_summary, mean_reward_episode, \
     mean_reward_std_episode, steps_episode, show_plot
 from smartstart.utilities.utilities import get_data_directory
 
-# sns.set_context("paper")
+sns.set_context("paper")
 
-directory = get_data_directory(__file__)
-mazes = ["GridWorldEasy"]
-baselines = [31]
+# directory = get_data_directory(__file__)
+directory = '/home/bart/Projects/smartstart/data/smartstart/'
+mazes = ["GridWorldEasy", "GridWorldMedium"]
+baselines = [31, 72]
 algos = ["QLearning", "SARSA", "SARSALambda"]
 exploration_strategies = [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCT]
 use_smart_start = [True, False]
@@ -30,7 +31,7 @@ for maze, baseline in zip(mazes, baselines):
                     filename += "SmartStart_"
                     legendname += "SmartStart "
                 filename += "%s_%s_exploration=%s" % (algo, maze, exploration_strategy)
-                files.append(os.path.join(directory, filename))
+                files.append(os.path.join(directory, maze, filename))
                 legendname += "%s" % exploration_strategy
                 legend.append(legendname)
 
@@ -43,6 +44,8 @@ for maze, baseline in zip(mazes, baselines):
                      legend=legend,
                      colors_in=colors,
                      linestyles_in=linestyles,
-                     baseline=1/baseline)
+                     baseline=1/baseline,
+                     output_dir='/home/bart/IHMC/thesis/img/',
+                     format='pdf')
 
-show_plot()
+# show_plot()

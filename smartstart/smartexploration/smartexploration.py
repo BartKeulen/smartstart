@@ -6,7 +6,7 @@ SmartStart object will be a subclass of the original algorithm object.
 import numpy as np
 from collections import defaultdict, OrderedDict
 
-from smartstart.algorithms import ValueIteration
+from smartstart.algorithms import ValueIteration, SARSALambda
 from smartstart.utilities.datacontainers import Episode, Summary
 
 
@@ -248,6 +248,11 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
                 # Add training episode to summary
                 summary.append(episode)
+
+                if base is SARSALambda:
+                    # Clear traces after episode
+                    self.traces = np.zeros(
+                        (self.env.w, self.env.h, self.env.num_actions))
 
                 # Render and/or print results
                 message = "Episode: %d, steps: %d, reward: %.2f" % \

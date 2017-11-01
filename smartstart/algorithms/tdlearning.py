@@ -110,6 +110,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
         self.temp = temp
         self.beta = beta
 
+        self.test_render = False
+
     def reset(self):
         """Resets Q-function
         
@@ -208,8 +210,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         """
         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-        td_error = self.alpha * (
-            reward + self.gamma * next_q_value - self.get_q_value(obs, action))
+        td_error = reward + self.gamma * next_q_value - self.get_q_value(obs, action)
 
         idx = tuple(obs) + (action,)
         self.Q[idx] += self.alpha * td_error
@@ -334,10 +335,15 @@ class TDLearning(Counter, metaclass=ABCMeta):
         episode = Episode(i_episode)
 
         obs = self.env.reset()
+        if self.test_render:
+            self.env.render()
         for step in range(self.max_steps):
             action = self._no_exploration(obs)
             obs, reward, done, _ = self.env.step(action)
             episode.append(reward)
+
+            if self.test_render:
+                self.env.render()
 
             if done:
                 break
@@ -599,7 +605,7 @@ class TDLearningLambda(TDLearning):
     """
     def __init__(self,
                  env,
-                 lamb=0.75,
+                 lamb=0.95,
                  threshold_traces=1e-3,
                  *args, **kwargs):
         super(TDLearningLambda, self).__init__(env, *args, **kwargs)
@@ -657,8 +663,7 @@ class TDLearningLambda(TDLearning):
 
         """
         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-        td_error = self.alpha * (
-            reward + self.gamma * next_q_value - self.get_q_value(obs, action))
+        td_error = reward + self.gamma * next_q_value - self.get_q_value(obs, action)
 
         idx = tuple(obs) + (action,)
         self.traces[idx] = 1
@@ -724,7 +729,7 @@ class TDLearningLambda(TDLearning):
                                                  density_map=self.get_density_map(),
                                                  message=message)
             if print_results:
-                print(messages)
+                print(message)
 
             # Run test episode and add tot summary
             if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):

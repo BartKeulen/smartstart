@@ -158,7 +158,7 @@ class GridWorldVisualizer(Visualizer):
             self._render_walls(pos=pos)
             self._render_elements("goal", "start", "agent", pos=pos)
             # self._render_map(grid, pos=positions.pop())
-        if self.VALUE_FUNCTION in self.active_visualizers:
+        if self.VALUE_FUNCTION in self.active_visualizers and value_map is not None:
             pos = positions.pop()
             self._render_walls(pos=pos)
             self._render_value_map(value_map, pos=pos)
