@@ -40,7 +40,7 @@ def task(params):
         agent = params['algorithm'](env,
                                     **kwargs)
 
-    post_fix = "exploration=%s_%d" % (params['exploration_strategy'], params['run'])
+    post_fix = "exploration=%s_%0.3d" % (params['exploration_strategy'], params['run'])
 
     summary = agent.train(test_freq=5, render=False, render_episode=False, print_results=False)
 

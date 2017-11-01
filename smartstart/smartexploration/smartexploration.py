@@ -7,6 +7,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 
 from smartstart.algorithms import ValueIteration, SARSALambda
+from smartstart.algorithms.sarsa import SARSA
 from smartstart.utilities.datacontainers import Episode, Summary
 
 
@@ -206,6 +207,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 max_steps = self.max_steps
 
                 # eta probability of using smart start
+                self.use_smart_start_policy = False
                 if i_episode > 0 and np.random.rand() <= self.eta:
                     # Step 1: Choose smart start
                     start_state = self.get_start()
@@ -214,10 +216,11 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     self.dynamic_programming(start_state)
 
                     finished = False
+                    self.use_smart_start_policy = True
                     for i in range(self.max_steps):
                         action = self.policy.get_action(obs)
-                        obs, _, done, render = self.take_step(obs, action,
-                                                              episode, render)
+
+                        obs, _, done, render = self.take_step(obs, action, episode, render)
 
                         if np.array_equal(obs, start_state):
                             break
@@ -236,6 +239,8 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     value_map = np.max(value_map, axis=2)
                     render_episode = self.env.render(value_map=value_map,
                                                      density_map=self.get_density_map())
+
+                self.use_smart_start_policy = False
 
                 # Perform normal reinforcement learning
                 action = self.get_action(obs)
@@ -283,6 +288,12 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                                          density_map=self.get_density_map())
 
             return summary
+
+        def get_action(self, obs):
+            if self.use_smart_start_policy and (base is SARSA or base is SARSALambda):
+                return self.policy.get_action(obs)
+
+            return super().get_action(obs)
 
         def dynamic_programming(self, start_state):
             """Fits transition model, reward function and performs dynamic
