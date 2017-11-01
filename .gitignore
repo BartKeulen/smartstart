@@ -157,3 +157,4 @@ fabric.properties
 *.json
 **/*/data/
 scripts/
+logs/
