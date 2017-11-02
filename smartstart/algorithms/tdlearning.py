@@ -83,7 +83,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
     E_GREEDY = "E-Greedy"
     BOLTZMANN = "Boltzmann"
     COUNT_BASED = "Count-Based"
-    UCT = "UCT"
+    UCB1 = "UCB1"
 
     def __init__(self,
                  env,
@@ -383,8 +383,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
             return self._boltzmann(obs)
         elif self.exploration == TDLearning.COUNT_BASED:
             return self._count_based(obs)
-        elif self.exploration == TDLearning.UCT:
-            return self._uct(obs)
+        elif self.exploration == TDLearning.UCB1:
+            return self._ucb1(obs)
         else:
             raise NotImplementedError(
                 "Please choose from the available exploration methods, "
@@ -508,7 +508,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return random.choice(max_actions)
 
-    def _uct(self, obs):
+    def _ucb1(self, obs):
         """Policy with UCT exploration method
 
         Parameters

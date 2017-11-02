@@ -69,8 +69,8 @@ if __name__ == "__main__":
     param_grid = {'task': task,
                   'env': [env],
                   'max_steps': [max_steps],
-                  'algorithm': [QLearning, SARSA, SARSALambda],
-                  'exploration_strategy': [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCT],
+                  'algorithm': [QLearning, SARSA],
+                  'exploration_strategy': [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCB1],
                   'use_smart_start': [True, False],
                   'num_exp': 25,
                   'directory': [datetime.datetime.now().strftime('%d%m%Y')]}

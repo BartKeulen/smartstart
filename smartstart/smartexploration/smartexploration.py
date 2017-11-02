@@ -216,6 +216,8 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     self.dynamic_programming(start_state)
 
                     finished = False
+
+                    # Set using smart start policy to True
                     self.use_smart_start_policy = True
                     for i in range(self.max_steps):
                         action = self.policy.get_action(obs)
@@ -240,6 +242,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     render_episode = self.env.render(value_map=value_map,
                                                      density_map=self.get_density_map())
 
+                # Turn using smart start policy off
                 self.use_smart_start_policy = False
 
                 # Perform normal reinforcement learning
@@ -290,7 +293,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             return summary
 
         def get_action(self, obs):
-            if self.use_smart_start_policy and (base is SARSA or base is SARSALambda):
+            if self.use_smart_start_policy:
                 return self.policy.get_action(obs)
 
             return super().get_action(obs)
