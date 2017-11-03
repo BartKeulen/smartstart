@@ -26,7 +26,7 @@ def task(params):
         'alpha': 0.1,
         'gamma': 0.99,
         'epsilon': 0.05,
-        'num_episodes': 1000,
+        'num_episodes': params['num_episodes'],
         'max_steps': params['max_steps'],
         'exploration': params['exploration_strategy']
     }
@@ -56,12 +56,16 @@ if __name__ == "__main__":
 
     env = args.environment
     if env == 0:
+        num_episodes = 1000
         max_steps = 1000
     elif env == 1:
+        num_episodes = 2500
         max_steps = 2500
     elif env == 2:
+        num_episodes = 5000
         max_steps = 5000
     elif env == 3:
+        num_episodes = 10000
         max_steps = 10000
     else:
         raise NotImplementedError("Choose from available environments (0 = Easy, 1 = Medium, 2 = Hard, 3 = Extreme)")
@@ -69,6 +73,7 @@ if __name__ == "__main__":
     param_grid = {'task': task,
                   'env': [env],
                   'max_steps': [max_steps],
+                  'num_episodes': [num_episodes],
                   'algorithm': [QLearning, SARSA],
                   'exploration_strategy': [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCB1],
                   'use_smart_start': [True, False],
