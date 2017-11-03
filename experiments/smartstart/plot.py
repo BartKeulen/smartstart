@@ -11,8 +11,10 @@ sns.set_context("paper")
 
 # directory = get_data_directory(__file__)
 directory = '/home/bart/Projects/smartstart/data/smartstart/'
-mazes = ["GridWorldEasy", "GridWorldMedium", "GridWorldHard"]
-baselines = [31, 72, 138]
+# mazes = ["GridWorldEasy", "GridWorldMedium", "GridWorldHard"]
+# baselines = [31, 72, 138]
+mazes = ["GridWorldEasy"]
+baselines = [31]
 algos = ["QLearning", "SARSA"]
 exploration_strategies = [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCB1]
 use_smart_start = [True, False]
@@ -34,6 +36,9 @@ for maze, baseline in zip(mazes, baselines):
                 files.append(os.path.join(directory, maze, filename))
                 legendname += "%s" % exploration_strategy
                 legend.append(legendname)
+
+        import pdb
+        pdb.set_trace()
 
         title = "%s_%s" % (algo, maze)
 

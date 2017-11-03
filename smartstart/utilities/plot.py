@@ -206,9 +206,9 @@ def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, leg
 
         color, linestyle = None, None
         if colors is not None:
-            color = colors.pop()
+            color = colors.pop(0)
         if linestyles is not None:
-            linestyle = linestyles.pop()
+            linestyle = linestyles.pop(0)
 
         x = plot_type(summaries, ma_window, color, linestyle, train_bool)
         xmax = max(xmax, x)
