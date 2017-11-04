@@ -5,7 +5,7 @@ Module defining classes for Q-Learning and Q(lambda).
 See 'Reinforcement Learning: An Introduction by Richard S. Sutton and
 Andrew G. Barto for more information.
 """
-from smartstart.algorithms import TDLearning, TDLearningLambda
+from smartstart.algorithms.tabular.tdlearning import TDLearning, TDLearningLambda
 
 
 class QLearning(TDLearning):
