@@ -186,8 +186,6 @@ def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, leg
     baseline : :obj:`float`
         plotting a dotted horizontal line as baseline (Default value = None)
     """
-    # colors = colors_in.copy()
-    # linestyles = linestyles_in.copy()
     if colors is not None:
         assert len(colors) == len(files)
     if linestyles is not None:

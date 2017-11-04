@@ -13,8 +13,8 @@ sns.set_context("paper")
 directory = '/home/bart/Projects/smartstart/data/smartstart/'
 # mazes = ["GridWorldEasy", "GridWorldMedium", "GridWorldHard"]
 # baselines = [31, 72, 138]
-mazes = ["GridWorldEasy"]
-baselines = [31]
+mazes = ["GridWorldHard"]
+baselines = [138]
 algos = ["QLearning", "SARSA"]
 exploration_strategies = [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCB1]
 use_smart_start = [True, False]
