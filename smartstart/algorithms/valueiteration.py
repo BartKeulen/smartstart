@@ -55,7 +55,7 @@ class ValueIteration(object):
 
     def __init__(self,
                  env,
-                 gamma=0.999,
+                 gamma=0.99,
                  min_error=1e-5,
                  max_itr=1000):
         self.env = env
@@ -66,7 +66,6 @@ class ValueIteration(object):
         self.V = defaultdict(lambda: 0)
         self.T = defaultdict(lambda: defaultdict(lambda: 0))
         self.R = defaultdict(lambda: defaultdict(lambda: 0))
-        # self.obses = set()
         self.obses = []
         self.goal = None
 
@@ -81,21 +80,10 @@ class ValueIteration(object):
         - self.goal: Goal state
 
         """
-        # self.V.clear()
+        self.V.clear()
         self.T.clear()
         self.R.clear()
         self.goal = None
-
-    def add_obs(self, obs):
-        """Adds observation to the obses set
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            observation
-
-        """
-        self.obses.add(tuple(obs))
 
     def set_goal(self, obs):
         """Set goal state

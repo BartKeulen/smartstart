@@ -162,7 +162,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             max_ucb = -float('inf')
             for i in range(possible_starts.shape[1]):
                 obs = possible_starts[:, i]
-                q_values, _ = self.get_q_values(obs)
+                q_values, _ = self.get_q_value(obs)
                 q_value = max(q_values)
                 ucb = self.exploitation_param * q_value + \
                       np.sqrt((self.exploration_param *
@@ -211,6 +211,8 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 if i_episode > 0 and np.random.rand() <= self.eta:
                     # Step 1: Choose smart start
                     start_state = self.get_start()
+
+                    print("Smart Start State: ", start_state)
 
                     # Step 2: Guide to smart start
                     self.dynamic_programming(start_state)
