@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
-from smartstart.algorithms.tabular.tdlearning import TDLearning
+from smartstart.algorithms.tdlearning import TDLearning
 
 
 class FunctionApproximation(TDLearning, metaclass=ABCMeta):

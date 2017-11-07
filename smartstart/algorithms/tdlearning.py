@@ -10,10 +10,10 @@ import random
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-from smartstart.utilities.scheduler import Scheduler
 
+from smartstart.algorithms.counter import Counter
 from smartstart.utilities.datacontainers import Summary, Episode
-from .counter import Counter
+from smartstart.utilities.scheduler import Scheduler
 
 
 class TDLearning(Counter, metaclass=ABCMeta):
@@ -91,20 +91,15 @@ class TDLearning(Counter, metaclass=ABCMeta):
                  max_steps=1000,
                  alpha=0.1,
                  gamma=0.99,
-                 init_q_value=0.,
                  exploration=E_GREEDY,
                  epsilon=0.1,
                  temp=0.5,
                  beta=1.):
         super(TDLearning, self).__init__(env)
-
         self.num_episodes = num_episodes
         self.max_steps = max_steps
         self.alpha = alpha
         self.gamma = gamma
-        self.init_q_value = init_q_value
-        self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
         self.exploration = exploration
         self.epsilon = epsilon
         self.temp = temp
@@ -112,110 +107,21 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         self.test_render = False
 
+    @abstractmethod
     def reset(self):
-        """Resets Q-function
-        
-        The Q-function is set to the initial q-value for very state-action pair.
-        """
-        self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+        raise NotImplementedError
 
-    def get_q_values(self, obs):
-        """Returns Q-values and actions for observation obs
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            observation
-
-        Returns
-        -------
-        :obj:`list` of :obj:`float`
-            Q-values
-        :obj:`list` of :obj:`int`
-            actions associated with each q-value in q_values
-
-        """
-        actions = self.env.possible_actions(obs)
-        q_values = []
-        for action in actions:
-            idx = tuple(obs) + (action,)
-            q_values.append(self.Q[idx])
-        return q_values, actions
-
-    def get_q_value(self, obs, action):
-        """Returns Q-value for obs-action pair
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            observation
-        action : int
-            action
-
-        Returns
-        -------
-        :obj:`float`
-            Q-Value
-
-        """
-        idx = tuple(obs) + (action,)
-        return self.Q[idx]
+    @abstractmethod
+    def get_q_value(self, obs, action=None):
+        raise NotImplementedError
 
     @abstractmethod
     def get_next_q_action(self, obs_tp1, done):
-        """Returns next Q-Value and next action
-        
-        Note:
-            Has to be implemented in child class.
+        raise NotImplementedError
 
-        Parameters
-        ----------
-        obs_tp1 : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            next observation
-        done : bool
-            True when obs_tp1 is terminal
-
-        Raises
-        ------
-        NotImplementedError
-            use a subclass of TDLearning like QLearning or SARSA.
-
-        """
-        raise NotImplementedError(
-            "Use a subclass of TDLearning like QLearning or SARSA.")
-
+    @abstractmethod
     def update_q_value(self, obs, action, reward, obs_tp1, done):
-        """Update Q-value for obs-action pair
-        
-        Updates Q-value according to the Bellman equation.
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            observation
-        action : :obj:`int`
-            action
-        reward : :obj:`float`
-            reward
-        obs_tp1 : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            next observation
-        done : :obj:`bool`
-            True when obs_tp1 is terminal
-
-        Returns
-        -------
-        :obj:`float`
-            updated Q-value and next action
-
-        """
-        next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-        td_error = reward + self.gamma * next_q_value - self.get_q_value(obs, action)
-
-        idx = tuple(obs) + (action,)
-        self.Q[idx] += self.alpha * td_error
-
-        return self.Q[idx], action_tp1
+        raise NotImplementedError
 
     def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         """Runs a training experiment
@@ -260,7 +166,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             message = "Episode: %d, steps: %d, reward: %.2f" % (
                 i_episode, len(episode), episode.reward)
             if render or render_episode:
-                value_map = self.Q.copy()
+                value_map = self.get_q_map()
                 value_map = np.max(value_map, axis=2)
                 render_episode = self.env.render(value_map=value_map,
                                                  density_map=self.get_density_map(),
@@ -280,7 +186,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
                             i_episode, len(test_episode), test_episode.reward))
 
         while render:
-            value_map = self.Q.copy()
+            value_map = self.get_q_map()
             value_map = np.max(value_map, axis=2)
             render = self.env.render(value_map=value_map,
                                      density_map=self.get_density_map())
@@ -318,7 +224,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         obs_tp1, reward, done, _ = self.env.step(action)
 
         if render:
-            value_map = self.Q.copy()
+            value_map = self.get_q_map()
             value_map = np.max(value_map, axis=2)
             render = self.env.render(value_map=value_map,
                                      density_map=self.get_density_map())
@@ -404,7 +310,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             next action
 
         """
-        q_values, actions = self.get_q_values(obs)
+        q_values, actions = self.get_q_value(obs)
         _, max_action = max(zip(q_values, actions))
         return max_action
 
@@ -426,7 +332,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         Exception
             No maximum q-values were found.
         """
-        q_values, actions = self.get_q_values(obs)
+        q_values, actions = self.get_q_value(obs)
 
         if Scheduler in self.epsilon.__class__.__bases__:
             epsilon = self.epsilon.sample()
@@ -463,7 +369,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         :obj:`int`
             next action
         """
-        q_values, actions = self.get_q_values(obs)
+        q_values, actions = self.get_q_value(obs)
 
         q_values = np.asarray(q_values)
         sum_q = np.sum(np.exp(q_values / self.temp))
@@ -490,7 +396,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         Exception
             No maximum q-values were found.
         """
-        q_values, actions = self.get_q_values(obs)
+        q_values, actions = self.get_q_value(obs)
         tot_count = self.get_count(obs)
 
         max_value = -float('inf')
@@ -526,7 +432,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         Exception
             No maximum q-values were found.
         """
-        q_values, actions = self.get_q_values(obs)
+        q_values, actions = self.get_q_value(obs)
         tot_count = self.get_count(obs)
 
         max_value = -float('inf')
@@ -549,6 +455,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return random.choice(max_actions)
 
+    @abstractmethod
     def get_q_map(self):
         """Returns value map for environment
         
@@ -562,16 +469,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             value map
 
         """
-        width, height = self.env.w, self.env.h
-
-        q_map = np.zeros((width, height), dtype='int')
-        for i in range(width):
-            for j in range(height):
-                obs = np.array([i, j])
-                q_values, _ = self.get_q_values(obs)
-                q_map[i, j] = int(max(q_values))
-
-        return q_map
+        raise NotImplementedError
 
 
 class TDLearningLambda(TDLearning):
@@ -611,7 +509,6 @@ class TDLearningLambda(TDLearning):
         super(TDLearningLambda, self).__init__(env, *args, **kwargs)
         self.lamb = lamb
         self.threshold_traces = threshold_traces
-        self.traces = np.zeros((self.env.w, self.env.h, self.env.num_actions))
 
     @abstractmethod
     def get_next_q_action(self, obs_tp1, done):
@@ -636,45 +533,6 @@ class TDLearningLambda(TDLearning):
         raise NotImplementedError(
             "Use a subclass of TDLearningLambda like QLearningLambda or "
             "SARSALambda.")
-
-    def update_q_value(self, obs, action, reward, obs_tp1, done):
-        """Update Q-value for obs-action pair
-        
-        Updates Q-value according to the Bellman equation with eligibility
-        traces included.
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or `np.ndarray`
-            observation
-        action : :obj:`int`
-            action
-        reward : :obj:`float`
-            reward
-        obs_tp1 : :obj:`list` of :obj:`int` or `np.ndarray`
-            next observation
-        done : :obj:`bool`
-            True when obs_tp1 is terminal
-
-        Returns
-        -------
-        :obj:`float`
-            updated Q-value and next action
-
-        """
-        next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-        td_error = reward + self.gamma * next_q_value - self.get_q_value(obs, action)
-
-        idx = tuple(obs) + (action,)
-        self.traces[idx] = 1
-        active_traces = np.asarray(
-            np.where(self.traces > self.threshold_traces))
-        for i in range(active_traces.shape[1]):
-            idx = tuple(active_traces[:, i])
-            self.Q[idx] += self.alpha * td_error * self.traces[idx]
-            self.traces[idx] *= self.gamma * self.lamb
-
-        return self.Q[idx], action_tp1
 
     def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         """Runs a training experiment
@@ -723,7 +581,7 @@ class TDLearningLambda(TDLearning):
             message = "Episode: %d, steps: %d, reward: %.2f" % (
                 i_episode, len(episode), episode.reward)
             if render or render_episode:
-                value_map = self.Q.copy()
+                value_map = self.get_q_map()
                 value_map = np.max(value_map, axis=2)
                 render_episode = self.env.render(value_map=value_map,
                                                  density_map=self.get_density_map(),
@@ -742,7 +600,7 @@ class TDLearningLambda(TDLearning):
                             i_episode, len(test_episode), test_episode.reward))
 
         while render:
-            value_map = self.Q.copy()
+            value_map = self.get_q_map()
             value_map = np.max(value_map, axis=2)
             render = self.env.render(value_map=value_map,
                                      density_map=self.get_density_map())
