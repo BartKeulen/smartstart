@@ -12,13 +12,12 @@ class Feature(metaclass=ABCMeta):
 
 class TriangularFeature(Feature):
 
-    def __init__(self, env, num_features_dim):
-        self.env = env
+    def __init__(self, num_states, obses_min, obses_max, num_features_dim):
         self.num_features_dim = num_features_dim
-        self.features = np.zeros((self.env.num_states, self.num_features_dim))
-        for i, (obs_min, obs_max) in enumerate(zip(self.env.obs_min, self.env.obs_max)):
+        self.features = np.zeros((num_states, self.num_features_dim))
+        for i, (obs_min, obs_max) in enumerate(zip(obses_min, obses_max)):
             self.features[i, :] = np.linspace(obs_min, obs_max, self.num_features_dim)
-        self.step_sizes = (env.obs_max - env.obs_min) / (num_features_dim - 1)
+        self.step_sizes = (np.asarray(obses_max) - np.asarray(obses_min)) / (num_features_dim - 1)
 
     def get(self, obs):
         feature_vector = np.zeros(self.features.shape)

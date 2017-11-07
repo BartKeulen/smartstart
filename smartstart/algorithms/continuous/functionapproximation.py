@@ -11,19 +11,21 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
                  env,
                  num_actions,
                  feature,
-                 alpha=0.1,
-                 gamma=0.99):
-
+                 *args,
+                 **kwargs):
+        super(FunctionApproximation, self).__init__(env, *args, **kwargs)
         self.env = env
         self.feature = feature
-        self.theta = np.zeros((self.feature.num_features, num_actions))
-        self.alpha = alpha
-        self.gamma = gamma
+        self.num_actions = num_actions
+        self.theta = np.zeros((self.feature.features.size, num_actions))
+
+    def reset(self):
+        self.theta = np.zeros((self.feature.num_features, self.num_actions))
 
     def get_q_value(self, obs, action=None):
         feature_vector = self.feature.get(obs)
         if action is None:
-            return self.theta.T.dot(feature_vector)
+            return self.theta.T.dot(feature_vector), np.asarray(range(self.theta.shape[1]))
 
         return self.theta[:, action].T.dot(feature_vector)
 
@@ -34,6 +36,22 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
         self.theta[:, action] += self.alpha * td_error * self.feature.get(obs)
         return self.get_q_value(obs, action), action_tp1
 
-    @abstractmethod
+    def get_q_map(self):
+        pass
+
+
+class QLearningFA(FunctionApproximation):
+
+    def __init__(self, *args, **kwargs):
+        super(QLearningFA, self).__init__(*args, **kwargs)
+
     def get_next_q_action(self, obs_tp1, done):
-        raise NotImplementedError
+        if not done:
+            next_q_values, _ = self.get_q_value(obs_tp1)
+            next_q_value = max(next_q_values)
+            action_tp1 = self.get_action(obs_tp1)
+        else:
+            next_q_value = 0.
+            action_tp1 = None
+
+        return next_q_value, action_tp1
