@@ -6,11 +6,9 @@ import argparse
 import numpy as np
 
 from smartstart.utilities.experimenter import run_experiment
-from smartstart.algorithms import QLearning
-from smartstart.algorithms import SARSA, SARSALambda
-from smartstart.algorithms import TDLearning
-from smartstart.environments.gridworld import GridWorld
-from smartstart.smartexploration.smartexploration import generate_smartstart_object
+from smartstart.algorithms import QLearning, SARSA, SARSALambda
+from smartstart.environments import GridWorld
+from smartstart.smartexploration import generate_smartstart_object
 from smartstart.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
@@ -75,7 +73,7 @@ if __name__ == "__main__":
                   'max_steps': [max_steps],
                   'num_episodes': [num_episodes],
                   'algorithm': [QLearning, SARSA],
-                  'exploration_strategy': [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCB1],
+                  'exploration_strategy': [QLearning.E_GREEDY, QLearning.BOLTZMANN, QLearning.COUNT_BASED, QLearning.UCB1],
                   'use_smart_start': [True, False],
                   'num_exp': 25,
                   'directory': [datetime.datetime.now().strftime('%d%m%Y')]}

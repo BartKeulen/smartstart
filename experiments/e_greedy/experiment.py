@@ -2,8 +2,7 @@ import numpy as np
 from smartstart.utilities.experimenter import run_experiment
 
 from smartstart.algorithms import QLearning
-from smartstart.algorithms import TDLearning
-from smartstart.environments.gridworld import GridWorld
+from smartstart.environments import GridWorld
 from smartstart.utilities.utilities import get_data_directory
 
 directory = get_data_directory(__file__)
@@ -37,7 +36,7 @@ def task(params):
                       gamma=params['gamma'],
                       num_episodes=num_episodes,
                       max_steps=max_steps,
-                      exploration=TDLearning.E_GREEDY,
+                      exploration=QLearning.E_GREEDY,
                       epsilon=params['epsilon'])
 
     post_fix = "alpha=%.2f_gamma=%.3f_epsilon=%.2f_%d" % (params['alpha'], params['gamma'], params['epsilon'], params['run'])

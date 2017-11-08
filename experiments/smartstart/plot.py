@@ -2,7 +2,7 @@ import os
 
 import seaborn as sns
 
-from smartstart.algorithms.tdlearning import TDLearning
+from smartstart.algorithms import QLearning
 from smartstart.utilities.plot import plot_summary, mean_reward_episode, \
     mean_reward_std_episode, steps_episode, show_plot
 from smartstart.utilities.utilities import get_data_directory
@@ -16,7 +16,7 @@ directory = '/home/bart/Projects/smartstart/data/smartstart/'
 mazes = ["GridWorldHard"]
 baselines = [138]
 algos = ["QLearning", "SARSA"]
-exploration_strategies = [TDLearning.E_GREEDY, TDLearning.BOLTZMANN, TDLearning.COUNT_BASED, TDLearning.UCB1]
+exploration_strategies = [QLearning.E_GREEDY, QLearning.BOLTZMANN, QLearning.COUNT_BASED, QLearning.UCB1]
 use_smart_start = [True, False]
 colors = [color for color in sns.color_palette("husl", 4) for _ in (0, 1)]
 linestyles = ['-', '-.']*4

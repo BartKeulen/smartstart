@@ -40,6 +40,21 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
         pass
 
 
+class SARSAFA(FunctionApproximation):
+
+    def __init__(self, *args, **kwargs):
+        super(SARSAFA, self).__init__(*args, **kwargs)
+
+    def get_next_q_action(self, obs_tp1, done):
+        if not done:
+            action_tp1 = self.get_action(obs_tp1)
+            next_q_value, _ = self.get_q_value(obs_tp1, action_tp1)
+        else:
+            next_q_value = 0.
+            action_tp1 = None
+        return next_q_value, action_tp1
+
+
 class QLearningFA(FunctionApproximation):
 
     def __init__(self, *args, **kwargs):
