@@ -10,7 +10,8 @@ import random
 
 import numpy as np
 
-from .tdlearning import TDLearning, TDLearningLambda
+from smartstart.utilities.datacontainers import Summary, Episode
+from .tdlearning import TDLearning
 from .counter import Counter
 
 
@@ -35,8 +36,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
 
         The Q-function is set to the initial q-value for very state-action pair.
         """
-        self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+        self.Q.fill(self.init_q_value)
 
     def get_q_value(self, obs, action=None):
         """Returns Q-values and actions for observation obs
@@ -346,7 +346,97 @@ class QLearning(TDTabular):
         return next_q_value, action_tp1
 
 
-class SARSALambda(TDLearningLambda):
+class TDTabularLambda(TDTabular, metaclass=ABCMeta):
+
+    def __init__(self,
+                 env,
+                 lamb=0.95,
+                 threshold_traces=1-3,
+                 *args,
+                 **kwargs):
+        super(TDTabularLambda, self).__init__(env, *args, **kwargs)
+        self.lamb = lamb
+        self.threshold_traces = threshold_traces
+        self.Q = np.ones(
+            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+        self.traces = np.zeros(self.Q.shape)
+
+    def reset(self):
+        self.Q.fill(self.init_q_value)
+        self.traces.fill(0.)
+
+    def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
+        """Runs a training experiment
+
+        Training experiment runs for self.num_episodes and each episode takes
+        a maximum of self.max_steps.
+
+        Parameters
+        ----------
+        render : :obj:`bool`
+            True when rendering every time-step (Default value = False)
+        render_episode : :obj:`bool`
+            True when rendering every episode (Default value = False)
+        print_results : :obj:`bool`
+            True when printing results to console (Default value = True)
+
+        Returns
+        -------
+        :class:`~smartexploration.utilities.datacontainers.Summary`
+            Summary Object containing the training data
+
+        """
+        try:
+            summary = Summary(self.__class__.__name__, self.env.name)
+        except AttributeError:
+            summary = Summary(self.__class__.__name__, 'MountainCar-v0')
+
+        for i_episode in range(self.num_episodes):
+            episode = Episode(i_episode)
+
+            obs = self.env.reset()
+            action = self.get_action(obs)
+
+            for _ in range(self.max_steps):
+                obs, action, done, render = self.take_step(obs, action, episode,
+                                                           render)
+
+                if done:
+                    break
+
+            # Clear traces after episode
+            self.traces = np.zeros(
+                (self.env.w, self.env.h, self.env.num_actions))
+
+            # Add training episode to summary
+            summary.append(episode)
+
+            # Render and/or print results
+            message = "Episode: %d, steps: %d, reward: %.2f" % (
+                i_episode, len(episode), episode.reward)
+            if render or render_episode:
+                render_episode = self.render(message=message)
+
+            if print_results:
+                print(message)
+
+            # Run test episode and add tot summary
+            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+                test_episode = self.run_test_episode(i_episode)
+                summary.append_test(test_episode)
+
+                if print_results:
+                    print(
+                        "TEST Episode: %d, steps: %d, reward: %.2f" % (
+                            i_episode, len(test_episode), test_episode.reward))
+
+        while render:
+            render = self.render()
+
+        return summary
+
+
+class SARSALambda(TDTabularLambda):
     """
 
     Parameters
@@ -361,74 +451,8 @@ class SARSALambda(TDLearningLambda):
         .TDLearningLambda`
     """
 
-    def __init__(self, env, init_q_value=0., *args, **kwargs):
+    def __init__(self, env, *args, **kwargs):
         super(SARSALambda, self).__init__(env, *args, **kwargs)
-        self.init_q_value = init_q_value
-        self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
-        self.traces = np.zeros((self.env.w, self.env.h, self.env.num_actions))
-
-    def reset(self):
-        """Resets Q-function
-
-        The Q-function is set to the initial q-value for very state-action pair.
-        """
-        self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
-
-    def get_q_value(self, obs, action=None):
-        """Returns Q-values and actions for observation obs
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            observation
-
-        Returns
-        -------
-        :obj:`list` of :obj:`float`
-            Q-values
-        :obj:`list` of :obj:`int`
-            actions associated with each q-value in q_values
-
-        """
-        if action is not None:
-            idx = tuple(obs) + (action,)
-            return self.Q[idx], action
-
-        actions = self.env.possible_actions(obs)
-        q_values = []
-        for action in actions:
-            idx = tuple(obs) + (action,)
-            q_values.append(self.Q[idx])
-        return q_values, actions
-
-    def get_next_q_action(self, obs_tp1, done):
-        """On-policy action selection
-
-        Parameters
-        ----------
-        obs_tp1 : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
-            Next observation
-        done : :obj:`bool`
-            Boolean is True for terminal state
-
-        Returns
-        -------
-        :obj:`float`
-            Q-value for obs_tp1
-        :obj:`int`
-            action_tp1
-
-        """
-        if not done:
-            action_tp1 = self.get_action(obs_tp1)
-            next_q_value, _ = self.get_q_value(obs_tp1, action_tp1)
-        else:
-            next_q_value = 0.
-            action_tp1 = None
-
-        return next_q_value, action_tp1
 
     def update_q_value(self, obs, action, reward, obs_tp1, done):
         """Update Q-value for obs-action pair
@@ -470,5 +494,78 @@ class SARSALambda(TDLearningLambda):
 
         return self.Q[idx], action_tp1
 
-    def get_q_map(self):
-        return self.Q.copy()
+    def get_next_q_action(self, obs_tp1, done):
+        """On-policy action selection
+
+        Parameters
+        ----------
+        obs_tp1 : :obj:`list` of :obj:`int` or :obj:`np.ndarray`
+            Next observation
+        done : :obj:`bool`
+            Boolean is True for terminal state
+
+        Returns
+        -------
+        :obj:`float`
+            Q-value for obs_tp1
+        :obj:`int`
+            action_tp1
+
+        """
+        if not done:
+            action_tp1 = self.get_action(obs_tp1)
+            next_q_value, _ = self.get_q_value(obs_tp1, action_tp1)
+        else:
+            next_q_value = 0.
+            action_tp1 = None
+
+        return next_q_value, action_tp1
+
+
+# class WatkinsQ(TDTabularLambda):
+#
+#     def __init__(self, env, *args, **kwargs):
+#         super(WatkinsQ, self).__init__(env, *args, **kwargs)
+#
+#     def update_q_value(self, obs, action, reward, obs_tp1, done):
+#         """Update Q-value for obs-action pair
+#
+#         Updates Q-value according to the Bellman equation with eligibility
+#         traces included.
+#
+#         Parameters
+#         ----------
+#         obs : :obj:`list` of :obj:`int` or `np.ndarray`
+#             observation
+#         action : :obj:`int`
+#             action
+#         reward : :obj:`float`
+#             reward
+#         obs_tp1 : :obj:`list` of :obj:`int` or `np.ndarray`
+#             next observation
+#         done : :obj:`bool`
+#             True when obs_tp1 is terminal
+#
+#         Returns
+#         -------
+#         :obj:`float`
+#             updated Q-value and next action
+#
+#         """
+#         cur_q_value, _ = self.get_q_value(obs, action)
+#         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
+#         td_error = reward + self.gamma * next_q_value - cur_q_value
+#
+#         idx = tuple(obs) + (action,)
+#         self.traces[idx] = 1
+#         active_traces = np.asarray(
+#             np.where(self.traces > self.threshold_traces))
+#         for i in range(active_traces.shape[1]):
+#             idx = tuple(active_traces[:, i])
+#             self.Q[idx] += self.alpha * td_error * self.traces[idx]
+#             self.traces[idx] *= self.gamma * self.lamb
+#
+#         return self.Q[idx], action_tp1
+#
+#     def get_next_q_action(self, obs_tp1, done):
+#         pass
