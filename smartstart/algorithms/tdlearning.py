@@ -10,10 +10,10 @@ import random
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-from smartstart.utilities.scheduler import Scheduler
 
+from smartstart.algorithms.counter import Counter
 from smartstart.utilities.datacontainers import Summary, Episode
-from .counter import Counter
+from smartstart.utilities.scheduler import Scheduler
 
 
 class TDLearning(Counter, metaclass=ABCMeta):
@@ -144,7 +144,10 @@ class TDLearning(Counter, metaclass=ABCMeta):
             Summary Object containing the training data
 
         """
-        summary = Summary(self.__class__.__name__, self.env.name)
+        try:
+            summary = Summary(self.__class__.__name__, self.env.name)
+        except AttributeError:
+            summary = Summary(self.__class__.__name__, 'MountainCar-v0')
 
         for i_episode in range(self.num_episodes):
             episode = Episode(i_episode)
@@ -166,11 +169,12 @@ class TDLearning(Counter, metaclass=ABCMeta):
             message = "Episode: %d, steps: %d, reward: %.2f" % (
                 i_episode, len(episode), episode.reward)
             if render or render_episode:
-                value_map = self.get_q_map()
-                value_map = np.max(value_map, axis=2)
-                render_episode = self.env.render(value_map=value_map,
-                                                 density_map=self.get_density_map(),
-                                                 message=message)
+                self.env.render()
+                # value_map = self.get_q_map()
+                # value_map = np.max(value_map, axis=2)
+                # render_episode = self.env.render(value_map=value_map,
+                #                                  density_map=self.get_density_map(),
+                #                                  message=message)
 
             if print_results:
                 print(message)
@@ -186,10 +190,11 @@ class TDLearning(Counter, metaclass=ABCMeta):
                             i_episode, len(test_episode), test_episode.reward))
 
         while render:
-            value_map = self.get_q_map()
-            value_map = np.max(value_map, axis=2)
-            render = self.env.render(value_map=value_map,
-                                     density_map=self.get_density_map())
+            self.env.render()
+            # value_map = self.get_q_map()
+            # value_map = np.max(value_map, axis=2)
+            # render = self.env.render(value_map=value_map,
+            #                          density_map=self.get_density_map())
 
         return summary
 
@@ -224,10 +229,11 @@ class TDLearning(Counter, metaclass=ABCMeta):
         obs_tp1, reward, done, _ = self.env.step(action)
 
         if render:
-            value_map = self.get_q_map()
-            value_map = np.max(value_map, axis=2)
-            render = self.env.render(value_map=value_map,
-                                     density_map=self.get_density_map())
+            self.env.render()
+        #     value_map = self.get_q_map()
+        #     value_map = np.max(value_map, axis=2)
+        #     render = self.env.render(value_map=value_map,
+        #                              density_map=self.get_density_map())
 
         _, action_tp1 = self.update_q_value(obs, action, reward, obs_tp1, done)
 
@@ -253,6 +259,9 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
             if done:
                 break
+
+        if self.test_render:
+            self.env.render(close=True)
 
         return episode
 
