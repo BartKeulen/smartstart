@@ -6,8 +6,10 @@ from collections import defaultdict
 
 import numpy as np
 
+from .tdlearning import Base
 
-class Counter(object):
+
+class Counter(Base):
     """Base class for visitation counts.
     
     Base class for keeping track of obs-action-obs_tp1 visitation counts in
@@ -29,12 +31,13 @@ class Counter(object):
 
     """
 
-    def __init__(self, env):
+    def __init__(self, env, *args, **kwargs):
+        super(Counter, self).__init__(env, *args, **kwargs)
         self.env = env
         self.count_map = defaultdict(lambda:
                                      defaultdict(lambda:
                                                  defaultdict(lambda: 0)))
-        self.total = 0
+        self.total_count = 0
 
     def increment(self, obs, action, obs_tp1):
         """Increment count for obs-action-obs_tp1 transition.
@@ -50,7 +53,7 @@ class Counter(object):
 
         """
         self.count_map[tuple(obs)][(action,)][tuple(obs_tp1)] += 1
-        self.total += 1
+        self.total_count += 1
 
     def get_count(self, obs, action=None, obs_tp1=None):
         """Returns visitation count
@@ -109,7 +112,7 @@ class Counter(object):
 
         """
         count = np.sum(self.get_count(obs, action, obs_tp1))
-        return count / self.total
+        return count / self.total_count
 
     def get_count_map(self):
         """Returns state count map for environment.
@@ -152,4 +155,4 @@ class Counter(object):
         count_map = self.get_count_map()
         if np.sum(count_map) == 0:
             return count_map
-        return count_map / self.total
+        return count_map / self.total_count

@@ -11,12 +11,17 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
-from smartstart.algorithms.counter import Counter
 from smartstart.utilities.datacontainers import Summary, Episode
 from smartstart.utilities.scheduler import Scheduler
 
 
-class TDLearning(Counter, metaclass=ABCMeta):
+class Base(object):
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+
+class TDLearning(Base, metaclass=ABCMeta):
     """Base class for temporal-difference methods
     
     Base class for temporal difference methods Q-Learning, SARSA,
@@ -82,8 +87,6 @@ class TDLearning(Counter, metaclass=ABCMeta):
     NONE = "None"
     E_GREEDY = "E-Greedy"
     BOLTZMANN = "Boltzmann"
-    COUNT_BASED = "Count-Based"
-    UCB1 = "UCB1"
 
     def __init__(self,
                  env,
@@ -93,9 +96,9 @@ class TDLearning(Counter, metaclass=ABCMeta):
                  gamma=0.99,
                  exploration=E_GREEDY,
                  epsilon=0.1,
-                 temp=0.5,
-                 beta=1.):
-        super(TDLearning, self).__init__(env)
+                 temp=0.5):
+        super(TDLearning, self).__init__()
+        self.env = env
         self.num_episodes = num_episodes
         self.max_steps = max_steps
         self.alpha = alpha
@@ -103,7 +106,6 @@ class TDLearning(Counter, metaclass=ABCMeta):
         self.exploration = exploration
         self.epsilon = epsilon
         self.temp = temp
-        self.beta = beta
 
         self.test_render = False
 
@@ -169,12 +171,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
             message = "Episode: %d, steps: %d, reward: %.2f" % (
                 i_episode, len(episode), episode.reward)
             if render or render_episode:
-                self.env.render()
-                # value_map = self.get_q_map()
-                # value_map = np.max(value_map, axis=2)
-                # render_episode = self.env.render(value_map=value_map,
-                #                                  density_map=self.get_density_map(),
-                #                                  message=message)
+                render_episode = self.render(message=message)
 
             if print_results:
                 print(message)
@@ -190,14 +187,11 @@ class TDLearning(Counter, metaclass=ABCMeta):
                             i_episode, len(test_episode), test_episode.reward))
 
         while render:
-            self.env.render()
-            # value_map = self.get_q_map()
-            # value_map = np.max(value_map, axis=2)
-            # render = self.env.render(value_map=value_map,
-            #                          density_map=self.get_density_map())
+            render = self.render()
 
         return summary
 
+    @abstractmethod
     def take_step(self, obs, action, episode, render=False):
         """Takes a step and updates
         
@@ -226,22 +220,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         :obj:`bool`
             render, True when rendering must continue
         """
-        obs_tp1, reward, done, _ = self.env.step(action)
-
-        if render:
-            self.env.render()
-        #     value_map = self.get_q_map()
-        #     value_map = np.max(value_map, axis=2)
-        #     render = self.env.render(value_map=value_map,
-        #                              density_map=self.get_density_map())
-
-        _, action_tp1 = self.update_q_value(obs, action, reward, obs_tp1, done)
-
-        self.increment(obs, action, obs_tp1)
-
-        episode.append(reward)
-
-        return obs_tp1, action_tp1, done, render
+        raise NotImplementedError
 
     def run_test_episode(self, i_episode):
         episode = Episode(i_episode)
@@ -296,10 +275,6 @@ class TDLearning(Counter, metaclass=ABCMeta):
             return self._epsilon_greedy(obs)
         elif self.exploration == TDLearning.BOLTZMANN:
             return self._boltzmann(obs)
-        elif self.exploration == TDLearning.COUNT_BASED:
-            return self._count_based(obs)
-        elif self.exploration == TDLearning.UCB1:
-            return self._ucb1(obs)
         else:
             raise NotImplementedError(
                 "Please choose from the available exploration methods, "
@@ -387,97 +362,8 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         return np.random.choice(actions, p=updated_values)
 
-    def _count_based(self, obs):
-        """Policy with count-based exploration method
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or `np.ndarray`
-            observation
-
-        Returns
-        -------
-        :obj:`int`
-            next action
-
-        Raises
-        ------
-        Exception
-            No maximum q-values were found.
-        """
-        q_values, actions = self.get_q_value(obs)
-        tot_count = self.get_count(obs)
-
-        max_value = -float('inf')
-        max_actions = []
-        for action, value in zip(actions, q_values):
-            value += self.beta * tot_count / (self.get_count(obs, action) + 1e-12)
-            if value > max_value:
-                max_value = value
-                max_actions = [action]
-            elif value == max_value:
-                max_actions.append(action)
-
-        if not max_actions:
-            raise Exception("No maximum q-values were found.")
-
-        return random.choice(max_actions)
-
-    def _ucb1(self, obs):
-        """Policy with UCT exploration method
-
-        Parameters
-        ----------
-        obs : :obj:`list` of :obj:`int` or `np.ndarray`
-            observation
-
-        Returns
-        -------
-        :obj:`int`
-            next action
-
-        Raises
-        ------
-        Exception
-            No maximum q-values were found.
-        """
-        q_values, actions = self.get_q_value(obs)
-        tot_count = self.get_count(obs)
-
-        max_value = -float('inf')
-        max_actions = []
-        for action, value in zip(actions, q_values):
-            if tot_count > 0:
-                count = self.get_count(obs, action)
-                if count == 0:
-                    value = np.inf
-                else:
-                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / (np.log(self.get_count(obs, action)) + 1e-12))
-            if value > max_value:
-                max_value = value
-                max_actions = [action]
-            elif value == max_value:
-                max_actions.append(action)
-
-        if not max_actions:
-            raise Exception("No maximum q-values were found.")
-
-        return random.choice(max_actions)
-
     @abstractmethod
-    def get_q_map(self):
-        """Returns value map for environment
-        
-        Value-map will be a numpy array equal to the width and height
-        of the environment. Each entry (state) will hold the maximum
-        action-value function associated with that state.
-
-        Returns
-        -------
-        :obj:`np.ndarray`
-            value map
-
-        """
+    def render(self, *args, **kwargs):
         raise NotImplementedError
 
 
