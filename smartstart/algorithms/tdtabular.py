@@ -29,7 +29,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
         self.init_q_value = init_q_value
         self.beta = beta
         self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+            (self.env.h, self.env.w, self.env.num_actions)) * self.init_q_value
 
     def reset(self):
         """Resets Q-function

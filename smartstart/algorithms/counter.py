@@ -130,9 +130,9 @@ class Counter(Base):
             Count map
 
         """
-        count_map = np.zeros((self.env.w, self.env.h), dtype=np.int)
-        for i in range(self.env.w):
-            for j in range(self.env.h):
+        count_map = np.zeros((self.env.h, self.env.w), dtype=np.int)
+        for i in range(self.env.h):
+            for j in range(self.env.w):
                 count_map[i, j] = self.get_count([i, j])
         return count_map
 
