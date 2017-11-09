@@ -207,8 +207,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
 
         """
         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-        td_error = self.alpha * (
-            reward + self.gamma * next_q_value - self.get_q_value(obs, action))
+        td_error = reward + self.gamma * next_q_value - self.get_q_value(obs, action)
 
         idx = tuple(obs) + (action,)
         self.Q[idx] += self.alpha * td_error
@@ -631,8 +630,7 @@ class TDLearningLambda(TDLearning):
 
         """
         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-        td_error = self.alpha * (
-            reward + self.gamma * next_q_value - self.get_q_value(obs, action))
+        td_error = reward + self.gamma * next_q_value - self.get_q_value(obs, action)
 
         idx = tuple(obs) + (action,)
         self.traces[idx] = 1
