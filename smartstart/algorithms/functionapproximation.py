@@ -9,15 +9,14 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
 
     def __init__(self,
                  env,
-                 num_actions,
                  feature,
                  *args,
                  **kwargs):
         super(FunctionApproximation, self).__init__(env, *args, **kwargs)
         self.env = env
         self.feature = feature
-        self.num_actions = num_actions
-        self.theta = np.zeros((self.feature.features.size, num_actions))
+        self.num_actions = env.num_actions
+        self.theta = np.zeros((self.feature.features.size, env.num_actions))
 
     def reset(self):
         self.theta = np.zeros((self.feature.num_features, self.num_actions))
@@ -48,7 +47,7 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
 
         return obs_tp1, action_tp1, done, render
 
-    def render(self):
+    def render(self, message=None):
         return self.env.render()
 
     def get_q_map(self):
@@ -57,8 +56,8 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
 
 class SARSAFA(FunctionApproximation):
 
-    def __init__(self, *args, **kwargs):
-        super(SARSAFA, self).__init__(*args, **kwargs)
+    def __init__(self, env, *args, **kwargs):
+        super(SARSAFA, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):
         if not done:
@@ -72,8 +71,8 @@ class SARSAFA(FunctionApproximation):
 
 class QLearningFA(FunctionApproximation):
 
-    def __init__(self, *args, **kwargs):
-        super(QLearningFA, self).__init__(*args, **kwargs)
+    def __init__(self, env, *args, **kwargs):
+        super(QLearningFA, self).__init__(env, *args, **kwargs)
 
     def get_next_q_action(self, obs_tp1, done):
         if not done:

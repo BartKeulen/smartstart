@@ -22,11 +22,17 @@ class Maze(GridWorld):
 
     """
 
-    def __init__(self, name, layout, wall_reset=False, scale=5, dt=0.05):
+    def __init__(self,
+                 name,
+                 layout,
+                 wall_reset=False,
+                 scale=5,
+                 dt=0.05,
+                 force_scale=25,
+                 max_speed=5):
         super(Maze, self).__init__(name, layout, wall_reset=wall_reset,
                                    scale=scale)
         self.name = self.__class__.__name__ + name
-        self.num_actions = 2
 
         # Create world
         self.scale = scale
@@ -92,8 +98,11 @@ class Maze(GridWorld):
         self.A, self.B = A, B
         self.dt = dt
 
-        self._u_high = np.ones(2)
-        self._max_speed = np.sqrt(50)
+        self.actions = [0, 1, 2, 3, 4]
+        self.num_actions = len(self.actions)
+        self.obs_min = np.array([0, 0, -max_speed, -max_speed])
+        self.obs_max = np.array([scale*self.w, scale*self.h, max_speed, max_speed])
+        self.num_states = 4
 
     def reset(self, start_state=None):
         """
@@ -128,7 +137,7 @@ class Maze(GridWorld):
         -------
 
         """
-        u = np.clip(action, -self._u_high, self._u_high)
+        u = self._control_input(action)
 
         x = np.concatenate((self.body.position, self.body.linearVelocity))
         x_new = self.dynamics(x, u)
@@ -139,11 +148,26 @@ class Maze(GridWorld):
             done = (np.linalg.norm(self.body.position - self.box2d_goal) < self.scale/2)
         else:
             done = False
-        reward = 1 if done else 0
+        # reward = 1 if done else 0
+        reward = -1
 
         self.world.Step(self.dt, 10, 10)
 
         return self._get_obs(), reward, done, {}
+
+    def _control_input(self, action):
+        if action == 0:
+            return np.array([0, 0])
+        elif action == 1:
+            return np.array([0, 1])
+        elif action == 2:
+            return np.array([1, 0])
+        elif action == 3:
+            return np.array([0, -1])
+        elif action == 4:
+            return np.array([-1, 0])
+        else:
+            raise NotImplementedError("Invalid action %d. Available actions: %s" % (action, self.actions))
 
     def _get_obs(self, x=None):
         """
@@ -175,18 +199,25 @@ class Maze(GridWorld):
         -------
 
         """
-        u = np.clip(u, -self._u_high, self._u_high)
-
         x_new = self.A.dot(x) + self.B.dot(u)
+
+        x_new = np.clip(x_new, self.obs_min, self.obs_max)
 
         return x_new.copy()
 
+    def possible_actions(self, state):
+        return self.actions
+
+
 if __name__ == "__main__":
-    from smartstart.environments import MazeVisualizer
+    from smartstart.environments.mazevisualizer import MazeVisualizer
     import pygame
     from pygame.locals import *
 
-    env = Maze.generate(Maze.IMPOSSIBRUUHHH)
+    import pdb
+    pdb.set_trace()
+
+    env = Maze.generate(Maze.EASY)
     vis = MazeVisualizer(env)
     vis.add_visualizer(MazeVisualizer.LIVE_AGENT)
     env.visualizer = vis
@@ -198,18 +229,20 @@ if __name__ == "__main__":
         if render:
             render = env.render()
 
-        action = np.zeros(2)
+        action = 0
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_UP:
-                    action = np.array([0, 1])
+                    action = 1
                 elif event.key == K_RIGHT:
-                    action = np.array([1, 0])
+                    action = 2
                 elif event.key == K_DOWN:
-                    action = np.array([0, -1])
+                    action = 3
                 elif event.key == K_LEFT:
-                    action = np.array([-1, 0])
+                    action = 4
 
         obs, reward, done, _ = env.step(action)
+
+        print(obs)
 
     print("FINISHED!!")
