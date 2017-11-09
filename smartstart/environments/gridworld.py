@@ -76,7 +76,7 @@ class GridWorld(Environment):
         grid_world[tuple(start_state)] = 2
         grid_world[tuple(goal_state)] = 3
 
-        self.w, self.h = grid_world.shape
+        self.h, self.w = grid_world.shape
         self.num_actions = 4
         self.grid_world, self.start_state, self.goal_state = grid_world, start_state, goal_state
 
@@ -122,7 +122,7 @@ class GridWorld(Environment):
             for action in self.possible_actions(cur_state):
                 for p_action in self.possible_actions(cur_state):
                     new_state = self._move(cur_state.copy(), p_action)
-                    if (new_state < 0).any() or (new_state[0] >= self.w) or (new_state[1] >= self.h) or (
+                    if (new_state < 0).any() or (new_state[0] >= self.h) or (new_state[1] >= self.w) or (
                         self.grid_world[tuple(new_state)] == 1):
                         new_state = cur_state.copy()
 
@@ -221,7 +221,7 @@ class GridWorld(Environment):
 
         new_state = self._move(self.state, action)
 
-        if (new_state < 0).any() or (new_state[0] >= self.w) or (new_state[1] >= self.h) or (self.grid_world[tuple(new_state)] == 1):
+        if (new_state < 0).any() or (new_state[0] >= self.h) or (new_state[1] >= self.w) or (self.grid_world[tuple(new_state)] == 1):
             if self.wall_reset:
                 return self.state, 0., True, {}
             else:

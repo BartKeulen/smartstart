@@ -104,7 +104,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         self.gamma = gamma
         self.init_q_value = init_q_value
         self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+            (self.env.h, self.env.w, self.env.num_actions)) * self.init_q_value
         self.exploration = exploration
         self.epsilon = epsilon
         self.temp = temp
@@ -115,8 +115,7 @@ class TDLearning(Counter, metaclass=ABCMeta):
         
         The Q-function is set to the initial q-value for very state-action pair.
         """
-        self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+        self.Q.fill(self.init_q_value)
 
     def get_q_values(self, obs):
         """Returns Q-values and actions for observation obs
