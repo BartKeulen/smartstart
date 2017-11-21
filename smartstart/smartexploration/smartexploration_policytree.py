@@ -208,7 +208,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
             -------
 
             """
-            obs_tp1, r, done, _ = self.env.step(action)
+            obs_tp1, r, done = self.env.step(action)
             self.policy.add_obs(obs_tp1)
 
             if render:

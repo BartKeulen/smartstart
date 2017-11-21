@@ -36,7 +36,7 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
         return self.get_q_value(obs, action), action_tp1
 
     def take_step(self, obs, action, episode, render=False):
-        obs_tp1, reward, done, _ = self.env.step(action)
+        obs_tp1, reward, done = self.env.step(action)
 
         if render:
             self.render()
@@ -51,6 +51,7 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
         return self.env.render()
 
     def get_q_map(self):
+
         pass
 
 

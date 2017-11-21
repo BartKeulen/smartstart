@@ -40,7 +40,7 @@ for gridworld in gridworlds:
     steps = 0
 
     while True:
-        obs, reward, done, _ = env.step(algo.get_action(obs))
+        obs, reward, done = env.step(algo.get_action(obs))
         steps += 1
         density_map[tuple(obs)] += 1
         env.render(value_map=algo.get_value_map(), density_map=density_map)

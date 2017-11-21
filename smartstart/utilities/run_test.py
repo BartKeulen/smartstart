@@ -35,7 +35,7 @@ def play_episode(env, max_steps, test_episode, render):
 
         action = get_action(env, test_episode.value_function, obs)
 
-        obs, reward, done, _ = env.step(action)
+        obs, reward, done = env.step(action)
 
         test_episode.append(reward)
 

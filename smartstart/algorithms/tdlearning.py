@@ -230,7 +230,7 @@ class TDLearning(Base, metaclass=ABCMeta):
             self.env.render()
         for step in range(self.max_steps):
             action = self._no_exploration(obs)
-            obs, reward, done, _ = self.env.step(action)
+            obs, reward, done = self.env.step(action)
             episode.append(reward)
 
             if self.test_render:

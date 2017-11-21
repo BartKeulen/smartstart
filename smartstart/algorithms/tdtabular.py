@@ -124,7 +124,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
         :obj:`bool`
             render, True when rendering must continue
         """
-        obs_tp1, reward, done, _ = self.env.step(action)
+        obs_tp1, reward, done = self.env.step(action)
 
         if render:
             render = self.render()

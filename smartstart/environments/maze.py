@@ -153,7 +153,7 @@ class Maze(GridWorld):
 
         self.world.Step(self.dt, 10, 10)
 
-        return self._get_obs(), reward, done, {}
+        return self._get_obs(), reward, done
 
     def _control_input(self, action):
         if action == 0:
@@ -241,7 +241,7 @@ if __name__ == "__main__":
                 elif event.key == K_LEFT:
                     action = 4
 
-        obs, reward, done, _ = env.step(action)
+        obs, reward, done = env.step(action)
 
         print(obs)
 

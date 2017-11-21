@@ -232,7 +232,7 @@ class GridWorld(Environment):
 
         self.state = new_state
 
-        return self.state, r, done, {}
+        return self.state, r, done
 
     def possible_actions(self, state):
         """Returns the available actions for state
