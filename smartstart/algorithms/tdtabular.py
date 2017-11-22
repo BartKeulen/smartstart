@@ -193,7 +193,14 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
         max_value = -float('inf')
         max_actions = []
         for action, value in zip(actions, q_values):
-            value += self.beta * tot_count / (self.get_count(obs, action) + 1e-12)
+            exploration_bonus = float('inf')
+            count = self.get_count(obs, action)
+            if count > 0:
+                obs_tp1 = self.next_obses(obs, action)[0]
+                count_obs_tp1 = self.get_count(obs_tp1)
+                if count_obs_tp1 != 0:
+                    exploration_bonus = 1 / self.get_count(obs_tp1)
+            value += self.beta * exploration_bonus
             if value > max_value:
                 max_value = value
                 max_actions = [action]

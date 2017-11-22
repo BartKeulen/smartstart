@@ -159,3 +159,4 @@ fabric.properties
 scripts/
 logs/
 thesis/
+experiments/results/*

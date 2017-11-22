@@ -55,6 +55,9 @@ class Counter(Base):
         self.count_map[tuple(obs)][(action,)][tuple(obs_tp1)] += 1
         self.total_count += 1
 
+    def next_obses(self, obs, action):
+        return list(self.count_map[tuple(obs)][(action,)].keys())
+
     def get_count(self, obs, action=None, obs_tp1=None):
         """Returns visitation count
         

@@ -57,11 +57,11 @@ class GridWorld(Environment):
     scale : :obj:`int`
         scale factor, gridworld will become layout * scale in size
     """
-    EASY = 0
-    MEDIUM = 1
-    HARD = 2
-    EXTREME = 3
-    IMPOSSIBRUUHHH = 4
+    EASY = 'Easy'
+    MEDIUM = 'Medium'
+    HARD = 'Hard'
+    EXTREME = 'Extreme'
+    IMPOSSIBRUUHHH = 'Impossible'
 
     def __init__(self, name, layout, T_prob=0., wall_reset=False, scale=5):
         super(GridWorld, self).__init__(self.__class__.__name__ + name)
@@ -186,7 +186,7 @@ class GridWorld(Environment):
         elif action == 3:
             movement = np.array([-1, 0])
         else:
-            raise NotImplementedError("Invalid action %d. Available actions: [0, 1, 2, 3]")
+            raise NotImplementedError("Invalid action %d. Available actions: [0, 1, 2, 3]" % action)
 
         return state + movement
 
