@@ -7,7 +7,6 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 
 from smartstart.algorithms import ValueIteration, SARSALambda
-from smartstart.algorithms.sarsa import SARSA
 from smartstart.utilities.datacontainers import Episode, Summary
 
 
@@ -212,8 +211,6 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     # Step 1: Choose smart start
                     start_state = self.get_start()
 
-                    print("Smart Start State: ", start_state)
-
                     # Step 2: Guide to smart start
                     self.dynamic_programming(start_state)
 
@@ -336,7 +333,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                         transitions[obs_tp1].append(obs_c)
 
                         if obs_tp1 == tuple(start_state):
-                            self.policy.R[obs_c + action][obs_tp1] = 1.
+                            self.policy.R[obs_c + action] = 1.
                             self.policy.goal = obs_tp1
                         self.policy.T[obs_c + action][obs_tp1] = \
                             count / sum(self.count_map[obs_c][action].
@@ -365,13 +362,12 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 if __name__ == "__main__":
     from smartstart.environments.gridworld import GridWorld
     from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
-    from smartstart.algorithms import SARSALambda
+    from smartstart.algorithms import SARSA
 
-    directory = '/home/bartkeulen/repositories/smartstart/data/tmp'
 
     np.random.seed()
 
-    env = GridWorld.generate(GridWorld.EASY)
+    env = GridWorld.generate(GridWorld.MEDIUM)
     visualizer = GridWorldVisualizer(env)
     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
                               GridWorldVisualizer.CONSOLE,
@@ -382,10 +378,8 @@ if __name__ == "__main__":
 
     # env.wall_reset = True
 
-    agent = generate_smartstart_object(SARSALambda, env, eta=0.75, alpha=0.3,
-                                       num_episodes=1000, max_steps=1000,
+    agent = generate_smartstart_object(SARSA, env, eta=0.75, alpha=0.3,
+                                       num_episodes=100, max_steps=1000,
                                        exploitation_param=0.)
-
-    summary = agent.train(render=False, render_episode=True)
-
-    summary.save(directory=directory)
+    agent.test_render = True
+    agent.train(test_freq=5)

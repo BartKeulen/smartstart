@@ -65,8 +65,8 @@ class ValueIteration(object):
 
         self.V = defaultdict(lambda: 0)
         self.T = defaultdict(lambda: defaultdict(lambda: 0))
-        self.R = defaultdict(lambda: defaultdict(lambda: 0))
-        self.obses = []
+        self.R = defaultdict(lambda: 0)
+        self.obses = set()
         self.goal = None
 
     def reset(self):
@@ -97,7 +97,6 @@ class ValueIteration(object):
             observation
 
         """
-        # self.add_obs(obs)
         self.goal = tuple(obs)
         self.V[self.goal] = 0
 
@@ -120,7 +119,6 @@ class ValueIteration(object):
             transition probability
 
         """
-        # self.add_obs(obs)
         self.T[tuple(obs) + (action,)][tuple(obs_tp1)] = value
 
     def get_transition(self, obs, action, obs_tp1=None):
@@ -146,7 +144,7 @@ class ValueIteration(object):
 
         return self.T[tuple(obs) + (action,)]
 
-    def set_reward(self, obs, action, obs_tp1, value):
+    def set_reward(self, obs, action, value):
         """Set reward for obs-action-obs_tp1
 
         Parameters
@@ -161,8 +159,10 @@ class ValueIteration(object):
             reward
 
         """
-        # self.add_obs(obs)
-        self.R[tuple(obs) + (action,)][tuple(obs_tp1)] = value
+        self.R[tuple(obs) + (action,)] = value
+
+    def get_reward(self, obs, action):
+        return self.R[tuple(obs) + (action,)]
 
     def optimize(self):
         """Run value iteration method
@@ -236,8 +236,8 @@ class ValueIteration(object):
         if tuple(obs) == self.goal:
             return self.V[self.goal]
         value = 0.
+        r = self.R[tuple(obs) + (action,)]
         for obs_prime, transition in self.get_transition(obs, action).items():
-            r = self.R[tuple(obs) + (action,)][tuple(obs_prime)]
             value += transition * (r + self.gamma * self.V[obs_prime])
         return value
 
@@ -259,51 +259,3 @@ class ValueIteration(object):
             for j in range(self.env.h):
                 V[i, j] = self.V[(i, j)]
         return V
-
-
-# if __name__ == "__main__":
-#     import time
-#     from smartstart.environments.gridworld import GridWorld, \
-#         GridWorldVisualizer
-#
-#     env = GridWorld.generate(GridWorld.IMPOSSIBRUUHHH)
-#     visualizer = GridWorldVisualizer(env)
-#     visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
-#                               GridWorldVisualizer.VALUE_FUNCTION,
-#                               GridWorldVisualizer.DENSITY,
-#                               GridWorldVisualizer.CONSOLE)
-#
-#     env.visualizer = visualizer
-#     # env.T_prob = 0.1
-#     env.reset()
-#
-#     algo = ValueIteration(env, max_itr=10000, min_error=1e-5)
-#     algo.T, algo.R = env.get_T_R()
-#     algo.obses = env.get_all_states()
-#     algo.set_goal(env.goal_state)
-#
-#     algo.optimize()
-#
-#     density_map = np.zeros((env.w, env.h))
-#
-#     obs = env.reset()
-#     density_map[tuple(obs)] += 1
-#     env.render(value_map=algo.get_value_map(), density_map=density_map)
-#     steps = 0
-#     while True:
-#         obs, reward, done, _ = env.step(algo.get_action(obs))
-#         steps += 1
-#         density_map[tuple(obs)] += 1
-#         env.render(value_map=algo.get_value_map(), density_map=density_map)
-#
-#         time.sleep(0.01)
-#
-#         if done:
-#             break
-#
-#     print("Optimal path for %s is %d steps in length" % (env.name, steps))
-#
-#     render = True
-#     while render:
-#         render = env.render(value_map=algo.get_value_map(),
-#                             density_map=density_map)
