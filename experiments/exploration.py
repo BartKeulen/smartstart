@@ -237,8 +237,8 @@ class ExplorationModelAgent(ExplorationAgent):
 
 def run_test(args):
     params, queue = args
-    print('Process %d started' % params['id'])
 
+    print("Process %d started" % params['id'])
     env = GridWorld.generate(params['env'])
 
     steps = []
@@ -260,7 +260,7 @@ def run_test(args):
     queue.put(params)
 
 
-def writer_to_file(queue, filename, fieldnames):
+def writer_to_file(queue, filename, fieldnames, total_procs):
     total_written = 0
     with open(filename, 'w', newline='\n') as output_file:
         writer = csv.DictWriter(output_file, fieldnames=fieldnames, delimiter=';')
@@ -269,17 +269,19 @@ def writer_to_file(queue, filename, fieldnames):
 
         writer.writeheader()
 
-        while True:
-            param_set = queue.get()
-            if type(param_set) == dict:
-                print("Writing process %d" % param_set['id'])
-                del param_set['id']
+    while True:
+        param_set = queue.get()
+        if type(param_set) == dict:
+            id = param_set['id']
+            del param_set['id']
+            with open(filename, 'a', newline='\n') as output_file:
+                writer = csv.DictWriter(output_file, fieldnames=fieldnames, delimiter=';')
                 writer.writerow(param_set)
-                total_written += 1
-                print("%d processes have finished" % total_written)
+            total_written += 1
+            print("Process %d finished. Total done: %d / %d" % (id, total_written, total_procs))
 
-            if param_set == 'DONE':
-                break
+        if param_set == 'DONE':
+            break
 
 
 def write_to_gcloud(local_fp, bucket, directory):
@@ -321,19 +323,21 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
             new_param_grid.append(param_set)
     param_grid = new_param_grid
 
+    print('%d processes in total' % len(param_grid))
+
     fieldnames = ['env', 'exploration_strategy', 'smart_start', 'num_iter', 'num_episodes', 'max_steps', 'mean', 'std', 'steps']
     local_fp = os.path.join(fp, 'exploration_%s.csv' % (datetime.datetime.now().strftime('%d%m%Y-%H:%M')))
 
     m = Manager()
     queue = m.Queue()
-    writer_p = Process(target=writer_to_file, args=(queue, local_fp, fieldnames))
+    writer_p = Process(target=writer_to_file, args=(queue, local_fp, fieldnames, len(param_grid)))
     writer_p.daemon = True
     writer_p.start()
 
     if n_processes is None:
         n_processes = cpu_count()
     p = Pool(n_processes - 1)
-    p.imap(run_test, [(param_set, queue) for param_set in param_grid])
+    p.map(run_test, [(param_set, queue) for param_set in param_grid])
     queue.put('DONE')
     p.close()
     p.join()
