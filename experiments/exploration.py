@@ -5,23 +5,25 @@ import random
 from multiprocessing import Pool, cpu_count, Manager, Process
 
 import numpy as np
+from collections import defaultdict
 from sklearn.model_selection import ParameterGrid
 from google.cloud import storage
 
+from smartstart.algorithms.counter import Counter
 from smartstart.algorithms.dynamicprogramming import ValueIteration
 from smartstart.environments import GridWorld
 from smartstart.algorithms.tdtabular import TDTabular
 from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
 
 
-class SimpleAgent(TDTabular):
+class ExplorationAgent(TDTabular):
     RANDOM = 'random'
     COUNT = 'count-based'
 
     def __init__(self, env, smart_start=False, *args, **kwargs):
-        super(SimpleAgent, self).__init__(env, *args, **kwargs)
+        super(ExplorationAgent, self).__init__(env, *args, **kwargs)
         self.smart_start = smart_start
-        self.vi = ValueIteration(self.env)
+        self.vi_ss = ValueIteration(self.env)
 
     def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         total_steps = 0
@@ -36,7 +38,7 @@ class SimpleAgent(TDTabular):
                     self.dynamic_programming(smart_start_state)
 
                     for i in range(self.max_steps):
-                        action = self.vi.get_action(obs)
+                        action = self.vi_ss.get_action(obs)
 
                         obs_tp1, reward, done = self.env.step(action)
 
@@ -91,7 +93,7 @@ class SimpleAgent(TDTabular):
         return smart_start_state
 
     def dynamic_programming(self, smart_start_state):
-        self.vi.reset()
+        self.vi_ss.reset()
 
         count_map = self.get_count_map()
         states = np.asarray(np.where(count_map > 0))
@@ -105,16 +107,16 @@ class SimpleAgent(TDTabular):
                 if sa_count >= 1:
                     for next_obs in self.next_obses(obs, action):
                         transition = self.get_count(obs, action, next_obs) / sa_count
-                        self.vi.set_transition(obs, action, next_obs, transition)
+                        self.vi_ss.set_transition(obs, action, next_obs, transition)
 
                         reward = 0.
                         if next_obs == tuple(smart_start_state):
                             reward = 1.
-                        self.vi.set_reward(obs, action, reward)
+                        self.vi_ss.set_reward(obs, action, reward)
 
-        self.vi.obses = obses
+        self.vi_ss.obses = obses
 
-        self.vi.optimize()
+        self.vi_ss.optimize()
 
     def get_next_q_action(self, obs_tp1, done):
         return 0, self.get_action(obs_tp1)
@@ -142,6 +144,97 @@ class SimpleAgent(TDTabular):
             return random.choice(max_actions)
 
 
+class ExplorationModelAgent(ExplorationAgent):
+
+    def __init__(self, env, smart_start=False, r_max=100, m=5, num_episodes=500, max_steps=1000, *args, **kwargs):
+        super(ExplorationModelAgent, self).__init__(env, *args, **kwargs)
+        self.vi = ValueIteration(env, *args, **kwargs)
+        self.m = m
+        self.r_max = r_max
+        self.num_episodes = num_episodes
+        self.max_steps = max_steps
+        self.s_abs = 's'
+        self.r_sum = defaultdict(lambda: 0)
+        self.smart_start = smart_start
+
+    def get_action(self, obs):
+        actions = self.env.possible_actions(obs)
+        new_actions = []
+        for action in actions:
+            if self.get_count(obs, action) == 0:
+                new_actions.append(action)
+        if new_actions:
+            return random.choice(new_actions)
+
+        return self.vi.get_action(obs)
+
+    def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
+        total_steps = 0
+        for i_episode in range(self.num_episodes):
+            obs = self.env.reset()
+
+            remaining_steps = self.max_steps
+            if self.smart_start:
+                smart_start_state = self.get_smart_start_state()
+
+                if smart_start_state is not None:
+                    self.dynamic_programming(smart_start_state)
+
+                    for i in range(self.max_steps):
+                        action = self.vi_ss.get_action(obs)
+
+                        obs_tp1, reward, done = self.env.step(action)
+
+                        self.increment(obs, action, obs_tp1)
+
+                        obs = obs_tp1
+
+                        if render:
+                            self.env.render(density_map=self.get_density_map())
+
+                        total_steps += 1
+
+                        if done:
+                            return total_steps
+
+                        if np.array_equal(obs, smart_start_state):
+                            remaining_steps -= i
+                            break
+
+            for _ in range(remaining_steps):
+                action = self.get_action(obs)
+                self.vi.obses.add(tuple(obs))
+                obs_tp1, reward, done = self.env.step(action)
+
+                if render:
+                    render = self.env.render(density_map=self.get_density_map())
+
+                self.increment(obs, action, obs_tp1)
+                self.r_sum[tuple(obs) + (action,)] += reward
+
+                current_count = self.get_count(obs, action)
+                if current_count >= self.m:
+                    reward_function = self.r_sum[tuple(obs) + (action,)] / current_count
+                    self.vi.set_reward(obs, action, reward_function)
+
+                    self.vi.T[tuple(obs) + (action,)].clear()
+                    for next_obs in self.next_obses(obs, action):
+                        transition_model = self.get_count(obs, action, next_obs) / current_count
+                        self.vi.set_transition(obs, action, next_obs, transition_model)
+                else:
+                    self.vi.set_reward(obs, action, self.r_max)
+                    self.vi.set_transition(obs, action, self.s_abs, 1)
+
+                self.vi.optimize()
+                obs = obs_tp1
+
+                total_steps += 1
+                if done:
+                    return total_steps
+
+        return np.nan
+
+
 def run_test(args):
     params, queue = args
     print('Process %d started' % params['id'])
@@ -150,11 +243,11 @@ def run_test(args):
 
     steps = []
     for i in range(params['num_iter']):
-        agent = SimpleAgent(env,
-                            smart_start=params['smart_start'],
-                            num_episodes=params['num_episodes'],
-                            max_steps=params['max_steps'],
-                            exploration=params['exploration_strategy'])
+        agent = ExplorationAgent(env,
+                                 smart_start=params['smart_start'],
+                                 num_episodes=params['num_episodes'],
+                                 max_steps=params['max_steps'],
+                                 exploration=params['exploration_strategy'])
 
         total_steps = agent.train()
         steps.append(total_steps)
@@ -168,6 +261,7 @@ def run_test(args):
 
 
 def writer_to_file(queue, filename, fieldnames):
+    total_written = 0
     with open(filename, 'w', newline='\n') as output_file:
         writer = csv.DictWriter(output_file, fieldnames=fieldnames, delimiter=';')
 
@@ -181,6 +275,8 @@ def writer_to_file(queue, filename, fieldnames):
                 print("Writing process %d" % param_set['id'])
                 del param_set['id']
                 writer.writerow(param_set)
+                total_written += 1
+                print("%d processes have finished" % total_written)
 
             if param_set == 'DONE':
                 break
@@ -206,7 +302,7 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
         'num_episodes': [1000],
         'max_steps': [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000],
         'env': [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD, GridWorld.EXTREME],
-        'exploration_strategy': [SimpleAgent.RANDOM, SimpleAgent.COUNT],
+        'exploration_strategy': [ExplorationAgent.RANDOM, ExplorationAgent.COUNT],
         'smart_start': [True, False]
     }
     param_grid = list(ParameterGrid(params))
@@ -237,7 +333,7 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
     if n_processes is None:
         n_processes = cpu_count()
     p = Pool(n_processes - 1)
-    p.map(run_test, [(param_set, queue) for param_set in param_grid])
+    p.imap(run_test, [(param_set, queue) for param_set in param_grid])
     queue.put('DONE')
     p.close()
     p.join()
@@ -249,4 +345,3 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
 
 if __name__ == '__main__':
     main(save_to_cloud=True, bucket='smartstart', directory='complexity')
-
