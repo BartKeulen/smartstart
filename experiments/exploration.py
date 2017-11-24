@@ -300,7 +300,7 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
         fp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
 
     params = {
-        'num_iter': [5],
+        'num_iter': [10],
         'num_episodes': [1000],
         'max_steps': [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000],
         'env': [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD, GridWorld.EXTREME],
