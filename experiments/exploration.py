@@ -146,7 +146,7 @@ class ExplorationAgent(TDTabular):
 
 class ExplorationModelAgent(ExplorationAgent):
 
-    def __init__(self, env, smart_start=False, r_max=100, m=5, num_episodes=500, max_steps=1000, *args, **kwargs):
+    def __init__(self, env, smart_start=False, r_max=100, m=2, num_episodes=500, max_steps=1000, *args, **kwargs):
         super(ExplorationModelAgent, self).__init__(env, *args, **kwargs)
         self.vi = ValueIteration(env, *args, **kwargs)
         self.m = m
@@ -243,11 +243,17 @@ def run_test(args):
 
     steps = []
     for i in range(params['num_iter']):
-        agent = ExplorationAgent(env,
-                                 smart_start=params['smart_start'],
-                                 num_episodes=params['num_episodes'],
-                                 max_steps=params['max_steps'],
-                                 exploration=params['exploration_strategy'])
+        if params['exploration_strategy'] == 'model-based':
+            agent = ExplorationModelAgent(env,
+                                          smart_start=params['smart_start'],
+                                          num_episodes=params['num_episodes'],
+                                          max_steps=params['max_steps'])
+        else:
+            agent = ExplorationAgent(env,
+                                     smart_start=params['smart_start'],
+                                     num_episodes=params['num_episodes'],
+                                     max_steps=params['max_steps'],
+                                     exploration=params['exploration_strategy'])
 
         total_steps = agent.train()
         steps.append(total_steps)
@@ -304,7 +310,7 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
         'num_episodes': [1000],
         'max_steps': [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000],
         'env': [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD, GridWorld.EXTREME],
-        'exploration_strategy': [ExplorationAgent.RANDOM, ExplorationAgent.COUNT],
+        'exploration_strategy': ['model-based'],
         'smart_start': [True, False]
     }
     param_grid = list(ParameterGrid(params))
