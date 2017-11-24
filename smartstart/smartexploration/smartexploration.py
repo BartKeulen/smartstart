@@ -359,27 +359,4 @@ def generate_smartstart_object(base, env, *args, **kwargs):
     return SmartStart(env, *args, **kwargs)
 
 
-if __name__ == "__main__":
-    from smartstart.environments.gridworld import GridWorld
-    from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
-    from smartstart.algorithms import SARSA
 
-
-    np.random.seed()
-
-    env = GridWorld.generate(GridWorld.MEDIUM)
-    visualizer = GridWorldVisualizer(env)
-    visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
-                              GridWorldVisualizer.CONSOLE,
-                              GridWorldVisualizer.VALUE_FUNCTION,
-                              GridWorldVisualizer.DENSITY)
-    env.visualizer = visualizer
-    # env.T_prob = 0.1
-
-    # env.wall_reset = True
-
-    agent = generate_smartstart_object(SARSA, env, eta=0.75, alpha=0.3,
-                                       num_episodes=100, max_steps=1000,
-                                       exploitation_param=0.)
-    agent.test_render = True
-    agent.train(test_freq=5)
