@@ -8,23 +8,55 @@ import numpy as np
 from sklearn.model_selection import ParameterGrid
 from google.cloud import storage
 
+from smartstart.algorithms.dynamicprogramming import ValueIteration
 from smartstart.environments import GridWorld
 from smartstart.algorithms.tdtabular import TDTabular
+from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
 
 
 class SimpleAgent(TDTabular):
     RANDOM = 'random'
     COUNT = 'count-based'
 
-    def __init__(self, *args, **kwargs):
-        super(SimpleAgent, self).__init__(*args, **kwargs)
+    def __init__(self, env, smart_start=False, *args, **kwargs):
+        super(SimpleAgent, self).__init__(env, *args, **kwargs)
+        self.smart_start = smart_start
+        self.vi = ValueIteration(self.env)
 
     def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         total_steps = 0
         for i_episode in range(self.num_episodes):
             obs = self.env.reset()
 
-            for _ in range(self.max_steps):
+            remaining_steps = self.max_steps
+            if self.smart_start:
+                smart_start_state = self.get_smart_start_state()
+
+                if smart_start_state is not None:
+                    self.dynamic_programming(smart_start_state)
+
+                    for i in range(self.max_steps):
+                        action = self.vi.get_action(obs)
+
+                        obs_tp1, reward, done = self.env.step(action)
+
+                        self.increment(obs, action, obs_tp1)
+
+                        obs = obs_tp1
+
+                        if render:
+                            self.env.render(density_map=self.get_density_map())
+
+                        total_steps += 1
+
+                        if done:
+                            return total_steps
+
+                        if np.array_equal(obs, smart_start_state):
+                            remaining_steps -= i
+                            break
+
+            for _ in range(remaining_steps):
                 action = self.get_action(obs)
 
                 obs_tp1, reward, done = self.env.step(action)
@@ -41,6 +73,48 @@ class SimpleAgent(TDTabular):
                     return total_steps
 
         return np.nan
+
+    def get_smart_start_state(self):
+        count_map = self.get_count_map()
+        possible_starts = np.asarray(np.where(count_map > 0))
+        if not possible_starts.any():
+            return None
+
+        smart_start_state = None
+        max_value = -float('inf')
+        for i in range(possible_starts.shape[1]):
+            obs = possible_starts[:, i]
+            value = 1/count_map[tuple(obs)]
+            if value > max_value:
+                smart_start_state = obs
+                max_value = value
+        return smart_start_state
+
+    def dynamic_programming(self, smart_start_state):
+        self.vi.reset()
+
+        count_map = self.get_count_map()
+        states = np.asarray(np.where(count_map > 0))
+        obses = []
+
+        for i in range(states.shape[1]):
+            obs = states[:, i]
+            obses.append(tuple(obs))
+            for action in self.env.possible_actions(obs):
+                sa_count = self.get_count(obs, action)
+                if sa_count >= 1:
+                    for next_obs in self.next_obses(obs, action):
+                        transition = self.get_count(obs, action, next_obs) / sa_count
+                        self.vi.set_transition(obs, action, next_obs, transition)
+
+                        reward = 0.
+                        if next_obs == tuple(smart_start_state):
+                            reward = 1.
+                        self.vi.set_reward(obs, action, reward)
+
+        self.vi.obses = obses
+
+        self.vi.optimize()
 
     def get_next_q_action(self, obs_tp1, done):
         return 0, self.get_action(obs_tp1)
@@ -77,6 +151,7 @@ def run_test(args):
     steps = []
     for i in range(params['num_iter']):
         agent = SimpleAgent(env,
+                            smart_start=params['smart_start'],
                             num_episodes=params['num_episodes'],
                             max_steps=params['max_steps'],
                             exploration=params['exploration_strategy'])
@@ -99,6 +174,7 @@ def writer_to_file(queue, filename, fieldnames):
         print("Writer opened successful")
 
         writer.writeheader()
+
         while True:
             param_set = queue.get()
             if type(param_set) == dict:
@@ -111,7 +187,7 @@ def writer_to_file(queue, filename, fieldnames):
 
 
 def write_to_gcloud(local_fp, bucket, directory):
-    name = datetime.datetime.now().strftime('%d%m%Y-%H:%M') + '.csv'
+    name = 'exploration_%s.csv' % datetime.datetime.now().strftime('%d%m%Y-%H:%M')
     fp = os.path.join(directory, name)
 
     storage_client = storage.Client()
@@ -126,17 +202,31 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
         fp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
 
     params = {
-        'num_iter': [10],
-        'num_episodes': [10000],
+        'num_iter': [5],
+        'num_episodes': [1000],
         'max_steps': [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000],
         'env': [GridWorld.EASY, GridWorld.MEDIUM, GridWorld.HARD, GridWorld.EXTREME],
-        'exploration_strategy': [SimpleAgent.RANDOM, SimpleAgent.COUNT]
+        'exploration_strategy': [SimpleAgent.RANDOM, SimpleAgent.COUNT],
+        'smart_start': [True, False]
     }
     param_grid = list(ParameterGrid(params))
+    id = 0
+    new_param_grid = []
     for i, param_set in enumerate(param_grid):
-        param_set['id'] = i
-    fieldnames = ['env', 'exploration_strategy', 'num_iter', 'num_episodes', 'max_steps', 'mean', 'std', 'steps']
-    local_fp = os.path.join(fp, 'exploration.csv')
+        if param_set['env'] == GridWorld.MEDIUM and param_set['max_steps'] < 100:
+            continue
+        elif param_set['env'] == GridWorld.HARD and param_set['max_steps'] < 250:
+            continue
+        elif param_set['env'] == GridWorld.EXTREME and param_set['max_steps'] < 250:
+            continue
+        else:
+            param_set['id'] = id
+            id += 1
+            new_param_grid.append(param_set)
+    param_grid = new_param_grid
+
+    fieldnames = ['env', 'exploration_strategy', 'smart_start', 'num_iter', 'num_episodes', 'max_steps', 'mean', 'std', 'steps']
+    local_fp = os.path.join(fp, 'exploration_%s.csv' % (datetime.datetime.now().strftime('%d%m%Y-%H:%M')))
 
     m = Manager()
     queue = m.Queue()
@@ -159,3 +249,4 @@ def main(n_processes=None, fp=None, save_to_cloud=False, bucket=None, directory=
 
 if __name__ == '__main__':
     main(save_to_cloud=True, bucket='smartstart', directory='complexity')
+
