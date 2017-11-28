@@ -57,6 +57,43 @@ def mean_reward_std_episode(summaries, ma_window=1, color=None, linestyle=None, 
     return max(x)
 
 
+def mean_reward_std_training_steps(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
+    """Plot mean reward with standard deviation per episode
+
+    Parameters
+    ----------
+    summaries : :obj:`list` of :obj:`~smartstart.utilities.datacontainers.Summary`
+        summaries to average and plot
+    ma_window : :obj:`int`
+        moving average window size (Default value = 1)
+    color :
+        color (Default value = None)
+    linestyle :
+        linestyle (Default value = None)
+
+    """
+    rewards = []
+    episodes = []
+    for summary in summaries:
+        rewards.append(summary.mean_reward_episode(train_bool))
+        episodes.append(summary.iterations_as_training_steps(train_bool))
+    rewards = np.asarray(rewards)
+    episodes = np.asarray(episodes)
+
+    x = np.unique(episodes)
+    y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
+    mean_y = np.mean(y, axis=0)
+    std = np.std(y, axis=0)
+
+    upper = mean_y + std
+    lower = mean_y - std
+
+    plt.fill_between(x, lower, upper, alpha=0.3, color=color)
+    plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
+
+    return max(x)
+
+
 def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
     """Plot mean reward per episode
 
@@ -84,8 +121,37 @@ def mean_reward_episode(summaries, ma_window=1, color=None, linestyle=None, trai
     y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
     mean_y = np.mean(y, axis=0)
 
-    # import pdb
-    # pdb.set_trace()
+    plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
+
+    return max(x)
+
+
+def mean_reward_training_steps(summaries, ma_window=1, color=None, linestyle=None, train_bool=True):
+    """Plot mean reward per episode
+
+    Parameters
+    ----------
+    summaries : :obj:`list` of :obj:`~smartstart.utilities.datacontainers.Summary`
+        summaries to average and plot
+    ma_window : :obj:`int`
+        moving average window size (Default value = 1)
+    color :
+        color (Default value = None)
+    linestyle :
+        linestyle (Default value = None)
+
+    """
+    rewards = []
+    episodes = []
+    for summary in summaries:
+        rewards.append(summary.mean_reward_episode(train_bool))
+        episodes.append(summary.iterations_as_training_steps(train_bool))
+    rewards = np.asarray(rewards)
+    episodes = np.asarray(episodes)
+
+    x = np.unique(episodes)
+    y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
+    mean_y = np.mean(y, axis=0)
 
     plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
 
@@ -127,7 +193,9 @@ def steps_episode(summaries, ma_window=1, color=None, linestyle=None, train_bool
 
 labels = {
     mean_reward_std_episode: ["Episode", "Average Reward"],
+    mean_reward_std_training_steps: ["Training Steps", "Average Reward"],
     mean_reward_episode: ["Episode", "Average Reward"],
+    mean_reward_training_steps: ["Training Steps", "Average Reward"],
     steps_episode: ["Episode", "Steps per Episode"]
 }
 

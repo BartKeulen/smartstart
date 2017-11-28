@@ -168,6 +168,14 @@ class Summary(object):
             episodes = self.tests
         return np.asarray([episode.iter for episode in episodes])
 
+    def iterations_as_training_steps(self, train=True):
+        if train:
+            episodes = self.episodes
+        else:
+            episodes = self.tests
+        training_steps = np.cumsum([episode.steps for episode in self.episodes])
+        return [training_steps[episode.iter] for episode in episodes]
+
     def steps_episode(self, train=True):
         """Number of steps per episode
 
