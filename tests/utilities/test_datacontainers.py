@@ -130,7 +130,7 @@ class TestSummary:
         summary, rewards, value_functions = random_summary(self.name, self.env_name, self.length, self.ep_length, self.v_size, bool_train)
         episodes = summary.episodes
 
-        assert summary.name == self.name
+        assert summary.algo_name == self.name
         assert summary.env_name == self.env_name
         assert len(episodes) == self.length
         for episode, reward, value_function in zip(episodes, rewards, value_functions):
@@ -144,7 +144,7 @@ class TestSummary:
                                                            bool_train)
         episodes = summary.tests
 
-        assert summary.name == self.name
+        assert summary.algo_name == self.name
         assert summary.env_name == self.env_name
         assert len(episodes) == self.length
         for episode, reward, value_function in zip(episodes, rewards, value_functions):
@@ -211,7 +211,7 @@ class TestSummary:
         json_dict['episodes'] = [Episode.from_json(episode) for episode in json_dict['episodes']]
         json_dict['tests'] = [Episode.from_json(test) for test in json_dict['tests']]
 
-        assert json_dict['name'] == summary.name
+        assert json_dict['name'] == summary.algo_name
         assert json_dict['env_name'] == summary.env_name
         for json_episode, episode in zip(json_dict['episodes'], summary.episodes):
             assert json_episode.iter == episode.iter
@@ -230,7 +230,7 @@ class TestSummary:
         json_str = summary.to_json()
         new_summary = Summary.from_json(json_str)
 
-        assert new_summary.name == summary.name
+        assert new_summary.name == summary.algo_name
         assert new_summary.env_name == summary.env_name
         for new_episode, episode in zip(new_summary.episodes, summary.episodes):
             assert new_episode.iter == episode.iter
@@ -273,7 +273,7 @@ class TestSummary:
 
         new_summary = Summary.load(fp)
 
-        assert new_summary.name == summary.name
+        assert new_summary.name == summary.algo_name
         assert new_summary.env_name == summary.env_name
         for new_episode, episode in zip(new_summary.episodes, summary.episodes):
             assert new_episode.iter == episode.iter

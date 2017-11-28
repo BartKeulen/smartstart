@@ -63,9 +63,9 @@ class TDLearning(Base, metaclass=ABCMeta):
 
     Attributes
     -----------
-    num_episodes : :obj:`int`
-        number of episodes
     max_steps : :obj:`int`
+        number of episodes
+    steps_episode : :obj:`int`
         maximum number of steps per episode
     alpha : :obj:`float`
         learning step-size
@@ -90,20 +90,20 @@ class TDLearning(Base, metaclass=ABCMeta):
 
     def __init__(self,
                  env,
-                 num_episodes=1000,
-                 max_steps=1000,
+                 max_steps=500000,
+                 steps_episode=1000,
                  alpha=0.1,
                  gamma=0.99,
-                 exploration=E_GREEDY,
+                 exploration_strategy=E_GREEDY,
                  epsilon=0.1,
                  temp=0.5):
         super(TDLearning, self).__init__()
         self.env = env
-        self.num_episodes = num_episodes
         self.max_steps = max_steps
+        self.steps_episode = steps_episode
         self.alpha = alpha
         self.gamma = gamma
-        self.exploration = exploration
+        self.exploration_strategy = exploration_strategy
         self.epsilon = epsilon
         self.temp = temp
 
@@ -146,20 +146,21 @@ class TDLearning(Base, metaclass=ABCMeta):
             Summary Object containing the training data
 
         """
-        try:
-            summary = Summary(self.__class__.__name__, self.env.name)
-        except AttributeError:
-            summary = Summary(self.__class__.__name__, 'MountainCar-v0')
+        summary = Summary(self.__class__.__name__, self.env.name, self.exploration_strategy)
 
-        for i_episode in range(self.num_episodes):
+        i_episode = 0
+        total_steps = 0
+        while total_steps < self.max_steps:
             episode = Episode(i_episode)
 
             obs = self.env.reset()
             action = self.get_action(obs)
 
-            for _ in range(self.max_steps):
+            for _ in range(self.steps_episode):
                 obs, action, done, render = self.take_step(obs, action, episode,
                                                            render)
+
+                total_steps += 1
 
                 if done:
                     break
@@ -177,7 +178,7 @@ class TDLearning(Base, metaclass=ABCMeta):
                 print(message)
 
             # Run test episode and add tot summary
-            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+            if test_freq != 0 and (i_episode % test_freq == 0 or total_steps >= self.max_steps):
                 test_episode = self.run_test_episode(i_episode)
                 summary.append_test(test_episode)
 
@@ -185,6 +186,8 @@ class TDLearning(Base, metaclass=ABCMeta):
                     print(
                         "TEST Episode: %d, steps: %d, reward: %.2f" % (
                             i_episode, len(test_episode), test_episode.reward))
+
+            i_episode += 1
 
         while render:
             render = self.render()
@@ -228,7 +231,7 @@ class TDLearning(Base, metaclass=ABCMeta):
         obs = self.env.reset()
         if self.test_render:
             self.env.render()
-        for step in range(self.max_steps):
+        for step in range(self.steps_episode):
             action = self._no_exploration(obs)
             obs, reward, done = self.env.step(action)
             episode.append(reward)
@@ -269,11 +272,11 @@ class TDLearning(Base, metaclass=ABCMeta):
             attributes.
 
         """
-        if self.exploration == TDLearning.NONE:
+        if self.exploration_strategy == TDLearning.NONE:
             return self._no_exploration(obs)
-        if self.exploration == TDLearning.E_GREEDY:
+        if self.exploration_strategy == TDLearning.E_GREEDY:
             return self._epsilon_greedy(obs)
-        elif self.exploration == TDLearning.BOLTZMANN:
+        elif self.exploration_strategy == TDLearning.BOLTZMANN:
             return self._boltzmann(obs)
         else:
             raise NotImplementedError(

@@ -73,15 +73,15 @@ def mean_reward_std_training_steps(summaries, ma_window=1, color=None, linestyle
 
     """
     rewards = []
-    episodes = []
+    steps = []
     for summary in summaries:
         rewards.append(summary.mean_reward_episode(train_bool))
-        episodes.append(summary.iterations_as_training_steps(train_bool))
+        steps.append(summary.iterations_as_training_steps(train_bool))
     rewards = np.asarray(rewards)
-    episodes = np.asarray(episodes)
+    steps = np.asarray(steps)
 
-    x = np.unique(episodes)
-    y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
+    x = np.unique(np.concatenate(steps))
+    y = np.asarray([np.interp(x, steps, reward) for steps, reward in zip(steps, rewards)])
     mean_y = np.mean(y, axis=0)
     std = np.std(y, axis=0)
 
@@ -142,15 +142,15 @@ def mean_reward_training_steps(summaries, ma_window=1, color=None, linestyle=Non
 
     """
     rewards = []
-    episodes = []
+    steps = []
     for summary in summaries:
         rewards.append(summary.mean_reward_episode(train_bool))
-        episodes.append(summary.iterations_as_training_steps(train_bool))
+        steps.append(summary.iterations_as_training_steps(train_bool))
     rewards = np.asarray(rewards)
-    episodes = np.asarray(episodes)
+    steps = np.asarray(steps)
 
-    x = np.unique(episodes)
-    y = np.asarray([np.interp(x, episode, reward) for episode, reward in zip(episodes, rewards)])
+    x = np.unique(np.concatenate(steps))
+    y = np.asarray([np.interp(x, steps, reward) for steps, reward in zip(steps, rewards)])
     mean_y = np.mean(y, axis=0)
 
     plt.plot(x, mean_y, color=color, linestyle=linestyle, linewidth=1.)
@@ -202,7 +202,7 @@ labels = {
 
 def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, legend=None,
                  output_dir=None, colors=None, linestyles=None,
-                 format="eps", baseline=None):
+                 format="eps", baseline=None, xlim=None):
     """Main plot function to be used
 
     The files parameter can be a list of files or a list of
@@ -266,6 +266,8 @@ def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, leg
     for file in files:
         if type(file) is Summary:
             summaries = [file]
+        elif type(file) is list and type(file[0]) is Summary:
+            summaries = file
         else:
             fps = glob.glob("%s*.json" % file)
             summaries = [Summary.load(fp) for fp in fps]
@@ -288,6 +290,9 @@ def plot_summary(files, plot_type, train_bool=True, ma_window=1, title=None, leg
     x_label, y_label = labels[plot_type]
     plt.xlabel(x_label)
     plt.ylabel(y_label)
+    if xlim is not None:
+        plt.xlim(xlim)
+
     if legend is not None:
         plt.legend(legend, loc='lower right')
 

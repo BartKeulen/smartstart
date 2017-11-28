@@ -27,17 +27,17 @@ class ExplorationAgent(TDTabular):
 
     def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         total_steps = 0
-        for i_episode in range(self.num_episodes):
+        for i_episode in range(self.max_steps):
             obs = self.env.reset()
 
-            remaining_steps = self.max_steps
+            remaining_steps = self.steps_episode
             if self.smart_start:
                 smart_start_state = self.get_smart_start_state()
 
                 if smart_start_state is not None:
                     self.dynamic_programming(smart_start_state)
 
-                    for i in range(self.max_steps):
+                    for i in range(self.steps_episode):
                         action = self.vi_ss.get_action(obs)
 
                         obs_tp1, reward, done = self.env.step(action)
@@ -122,9 +122,9 @@ class ExplorationAgent(TDTabular):
         return 0, self.get_action(obs_tp1)
 
     def get_action(self, obs):
-        if self.exploration == self.RANDOM:
+        if self.exploration_strategy == self.RANDOM:
             return random.randint(0, 3)
-        elif self.exploration == self.COUNT:
+        elif self.exploration_strategy == self.COUNT:
             max_value = -float('inf')
             max_actions = []
             for action in range(4):
@@ -146,13 +146,13 @@ class ExplorationAgent(TDTabular):
 
 class ExplorationModelAgent(ExplorationAgent):
 
-    def __init__(self, env, smart_start=False, r_max=100, m=2, num_episodes=500, max_steps=1000, *args, **kwargs):
+    def __init__(self, env, smart_start=False, r_max=100, m=2, max_steps=500, steps_episode=1000, *args, **kwargs):
         super(ExplorationModelAgent, self).__init__(env, *args, **kwargs)
         self.vi = ValueIteration(env, *args, **kwargs)
         self.m = m
         self.r_max = r_max
-        self.num_episodes = num_episodes
-        self.max_steps = max_steps
+        self.num_episodes = max_steps
+        self.max_steps = steps_episode
         self.s_abs = 's'
         self.r_sum = defaultdict(lambda: 0)
         self.smart_start = smart_start
@@ -246,8 +246,8 @@ def run_test(args):
         if params['exploration_strategy'] == 'model-based':
             agent = ExplorationModelAgent(env,
                                           smart_start=params['smart_start'],
-                                          num_episodes=params['num_episodes'],
-                                          max_steps=params['max_steps'])
+                                          max_steps=params['num_episodes'],
+                                          steps_episode=params['max_steps'])
         else:
             agent = ExplorationAgent(env,
                                      smart_start=params['smart_start'],

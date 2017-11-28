@@ -10,13 +10,13 @@ from smartstart.utilities.datacontainers import Summary, Episode
 
 class RMax(Counter):
 
-    def __init__(self, env, r_max=100, m=5, num_episodes=500, max_steps=1000, *args, **kwargs):
+    def __init__(self, env, r_max=100, m=5, max_steps=500000, steps_episode=1000, *args, **kwargs):
         super(RMax, self).__init__(env, *args, **kwargs)
         self.vi = ValueIteration(env, *args, **kwargs)
         self.m = m
         self.r_max = r_max
-        self.num_episodes = num_episodes
         self.max_steps = max_steps
+        self.steps_episode = steps_episode
         self.s_abs = 's'
         self.r_sum = defaultdict(lambda: 0)
 
@@ -36,15 +36,18 @@ class RMax(Counter):
     def train(self, test_freq=0, render=False, render_episode=False, print_results=True):
         summary = Summary(self.__class__.__name__, self.env.name)
 
-        for i_episode in range(self.num_episodes):
+        i_episode = 0
+        total_steps = 0
+        while total_steps < self.max_steps:
             episode = Episode(i_episode)
 
             obs = self.env.reset()
 
-            for _ in range(self.max_steps):
+            for _ in range(self.steps_episode):
                 action = self.get_action(obs)
                 self.vi.obses.add(tuple(obs))
                 obs_tp1, reward, done = self.env.step(action)
+                total_steps += 1
 
                 if render:
                     render = self.env.render()
@@ -87,7 +90,7 @@ class RMax(Counter):
                 print(message)
 
             # Run test episode and add tot summary
-            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+            if test_freq != 0 and (i_episode % test_freq == 0 or total_steps >= self.max_steps):
                 test_episode = self.run_test_episode(i_episode)
                 summary.append_test(test_episode)
 
@@ -95,6 +98,8 @@ class RMax(Counter):
                     print(
                         "TEST Episode: %d, steps: %d, reward: %.2f" % (
                             i_episode, len(test_episode), test_episode.reward))
+
+            i_episode += 1
 
         while render:
             render = self.env.render()
@@ -107,7 +112,7 @@ class RMax(Counter):
         obs = self.env.reset()
         if self.test_render:
             self.env.render()
-        for step in range(self.max_steps):
+        for step in range(self.steps_episode):
             action = self.vi.get_action(obs)
             obs, reward, done = self.env.step(action)
             episode.append(reward)

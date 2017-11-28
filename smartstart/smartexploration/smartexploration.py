@@ -196,17 +196,18 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 Summary Object containing the training data
 
             """
-            summary = Summary(self.__class__.__name__, self.env.name)
+            summary = Summary(self.__class__.__name__, self.env.name, self.exploration_strategy)
 
-            for i_episode in range(self.num_episodes):
+            i_episode = 0
+            total_steps = 0
+            while total_steps < self.max_steps:
                 episode = Episode(i_episode)
 
                 obs = self.env.reset()
 
-                max_steps = self.max_steps
-
                 # eta probability of using smart start
                 self.use_smart_start_policy = False
+                finished = False
                 if i_episode > 0 and np.random.rand() <= self.eta:
                     # Step 1: Choose smart start
                     start_state = self.get_start()
@@ -218,10 +219,12 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
                     # Set using smart start policy to True
                     self.use_smart_start_policy = True
-                    for i in range(self.max_steps):
+                    for i in range(self.steps_episode):
                         action = self.policy.get_action(obs)
 
                         obs, _, done, render = self.take_step(obs, action, episode, render)
+
+                        total_steps += 1
 
                         if np.array_equal(obs, start_state):
                             break
@@ -229,11 +232,6 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                         if done:
                             finished = True
                             break
-
-                    max_steps = self.max_steps - len(episode)
-
-                    if finished:
-                        max_steps = 0
 
                 if render or render_episode:
                     value_map = self.Q.copy()
@@ -245,13 +243,16 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 self.use_smart_start_policy = False
 
                 # Perform normal reinforcement learning
-                action = self.get_action(obs)
-                for step in range(max_steps):
-                    obs, action, done, render = self.take_step(obs, action,
-                                                               episode, render)
+                if not finished:
+                    action = self.get_action(obs)
+                    for step in range(self.steps_episode - len(episode)):
+                        obs, action, done, render = self.take_step(obs, action,
+                                                                   episode, render)
 
-                    if done:
-                        break
+                        total_steps += 1
+
+                        if done:
+                            break
 
                 # Add training episode to summary
                 summary.append(episode)
@@ -274,7 +275,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                     print(message)
 
                 # Run test episode and add tot summary
-                if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+                if test_freq != 0 and (i_episode % test_freq == 0 or total_steps >= self.max_steps):
                     test_episode = self.run_test_episode(i_episode)
                     summary.append_test(test_episode)
 
@@ -282,6 +283,8 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                         print(
                             "TEST Episode: %d, steps: %d, reward: %.2f" % (
                                 i_episode, len(test_episode), test_episode.reward))
+
+                i_episode += 1
 
             while render:
                 value_map = self.Q.copy()

@@ -1,9 +1,11 @@
 import datetime
+import os
 import pprint
 import random
 import argparse
 
 import numpy as np
+from multiprocessing import cpu_count
 
 from smartstart.utilities.experimenter import run_experiment
 from smartstart.algorithms import QLearning, SARSA, SARSALambda
@@ -24,9 +26,9 @@ def task(params):
         'alpha': 0.1,
         'gamma': 0.99,
         'epsilon': 0.05,
-        'num_episodes': params['num_episodes'],
+        'steps_episode': params['steps_episode'],
         'max_steps': params['max_steps'],
-        'exploration': params['exploration_strategy']
+        'exploration_strategy': params['exploration_strategy']
     }
 
     if params['use_smart_start']:
@@ -38,13 +40,16 @@ def task(params):
         agent = params['algorithm'](env,
                                     **kwargs)
 
-    post_fix = "exploration=%s_%0.3d" % (params['exploration_strategy'], params['run'])
+    post_fix = "%0.3d" % params['run']
 
     summary = agent.train(test_freq=5, render=False, render_episode=False, print_results=False)
 
-    summary.save_to_gcloud(bucket_name='smartstart',
-                           directory="%s/%s" % (params['directory'], env.name),
-                           post_fix=post_fix)
+    if params['save_to_cloud']:
+        summary.save_to_gcloud(bucket_name='smartstart',
+                               directory="%s/%s" % (params['directory'], env.name),
+                               post_fix=post_fix)
+    else:
+        summary.save(os.path.join(directory, env.name), post_fix)
 
 
 if __name__ == "__main__":
@@ -54,28 +59,33 @@ if __name__ == "__main__":
 
     env = args.environment
     if env == 0:
-        num_episodes = 1000
-        max_steps = 1000
+        env = GridWorld.EASY
+        steps_episode = 1000
+        max_steps = 250000
     elif env == 1:
-        num_episodes = 2500
-        max_steps = 2500
+        env = GridWorld.MEDIUM
+        steps_episode = 2500
+        max_steps = 1000000
     elif env == 2:
-        num_episodes = 5000
-        max_steps = 5000
+        env = GridWorld.HARD
+        steps_episode = 5000
+        max_steps = 5000000
     elif env == 3:
-        num_episodes = 10000
-        max_steps = 10000
+        env = GridWorld.EXTREME
+        steps_episode = 10000
+        max_steps = 10000000
     else:
         raise NotImplementedError("Choose from available environments (0 = Easy, 1 = Medium, 2 = Hard, 3 = Extreme)")
 
     param_grid = {'task': task,
                   'env': [env],
                   'max_steps': [max_steps],
-                  'num_episodes': [num_episodes],
-                  'algorithm': [QLearning, SARSA],
+                  'steps_episode': [steps_episode],
+                  'algorithm': [QLearning],
                   'exploration_strategy': [QLearning.E_GREEDY, QLearning.BOLTZMANN, QLearning.COUNT_BASED, QLearning.UCB1],
                   'use_smart_start': [True, False],
-                  'num_exp': 25,
+                  'num_exp': 5,
+                  'save_to_cloud': [True],
                   'directory': [datetime.datetime.now().strftime('%d%m%Y')]}
 
     pp = pprint.PrettyPrinter()

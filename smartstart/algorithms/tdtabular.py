@@ -162,9 +162,9 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
             attributes.
 
         """
-        if self.exploration == self.COUNT_BASED:
+        if self.exploration_strategy == self.COUNT_BASED:
             return self._count_based(obs)
-        elif self.exploration == self.UCB1:
+        elif self.exploration_strategy == self.UCB1:
             return self._ucb1(obs)
         else:
             return super().get_action(obs)
@@ -398,13 +398,13 @@ class TDTabularLambda(TDTabular, metaclass=ABCMeta):
         except AttributeError:
             summary = Summary(self.__class__.__name__, 'MountainCar-v0')
 
-        for i_episode in range(self.num_episodes):
+        for i_episode in range(self.max_steps):
             episode = Episode(i_episode)
 
             obs = self.env.reset()
             action = self.get_action(obs)
 
-            for _ in range(self.max_steps):
+            for _ in range(self.steps_episode):
                 obs, action, done, render = self.take_step(obs, action, episode,
                                                            render)
 
@@ -428,7 +428,7 @@ class TDTabularLambda(TDTabular, metaclass=ABCMeta):
                 print(message)
 
             # Run test episode and add tot summary
-            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.num_episodes - 1):
+            if test_freq != 0 and (i_episode % test_freq == 0 or i_episode == self.max_steps - 1):
                 test_episode = self.run_test_episode(i_episode)
                 summary.append_test(test_episode)
 

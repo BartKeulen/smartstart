@@ -112,15 +112,16 @@ class Summary(object):
 
     Attributes
     ----------
-    name : :obj:`str`
+    algo_name : :obj:`str`
         name of the summary, used for saving the data (Default = None)
     episodes : :obj:`list` of :obj:`tuple` with episode data
     """
 
-    def __init__(self, name, env_name):
+    def __init__(self, algo_name, env_name, exploration_strategy=None):
         super().__init__()
-        self.name = name
+        self.algo_name = algo_name
         self.env_name = env_name
+        self.exploration_strategy = exploration_strategy
         self.episodes = []
         self.tests = []
 
@@ -174,7 +175,7 @@ class Summary(object):
         else:
             episodes = self.tests
         training_steps = np.cumsum([episode.steps for episode in self.episodes])
-        return [training_steps[episode.iter] for episode in episodes]
+        return np.asarray([training_steps[episode.iter] for episode in episodes])
 
     def steps_episode(self, train=True):
         """Number of steps per episode
@@ -228,7 +229,7 @@ class Summary(object):
         :obj:`~smartstart.utilities.datacontainers.Summary`
             new Summary object
         """
-        summary = cls(None, None)
+        summary = cls(None, None, None)
         data_dict = json.loads(data)
         data_dict['episodes'] = [Episode.from_json(episode) for episode in data_dict['episodes']]
         data_dict['tests'] = [Episode.from_json(test) for test in data_dict['tests']]
@@ -254,7 +255,9 @@ class Summary(object):
         :obj:`str`
             full filepath to the saved json summary
         """
-        name = self.name + "_" + self.env_name
+        name = self.algo_name + "_" + self.env_name
+        if self.exploration_strategy is not None:
+            name += "_" + self.exploration_strategy
         if post_fix is not None:
             name += "_" + str(post_fix)
         name += ".json"
@@ -284,7 +287,7 @@ class Summary(object):
              None)
 
         """
-        name = self.name + "_" + self.env_name
+        name = self.algo_name + "_" + self.env_name
         if post_fix is not None:
             name += "_" + str(post_fix)
         name += ".json"
