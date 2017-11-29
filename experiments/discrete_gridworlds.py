@@ -54,38 +54,47 @@ def task(params):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('environment', type=int, help='An integer for the GridWorld environment (0 = Easy, 1 = Medium, 2 = Hard, 3 = Extreme)')
+    parser.add_argument('env', type=str, help='GridWorld environment to use; Easy, Medium, Hard, Extreme')
+    parser.add_argument('algo', type=str, help='Algorithm to use; QLearning, SARSA, SARSALambda')
+    parser.add_argument('num_exp', type=int, help='Number of experiments with each configuration')
+    parser.add_argument('-save_to_cloud', action='store_true')
     args = parser.parse_args()
 
-    env = args.environment
-    if env == 0:
-        env = GridWorld.EASY
+    env = args.env
+    if env == GridWorld.EASY:
         steps_episode = 1000
         max_steps = 250000
-    elif env == 1:
-        env = GridWorld.MEDIUM
+    elif env == GridWorld.MEDIUM:
         steps_episode = 2500
-        max_steps = 1000000
-    elif env == 2:
-        env = GridWorld.HARD
-        steps_episode = 5000
         max_steps = 5000000
-    elif env == 3:
-        env = GridWorld.EXTREME
-        steps_episode = 10000
+    elif env == GridWorld.HARD:
+        steps_episode = 5000
         max_steps = 10000000
+    elif env == GridWorld.EXTREME:
+        steps_episode = 10000
+        max_steps = 50000000
     else:
-        raise NotImplementedError("Choose from available environments (0 = Easy, 1 = Medium, 2 = Hard, 3 = Extreme)")
+        raise NotImplementedError("Choose from available environments")
+
+    algo = args.algo
+    if algo == 'QLearning':
+        algo = QLearning
+    elif algo == 'SARSA':
+        algo = SARSA
+    elif algo == 'SARSALambda':
+        algo = SARSALambda
+    else:
+        raise NotImplementedError("Choose from available algorithms")
 
     param_grid = {'task': task,
                   'env': [env],
                   'max_steps': [max_steps],
                   'steps_episode': [steps_episode],
-                  'algorithm': [QLearning],
+                  'algorithm': [algo],
                   'exploration_strategy': [QLearning.E_GREEDY, QLearning.BOLTZMANN, QLearning.COUNT_BASED, QLearning.UCB1],
                   'use_smart_start': [True, False],
-                  'num_exp': 5,
-                  'save_to_cloud': [True],
+                  'num_exp': args.num_exp,
+                  'save_to_cloud': [args.save_to_cloud],
                   'directory': [datetime.datetime.now().strftime('%d%m%Y')]}
 
     pp = pprint.PrettyPrinter()

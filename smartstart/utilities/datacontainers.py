@@ -288,6 +288,8 @@ class Summary(object):
 
         """
         name = self.algo_name + "_" + self.env_name
+        if self.exploration_strategy is not None:
+            name += "_" + self.exploration_strategy
         if post_fix is not None:
             name += "_" + str(post_fix)
         name += ".json"
