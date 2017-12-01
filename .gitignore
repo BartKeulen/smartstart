@@ -153,10 +153,3 @@ fabric.properties
 
 # custom rules
 .idea
-*.bin
-*.json
-**/*/data/
-scripts/
-logs/
-thesis/
-experiments/results/*
