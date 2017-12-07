@@ -3,7 +3,8 @@ import random
 import numpy as np
 
 from smartstart.algorithms import QLearning
-from smartstart.environments import GridWorld, GridWorldVisualizer
+from smartstart.environments.gridworld import GridWorld
+from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
 from smartstart.utilities.plot import plot_summary, show_plot, \
     mean_reward_episode, steps_episode
 
@@ -23,9 +24,9 @@ visualizer.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
 agent = QLearning(grid_world,
                   alpha=0.1,
                   epsilon=0.05,
-                  num_episodes=500,
-                  max_steps=1000,
-                  exploration=QLearning.E_GREEDY)
+                  steps_episode=1000,
+                  max_steps=500000,
+                  exploration_strategy=QLearning.E_GREEDY)
 
 # Train the agent, summary contains training data
 summary = agent.train(render=True,

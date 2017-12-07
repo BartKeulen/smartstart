@@ -259,8 +259,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
                 if base is SARSALambda:
                     # Clear traces after episode
-                    self.traces = np.zeros(
-                        (self.env.w, self.env.h, self.env.num_actions))
+                    self.traces.fill(0.)
 
                 # Render and/or print results
                 message = "Episode: %d, steps: %d, reward: %.2f" % \

@@ -88,8 +88,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
         """
         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
         q_value, _ = self.get_q_value(obs, action)
-        td_error = self.alpha * (
-            reward + self.gamma * next_q_value - q_value)
+        td_error = reward + self.gamma * next_q_value - q_value
 
         idx = tuple(obs) + (action,)
         self.Q[idx] += self.alpha * td_error
@@ -199,7 +198,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
                 obs_tp1 = self.next_obses(obs, action)[0]
                 count_obs_tp1 = self.get_count(obs_tp1)
                 if count_obs_tp1 != 0:
-                    exploration_bonus = 1 / self.get_count(obs_tp1)
+                    exploration_bonus = tot_count / self.get_count(obs_tp1)
             value += self.beta * exploration_bonus
             if value > max_value:
                 max_value = value
@@ -241,7 +240,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
                 if count == 0:
                     value = np.inf
                 else:
-                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / (np.log(self.get_count(obs, action)) + 1e-12))
+                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / self.get_count(obs, action))
             if value > max_value:
                 max_value = value
                 max_actions = [action]
@@ -365,7 +364,7 @@ class TDTabularLambda(TDTabular, metaclass=ABCMeta):
         self.lamb = lamb
         self.threshold_traces = threshold_traces
         self.Q = np.ones(
-            (self.env.w, self.env.h, self.env.num_actions)) * self.init_q_value
+            (self.env.h, self.env.w, self.env.num_actions)) * self.init_q_value
         self.traces = np.zeros(self.Q.shape)
 
     def reset(self):
@@ -412,8 +411,7 @@ class TDTabularLambda(TDTabular, metaclass=ABCMeta):
                     break
 
             # Clear traces after episode
-            self.traces = np.zeros(
-                (self.env.w, self.env.h, self.env.num_actions))
+            self.traces.fill(0)
 
             # Add training episode to summary
             summary.append(episode)
@@ -527,52 +525,3 @@ class SARSALambda(TDTabularLambda):
             action_tp1 = None
 
         return next_q_value, action_tp1
-
-
-# class WatkinsQ(TDTabularLambda):
-#
-#     def __init__(self, env, *args, **kwargs):
-#         super(WatkinsQ, self).__init__(env, *args, **kwargs)
-#
-#     def update_q_value(self, obs, action, reward, obs_tp1, done):
-#         """Update Q-value for obs-action pair
-#
-#         Updates Q-value according to the Bellman equation with eligibility
-#         traces included.
-#
-#         Parameters
-#         ----------
-#         obs : :obj:`list` of :obj:`int` or `np.ndarray`
-#             observation
-#         action : :obj:`int`
-#             action
-#         reward : :obj:`float`
-#             reward
-#         obs_tp1 : :obj:`list` of :obj:`int` or `np.ndarray`
-#             next observation
-#         done : :obj:`bool`
-#             True when obs_tp1 is terminal
-#
-#         Returns
-#         -------
-#         :obj:`float`
-#             updated Q-value and next action
-#
-#         """
-#         cur_q_value, _ = self.get_q_value(obs, action)
-#         next_q_value, action_tp1 = self.get_next_q_action(obs_tp1, done)
-#         td_error = reward + self.gamma * next_q_value - cur_q_value
-#
-#         idx = tuple(obs) + (action,)
-#         self.traces[idx] = 1
-#         active_traces = np.asarray(
-#             np.where(self.traces > self.threshold_traces))
-#         for i in range(active_traces.shape[1]):
-#             idx = tuple(active_traces[:, i])
-#             self.Q[idx] += self.alpha * td_error * self.traces[idx]
-#             self.traces[idx] *= self.gamma * self.lamb
-#
-#         return self.Q[idx], action_tp1
-#
-#     def get_next_q_action(self, obs_tp1, done):
-#         pass
