@@ -16,10 +16,10 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
         self.env = env
         self.feature = feature
         self.num_actions = env.num_actions
-        self.theta = np.zeros((self.feature.features.size, env.num_actions))
+        self.theta = np.zeros((self.feature.size, env.num_actions))
 
     def reset(self):
-        self.theta = np.zeros((self.feature.num_features, self.num_actions))
+        self.theta = np.zeros((self.feature.size, self.num_actions))
 
     def get_q_value(self, obs, action=None):
         feature_vector = self.feature.get(obs)

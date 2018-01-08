@@ -8,8 +8,6 @@ import os
 import numpy as np
 from google.cloud import storage
 
-from smartstart.utilities.utilities import DIR
-
 
 class Episode(object):
     """Datacontainer for episode data
@@ -236,7 +234,7 @@ class Summary(object):
         summary.__dict__.update(data_dict)
         return summary
 
-    def save(self, directory=DIR, post_fix=None):
+    def save(self, directory, post_fix=None):
         """Save summary as json file
 
         The summary name is used as filename, an optional postfix can be

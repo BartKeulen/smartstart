@@ -112,8 +112,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
 
         def __init__(self,
                      env,
-                     exploitation_param=1.,
-                     exploration_param=2.,
+                     c_ss=2.,
                      eta=0.5,
                      m=1,
                      vi_gamma=0.999,
@@ -123,13 +122,11 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                      **kwargs):
             super(SmartStart, self).__init__(env, *args, **kwargs)
             self.__class__.__name__ = "SmartStart_" + base.__name__
-            self.exploitation_param = exploitation_param
-            self.exploration_param = exploration_param
+            self.c_ss = c_ss
             self.eta = eta
             self.m = m
 
-            self.policy = ValueIteration(self.env, vi_gamma, vi_min_error,
-                                         vi_max_itr)
+            self.policy = ValueIteration(self.env, vi_gamma, vi_min_error, vi_max_itr)
 
         def get_start(self):
             """Determines the smart start state
@@ -163,9 +160,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 obs = possible_starts[:, i]
                 q_values, _ = self.get_q_value(obs)
                 q_value = max(q_values)
-                ucb = self.exploitation_param * q_value + \
-                      np.sqrt((self.exploration_param *
-                               np.log(np.sum(count_map)))/count_map[tuple(obs)])
+                ucb = q_value + np.sqrt((self.c_ss * np.log(np.sum(count_map)))/count_map[tuple(obs)])
                 if ucb > max_ucb:
                     smart_start = obs
                     max_ucb = ucb

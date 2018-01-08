@@ -22,12 +22,14 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
     def __init__(self,
                  env,
                  init_q_value=0.,
-                 beta=1.,
+                 c_cb=1.,
+                 c_ucb=1.,
                  *args,
                  **kwargs):
         super(TDTabular, self).__init__(env, *args, **kwargs)
         self.init_q_value = init_q_value
-        self.beta = beta
+        self.c_cb = c_cb
+        self.c_ucb = c_ucb
         self.Q = np.ones(
             (self.env.h, self.env.w, self.env.num_actions)) * self.init_q_value
 
@@ -192,14 +194,15 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
         max_value = -float('inf')
         max_actions = []
         for action, value in zip(actions, q_values):
-            exploration_bonus = float('inf')
-            count = self.get_count(obs, action)
-            if count > 0:
-                obs_tp1 = self.next_obses(obs, action)[0]
-                count_obs_tp1 = self.get_count(obs_tp1)
-                if count_obs_tp1 != 0:
-                    exploration_bonus = tot_count / self.get_count(obs_tp1)
-            value += self.beta * exploration_bonus
+            if self.c_cb > 0:
+                exploration_bonus = float('inf')
+                count = self.get_count(obs, action)
+                if count > 0:
+                    obs_tp1 = self.next_obses(obs, action)[0]
+                    count_obs_tp1 = self.get_count(obs_tp1)
+                    if count_obs_tp1 != 0:
+                        exploration_bonus = tot_count / self.get_count(obs_tp1)
+                value += self.c_cb * exploration_bonus
             if value > max_value:
                 max_value = value
                 max_actions = [action]
@@ -240,7 +243,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
                 if count == 0:
                     value = np.inf
                 else:
-                    value += 2 * self.beta * np.sqrt(np.log(tot_count) / self.get_count(obs, action))
+                    value += 2 * self.c_ucb * np.sqrt(np.log(tot_count) / self.get_count(obs, action))
             if value > max_value:
                 max_value = value
                 max_actions = [action]

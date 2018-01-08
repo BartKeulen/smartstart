@@ -63,7 +63,7 @@ class GridWorld(Environment):
     EXTREME = 'Extreme'
     IMPOSSIBRUUHHH = 'Impossible'
 
-    def __init__(self, name, layout, T_prob=0., wall_reset=False, scale=5):
+    def __init__(self, name, layout, T_prob=1., wall_reset=False, scale=5):
         super(GridWorld, self).__init__(self.__class__.__name__ + name)
         layout = np.asarray(layout)
         self.T_prob = T_prob
@@ -130,9 +130,9 @@ class GridWorld(Environment):
                         R[tuple(cur_state) + (action,)][tuple(new_state)] = 1.
 
                     if action == p_action:
-                        p = 1 - self.T_prob + self.T_prob / len(self.possible_actions(cur_state))
+                        p = self.T_prob
                     else:
-                        p = self.T_prob / len(self.possible_actions(cur_state))
+                        p = (1. - self.T_prob) / (len(self.possible_actions(cur_state)) - 1)
 
                     T[tuple(cur_state) + (action,)][tuple(new_state)] += p
 
@@ -216,8 +216,10 @@ class GridWorld(Environment):
             Empty info dict (to make it equal to the step method in the OpenAI
             Gym)
         """
-        if np.random.rand() < self.T_prob:
-            action = np.random.choice(self.possible_actions(self.state))
+        if np.random.rand() < (1. - self.T_prob):
+            actions = self.possible_actions(self.state)
+            actions.remove(action)
+            action = np.random.choice(actions)
 
         new_state = self._move(self.state, action)
 
