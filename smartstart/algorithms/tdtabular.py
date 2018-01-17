@@ -5,14 +5,16 @@ Module defining classes for SARSA and SARSA(lambda).
 See 'Reinforcement Learning: An Introduction by Richard S. Sutton and
 Andrew G. Barto for more information.
 """
+import time
 from abc import ABCMeta
 import random
 
 import numpy as np
+from smartstart.environments.gridworld import GridWorld
 
 from smartstart.utilities.datacontainers import Summary, Episode
-from .tdlearning import TDLearning
-from .counter import Counter
+from smartstart.algorithms.tdlearning import TDLearning
+from smartstart.algorithms.counter import Counter
 
 
 class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
@@ -134,7 +136,7 @@ class TDTabular(Counter, TDLearning, metaclass=ABCMeta):
 
         self.increment(obs, action, obs_tp1)
 
-        episode.append(reward)
+        episode.add(reward)
 
         return obs_tp1, action_tp1, done, render
 

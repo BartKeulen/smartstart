@@ -2,9 +2,11 @@
 
 """
 import math
+import pdb
 from collections import defaultdict
 
 import numpy as np
+from smartstart.agents.valueiteration import TransitionModel, RewardFunction
 
 from smartstart.environments.environment import Environment
 from smartstart.environments.generate_gridworld import generate_gridworld
@@ -60,13 +62,17 @@ class GridWorld(Environment):
     EASY = 'Easy'
     MEDIUM = 'Medium'
     HARD = 'Hard'
+    MAZE = 'Maze'
     EXTREME = 'Extreme'
     IMPOSSIBRUUHHH = 'Impossible'
 
-    def __init__(self, name, layout, T_prob=1., wall_reset=False, scale=5):
-        super(GridWorld, self).__init__(self.__class__.__name__ + name)
+    def __init__(self, name, layout, T_prob=1., wall_reset=False, scale=3):
+        super(GridWorld, self).__init__(name)
         layout = np.asarray(layout)
         self.T_prob = T_prob
+        self.wall_reset = wall_reset
+        self.scale = scale
+
 
         grid_world = np.kron(layout, np.ones((scale, scale), dtype=layout.dtype))
         start_state = np.asarray(np.where(grid_world == 2))[:, math.floor(scale**2/2)]
@@ -77,10 +83,9 @@ class GridWorld(Environment):
         grid_world[tuple(goal_state)] = 3
 
         self.h, self.w = grid_world.shape
+        self.actions = [0, 1, 2, 3]
         self.num_actions = 4
         self.grid_world, self.start_state, self.goal_state = grid_world, start_state, goal_state
-
-        self.wall_reset = wall_reset
 
     def get_all_states(self):
         """Return all the states of the gridworld
@@ -98,7 +103,7 @@ class GridWorld(Environment):
                     states.add((y, x))
         return states
 
-    def get_T_R(self):
+    def get_p_and_r(self):
         """Return transition model and reward function
 
         Creates a the transition model and reward function for the gridworld
@@ -115,28 +120,29 @@ class GridWorld(Environment):
         """
         states = self.get_all_states()
 
-        T = defaultdict(lambda: defaultdict(lambda: 0))
-        R = defaultdict(lambda: defaultdict(lambda: 0))
+        p = TransitionModel(self.actions)
+        r = RewardFunction(self.actions)
+
         for state in states:
             cur_state = np.asarray(state)
-            for action in self.possible_actions(cur_state):
-                for p_action in self.possible_actions(cur_state):
-                    new_state = self._move(cur_state.copy(), p_action)
-                    if (new_state < 0).any() or (new_state[0] >= self.h) or (new_state[1] >= self.w) or (
-                        self.grid_world[tuple(new_state)] == 1):
-                        new_state = cur_state.copy()
+            for action in self.actions:
+                next_states = [self._move(cur_state, action_) for action_ in self.actions]
+                for next_state, random_action in zip(next_states, self.actions):
+                    if (next_state < 0).any() or (next_state[0] >= self.h) or (next_state[1] >= self.w) or (
+                                    self.grid_world[tuple(next_state)] == 1):
+                        next_state = cur_state.copy()
 
-                    if self.grid_world[tuple(new_state)] == 3:
-                        R[tuple(cur_state) + (action,)][tuple(new_state)] = 1.
-
-                    if action == p_action:
-                        p = self.T_prob
+                    if random_action == action:
+                        transition_prob = self.T_prob
                     else:
-                        p = (1. - self.T_prob) / (len(self.possible_actions(cur_state)) - 1)
+                        transition_prob = (1. - self.T_prob) / (len(self.actions) - 1)
 
-                    T[tuple(cur_state) + (action,)][tuple(new_state)] += p
+                    p.add_transition(cur_state, action, next_state, transition_prob)
 
-        return T, R
+                    if self.grid_world[tuple(next_state)] == 3:
+                        r.set_reward(state, action, transition_prob)
+
+        return p, r
 
     def reset(self, start_state=None):
         """
@@ -299,7 +305,7 @@ class GridWorld(Environment):
         return self.visualizer.render(**kwargs)
 
     @classmethod
-    def generate(cls, type=EASY, size=None):
+    def generate(cls, type=EASY, *args, **kwargs):
         """Generates a gridworld according to the presets
 
         Preset are given in :mod:`smartstart.environments.presets`.
@@ -320,19 +326,31 @@ class GridWorld(Environment):
             new gridworld environment
         """
         if type == GridWorld.EASY:
-            name, layout, scale = easy()
+            name, layout = easy()
         elif type == GridWorld.MEDIUM:
-            name, layout, scale = medium()
+            name, layout = medium()
         elif type == GridWorld.HARD:
-            name, layout, scale = hard()
+            name, layout = hard()
+        elif type == GridWorld.MAZE:
+            name, layout = maze()
         elif type == GridWorld.EXTREME:
-            name, layout, scale = extreme()
-        elif type == GridWorld.IMPOSSIBRUUHHH:
-            name, layout, scale = generate_gridworld(size=size)
+            name, layout = extreme()
         else:
             raise NotImplementedError("Please choose from the available GridWorld implementations or build one your self.")
 
-        return cls(name, layout, scale=scale)
+        return cls(name, layout, *args, **kwargs)
+
+    def to_json_dict(self):
+        return {
+            'type': self.name,
+            'scale': self.scale,
+            'T_prob': self.T_prob,
+            'wall_reset': self.wall_reset
+        }
+
+    @classmethod
+    def from_json_dict(cls, json_dict):
+        return cls.generate(**json_dict)
 
 
 # if __name__ == "__main__":

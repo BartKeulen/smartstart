@@ -43,7 +43,7 @@ class FunctionApproximation(TDLearning, metaclass=ABCMeta):
 
         _, action_tp1 = self.update_q_value(obs, action, reward, obs_tp1, done)
 
-        episode.append(reward)
+        episode.add(reward)
 
         return obs_tp1, action_tp1, done, render
 

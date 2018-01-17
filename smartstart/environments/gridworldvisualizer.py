@@ -94,7 +94,13 @@ class GridWorldVisualizer(Visualizer):
             visualizers to add, see class attributes for available visualizers
         """
         for arg in args:
-            self.active_visualizers.add(arg)
+            if arg == self.ALL:
+                self.add_visualizer(GridWorldVisualizer.LIVE_AGENT,
+                                    GridWorldVisualizer.VALUE_FUNCTION,
+                                    GridWorldVisualizer.DENSITY,
+                                    GridWorldVisualizer.CONSOLE)
+            else:
+                self.active_visualizers.add(arg)
 
     def render(self, value_map=None, density_map=None, message=None, close=False):
         """Render the current state of the GridWorld

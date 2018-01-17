@@ -4,12 +4,13 @@ This methods defined in this module make it easy to run multiple experiments
 in parallel and using different sets of parameters.
 """
 from multiprocessing import Pool, cpu_count
+import pprint
 
 from sklearn.model_selection import ParameterGrid
 from tqdm import *
 
 
-def run_experiment(param_grid, n_processes=-1):
+def run_experiment(param_grid, n_processes=None):
     """Method for running experiments
 
     This method is used for making it easy to run experiments in parallel and
@@ -79,9 +80,9 @@ def run_experiment(param_grid, n_processes=-1):
     for i in range(len(params)):
         params[i]['id'] = i
 
-    print("\033[1mNumber of processes: %d\033[0m" % len(params))
+    print("\n\033[1mNumber of processes: %d\033[0m" % len(params))
 
-    if n_processes == -1:
+    if n_processes is None or n_processes <= 0:
         n_processes = cpu_count()
     if n_processes > 1:
         with Pool(n_processes) as p:

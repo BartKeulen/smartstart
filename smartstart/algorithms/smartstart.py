@@ -327,7 +327,7 @@ def generate_smartstart_object(base, env, *args, **kwargs):
                 for action, action_count in obs_count.items():
                     for obs_tp1, count in action_count.items():
 
-                        transitions[obs_tp1].append(obs_c)
+                        transitions[obs_tp1].add(obs_c)
 
                         if obs_tp1 == tuple(start_state):
                             self.policy.R[obs_c + action] = 1.

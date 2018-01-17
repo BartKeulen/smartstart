@@ -169,7 +169,7 @@ def generate_gridworld(size=None):
     goal = possible_goals[:, goal_idx]
     _fill_cell(gridworld, goal, 3)
 
-    return "Random", gridworld, 1
+    return "Random", gridworld
 
 
 if __name__ == "__main__":
