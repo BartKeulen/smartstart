@@ -89,6 +89,13 @@ class ValueIteration:
                                zip(transition_probs, next_state_values)]))
         return values
 
+    def get_state_action_values(self):
+        state_action_values = np.zeros(self.state_action_shape)
+        for i in range(self.state_action_shape[0]):
+            for j in range(self.state_action_shape[1]):
+                state_action_values[i, j] = self.calc_state_action_values([i, j])
+        return state_action_values
+
     def get_state_values(self):
         return self.state_values
 
@@ -156,7 +163,7 @@ class TransitionModel:
         for state, action_next_states_transitions in self.P.items():
             for action, next_state_transitions in action_next_states_transitions.items():
                 total_prob = sum(list(next_state_transitions.values()))
-                if total_prob != 1:
+                if abs(total_prob - 1) > 1e-5:
                     raise ValueError('Total probability for state %s and action %s do not add up to 1. Total probability is %.2f' % (state, action, total_prob))
 
     def to_json_dict(self):

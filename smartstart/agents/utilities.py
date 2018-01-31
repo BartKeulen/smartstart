@@ -60,12 +60,20 @@ class Summary:
             'steps': [],
             'rewards': []
         }
+        self.correct_policy = {
+            'iter': [],
+            'correct_policy': []
+        }
 
     def add_train_episode(self, episode):
         self._add_episode(self.train, episode)
 
     def add_test_episode(self, episode):
         self._add_episode(self.test, episode)
+
+    def add_test_policy(self, iter, percentage_correct):
+        self.correct_policy['iter'].append(iter)
+        self.correct_policy['correct_policy'].append(percentage_correct)
 
     def _add_episode(self, episode_list, episode):
         episode_list['iter'].append(episode.iter)
@@ -79,8 +87,9 @@ class Summary:
         training_steps = self.get_train_iterations_in_training_steps()
         return np.asarray([training_steps[i] for i in self.test['iter']])
 
-    def get_test_rise_time_in_training_steps(self, epsilon):
-        pass
+    def get_policy_iterations_in_training_steps(self):
+        training_steps = self.get_train_iterations_in_training_steps()
+        return np.asarray([training_steps[i] for i in self.correct_policy['iter']])
 
     def to_json_dict(self):
         json_dict = self.__dict__.copy()
@@ -175,9 +184,50 @@ def calc_average_reward_training_steps(summaries):
     return x, mean_y, std
 
 
-def calc_average_rise_time_in_training_steps(summaries, epsilon, baseline):
-    training_steps, average_rewards, _ = calc_average_reward_training_steps(summaries)
+def calc_average_steps_training_steps(summaries):
+    average_steps = []
+    training_steps = []
+    for summary in summaries:
+        average_steps.append(np.asarray(summary.test['steps']))
+        training_steps.append(summary.get_test_iterations_in_training_steps())
+    average_steps = np.asarray(average_steps)
+    training_steps = np.asarray(training_steps)
 
-    idx = np.argmax(average_rewards >= baseline * (1 - epsilon))
+    x = np.unique(np.concatenate(training_steps))
+    y = np.asarray([np.interp(x, training_step, step) for training_step, step in zip(training_steps, average_steps)])
+    mean_y = np.mean(y, axis=0)
+    std = np.std(y, axis=0)
+
+    return x, mean_y, std
+
+
+def calc_average_rise_time_in_training_steps(summaries, epsilon, baseline):
+    training_steps, average_steps, std_steps = calc_average_steps_training_steps(summaries)
+
+    lower_steps = average_steps - std_steps
+    upper_steps = average_steps + std_steps
+
+    idx = np.argmax(average_steps <= (baseline * (1 + epsilon)))
+    lower_idx = np.argmax(lower_steps <= (baseline * (1 + epsilon)))
+    upper_idx = np.argmax(upper_steps <= (baseline * (1 + epsilon)))
     rise_time = training_steps[idx] if idx > 0 else np.nan
-    return rise_time
+    rise_time_lower = training_steps[lower_idx] if lower_idx > 0 else np.nan
+    rise_time_upper = training_steps[upper_idx] if upper_idx > 0 else np.nan
+    return rise_time, rise_time_lower, rise_time_upper
+
+
+def calc_average_policy_in_training_steps(summaries):
+    average_policies = []
+    training_steps = []
+    for summary in summaries:
+        average_policies.append(np.asarray(summary.correct_policy['correct_policy']))
+        training_steps.append(summary.get_policy_iterations_in_training_steps())
+    average_policies = np.asarray(average_policies)
+    training_steps = np.asarray(training_steps)
+
+    x = np.unique(np.concatenate(training_steps))
+    y = np.asarray([np.interp(x, training_step, policy) for training_step, policy in zip(training_steps, average_policies)])
+    mean_y = np.mean(y, axis=0)
+    std = np.std(y, axis=0)
+
+    return x, mean_y, std

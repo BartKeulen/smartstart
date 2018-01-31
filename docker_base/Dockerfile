@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM smartstart_base
+FROM python:3.6-slim
 
 # Set the working directory to /app
 WORKDIR /app
@@ -8,6 +8,4 @@ WORKDIR /app
 ADD . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install .
-
-
+RUN pip install -r requirements.txt

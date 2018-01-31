@@ -73,7 +73,6 @@ class GridWorld(Environment):
         self.wall_reset = wall_reset
         self.scale = scale
 
-
         grid_world = np.kron(layout, np.ones((scale, scale), dtype=layout.dtype))
         start_state = np.asarray(np.where(grid_world == 2))[:, math.floor(scale**2/2)]
         goal_state = np.asarray(np.where(grid_world == 3))[:, math.floor(scale**2/2)]

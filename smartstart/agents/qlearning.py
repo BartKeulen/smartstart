@@ -63,6 +63,9 @@ class QLearning:
     def get_state_values(self):
         return np.max(self.state_action_values, axis=-1)
 
+    def get_state_action_values(self):
+        return self.state_action_values
+
     def to_json_dict(self):
         json_dict = self.__dict__.copy()
         json_dict['state_action_values'] = json_dict['state_action_values'].tolist()

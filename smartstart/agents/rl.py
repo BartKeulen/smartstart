@@ -17,61 +17,8 @@ MAX_STEPS = 50000
 MAX_STEPS_EPISODE = 100
 TEST_FREQ = 0
 
-#
-# def train(env, agent):
-#     global RENDER, RENDER_EPISODE
-#     np.random.seed(SEED)
-#
-#     summary = Summary(env, agent)
-#
-#     i_episode = 0
-#     total_steps = 0
-#     test_count = TEST_FREQ
-#     while total_steps < MAX_STEPS:
-#         episode = Episode(i_episode)
-#         obs = env.reset()
-#
-#         for _ in range(MAX_STEPS_EPISODE):
-#             action = agent.get_action(obs)
-#             obs_tp1, reward, done = env.step(action)
-#
-#             if RENDER:
-#                 RENDER = render(env, agent)
-#
-#             agent.update(obs, action, reward, obs_tp1, done)
-#
-#             episode.add(reward)
-#             total_steps += 1
-#             test_count += 1
-#
-#             obs = obs_tp1
-#
-#             if done:
-#                 break
-#
-#         summary.add_train_episode(episode)
-#         logger.info('[TRAIN] - Episode: %d, steps: %d, reward %.2f' % (i_episode, episode.steps, episode.reward))
-#
-#         if RENDER_EPISODE:
-#             RENDER_EPISODE = render(env, agent)
-#
-#         if TEST_FREQ != 0 and (test_count >= TEST_FREQ or total_steps >= MAX_STEPS):
-#             test_episode = test(env, agent, i_episode)
-#             summary.add_test_episode(test_episode)
-#
-#             logger.info('[TEST]  - Episode: %d, steps: %d, reward %.2f' % (i_episode, episode.steps, test_episode.reward))
-#
-#             test_count = 0
-#
-#         i_episode += 1
-#
-#     if RENDER or RENDER_EPISODE:
-#         env.render(close=True)
-#
-#     return summary
 
-
-def train(env, agent):
+def train(env, agent, true_state_action_values=None):
     global RENDER, RENDER_EPISODE
     np.random.seed(SEED)
 
@@ -120,7 +67,7 @@ def train(env, agent):
                     break
 
         if smart_start_state is not None and not reached_smart_start and not reached_terminal_state:
-            logger.warning('[SS] - Did not reach smart start state: [%d, %d] != [%d, %d]' % (smart_start_state + tuple(obs)))
+            logger.debug('[SS] - Did not reach smart start state: [%d, %d] != [%d, %d]' % (smart_start_state + tuple(obs)))
 
         if not reached_terminal_state:
             for _ in range(MAX_STEPS_EPISODE - episode.steps):
@@ -150,9 +97,13 @@ def train(env, agent):
         if TEST_FREQ != 0 and (test_count >= TEST_FREQ or total_steps >= MAX_STEPS):
             test_episode = test(env, agent, i_episode)
             summary.add_test_episode(test_episode)
-
             logger.info(
                 '[TEST]  - Episode: %d, steps: %d, reward %.2f' % (i_episode, test_episode.steps, test_episode.reward))
+
+            if true_state_action_values is not None:
+                policy_percentage_correct, count, tot_size = compare_policies(true_state_action_values, agent.get_state_action_values(), env)
+                summary.add_test_policy(i_episode, policy_percentage_correct)
+                logger.info('[TEST]  - Correct policy: %.2f (%d / %d)' % (policy_percentage_correct, count, tot_size))
 
             test_count = 0
 
@@ -192,3 +143,21 @@ def render(env, agent, message=None):
         density_map = agent.counter.get_state_visitation_counts()
     value_map = agent.get_state_values()
     return env.render(value_map=value_map, density_map=density_map, message=message)
+
+
+def compare_policies(true_state_action_values, state_action_values, env):
+    count = 0
+    tot_count = 0
+    for i in range(env.h):
+        for j in range(env.w):
+            if env.grid_world[i, j] != 1 and env.grid_world[i, j] != 3:
+                true_policy = get_policy_action_values(true_state_action_values[i, j])
+                policy = get_policy_action_values(state_action_values[i, j])
+                if set(true_policy) == set(policy):
+                    count += 1
+                tot_count += 1
+    return count/tot_count, count, tot_count
+
+
+def get_policy_action_values(action_values):
+    return [idx for idx, value in enumerate(action_values) if value == np.max(action_values)]

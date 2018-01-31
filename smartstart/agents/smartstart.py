@@ -78,6 +78,9 @@ class SmartStart:
     def get_state_values(self):
         return self.agent.get_state_values()
 
+    def get_state_action_values(self):
+        return self.agent.get_state_action_values()
+
     def to_json_dict(self):
         json_dict = self.__dict__.copy()
         json_dict['agent'] = self.agent.to_json_dict()
