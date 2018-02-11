@@ -52,7 +52,8 @@ class ValueIteration:
 
     def get_action(self, state):
         values = self.calc_state_action_values(state)
-        return np.argmax(values)
+        actions = [action for action, value in enumerate(values) if value == np.max(values)]
+        return np.random.choice(actions)
 
     def optimize(self):
         if self.p is None or self.r is None:

@@ -139,7 +139,7 @@ class GridWorld(Environment):
                     p.add_transition(cur_state, action, next_state, transition_prob)
 
                     if self.grid_world[tuple(next_state)] == 3:
-                        r.set_reward(state, action, transition_prob)
+                        r.set_reward(state, action, 1.)
 
         return p, r
 

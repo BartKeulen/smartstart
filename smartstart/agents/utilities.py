@@ -8,6 +8,7 @@ from google.cloud import storage
 
 from smartstart.agents.qlearning import QLearning
 from smartstart.agents.rmax import RMax
+from smartstart.agents.mbrl import MBRL
 from smartstart.agents.smartstart import SmartStart
 from smartstart.environments.gridworld import GridWorld
 
@@ -25,6 +26,7 @@ TEST_FREQ = 0
 agents = {
     'QLearning': QLearning,
     'RMax': RMax,
+    'MBRL': MBRL,
     'SmartStart': SmartStart
 }
 
@@ -202,18 +204,33 @@ def calc_average_steps_training_steps(summaries):
 
 
 def calc_average_rise_time_in_training_steps(summaries, epsilon, baseline):
-    training_steps, average_steps, std_steps = calc_average_steps_training_steps(summaries)
+    rise_times = []
+    for summary in summaries:
+        idx = np.argmax(np.asarray(summary.test['steps']) <= np.ceil(baseline * (1 + epsilon)))
+        training_steps = summary.get_test_iterations_in_training_steps()
+        rise_time = training_steps[idx] if idx > 0 else training_steps[-1]
+        rise_times.append(rise_time)
+    rise_times = np.asarray(rise_times)
 
-    lower_steps = average_steps - std_steps
-    upper_steps = average_steps + std_steps
+    mean = np.mean(rise_times)
+    std = np.std(rise_times)
+    return mean, std
 
-    idx = np.argmax(average_steps <= (baseline * (1 + epsilon)))
-    lower_idx = np.argmax(lower_steps <= (baseline * (1 + epsilon)))
-    upper_idx = np.argmax(upper_steps <= (baseline * (1 + epsilon)))
-    rise_time = training_steps[idx] if idx > 0 else np.nan
-    rise_time_lower = training_steps[lower_idx] if lower_idx > 0 else np.nan
-    rise_time_upper = training_steps[upper_idx] if upper_idx > 0 else np.nan
-    return rise_time, rise_time_lower, rise_time_upper
+# def calc_average_rise_time_in_training_steps(summaries, epsilon, baseline):
+#     training_steps, average_steps, std_steps = calc_average_steps_training_steps(summaries)
+#
+#     lower_steps = average_steps - std_steps
+#     upper_steps = average_steps + std_steps
+#
+#     idx = np.argmax(average_steps <= (baseline * (1 + epsilon)))
+#     lower_idx = np.argmax(lower_steps <= (baseline * (1 + epsilon)))
+#     upper_idx = np.argmax(upper_steps <= (baseline * (1 + epsilon)))
+#
+#     rise_time = training_steps[idx] if idx > 0 else np.nan
+#
+#     rise_time_lower = training_steps[lower_idx] if lower_idx > 0 else np.nan
+#     rise_time_upper = training_steps[upper_idx] if upper_idx > 0 else np.nan
+#     return rise_time, rise_time_lower, rise_time_upper
 
 
 def calc_average_policy_in_training_steps(summaries):

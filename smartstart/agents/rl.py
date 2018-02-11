@@ -89,12 +89,12 @@ def train(env, agent, true_state_action_values=None):
                     break
 
         summary.add_train_episode(episode)
-        logger.info('[TRAIN] - Episode: %d, steps: %d, reward %.2f' % (i_episode, episode.steps, episode.reward))
+        # logger.info('[TRAIN] - Episode: %d, steps: %d, reward %.2f' % (i_episode, episode.steps, episode.reward))
 
         if RENDER_EPISODE:
             RENDER_EPISODE = render(env, agent)
 
-        if TEST_FREQ != 0 and (test_count >= TEST_FREQ or total_steps >= MAX_STEPS):
+        if TEST_FREQ != 0 and (i_episode == 0 or test_count >= TEST_FREQ or total_steps >= MAX_STEPS):
             test_episode = test(env, agent, i_episode)
             summary.add_test_episode(test_episode)
             logger.info(
@@ -120,18 +120,19 @@ def test(env, agent, episode=0):
     episode = Episode(episode)
     obs = env.reset()
 
+    render_test = RENDER_TEST
     for _ in range(MAX_STEPS_EPISODE):
         action = agent.get_greedy_action(obs)
         obs_tp1, reward, done = env.step(action)
-        if RENDER_TEST:
-            RENDER_TEST = render(env, agent)
+        if render_test:
+            render_test = render(env, agent)
         episode.add(reward)
         obs = obs_tp1
 
         if done:
             break
 
-    if RENDER_TEST:
+    if render_test:
         env.render(close=True)
 
     return episode

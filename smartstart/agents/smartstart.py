@@ -4,11 +4,13 @@ import numpy as np
 from smartstart.agents.counter import Counter
 from smartstart.agents.qlearning import QLearning
 from smartstart.agents.rmax import RMax
+from smartstart.agents.mbrl import MBRL
 from smartstart.agents.valueiteration import TransitionModel, RewardFunction, ValueIteration
 
 agents = {
     'QLearning': QLearning,
-    'RMax': RMax
+    'RMax': RMax,
+    'MBRL': MBRL
 }
 
 
