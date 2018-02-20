@@ -50,7 +50,8 @@ class SmartStart:
             ucb = state_values + np.sqrt((self.c_ss * np.log(total_count)) / state_visitation_counts)
         ucb[ucb == np.inf] = 0
 
-        return np.unravel_index(np.argmax(ucb), ucb.shape)
+        smart_start_states = np.where(np.ravel(ucb) == np.max(ucb))[0]  # Returns flattened indices of values that equal maximum ucb
+        return np.unravel_index(np.random.choice(smart_start_states), ucb.shape)  # Chooses random and transforms back to state
 
     def fit_model_and_optimize(self, smart_start_state):
         actions = list(range(self.counter.shape[-1]))

@@ -1,4 +1,5 @@
 import logging
+import pdb
 
 import numpy as np
 
@@ -44,10 +45,10 @@ class MBRL:
         for visitation_count, next_state in zip(visitation_counts, next_states):
             self.vi.p.set_transition(state, action, next_state, visitation_count / np.sum(visitation_counts))
 
-        if done:
+        if done and reward > 0:
             self.vi.terminal_states.append(tuple(next_state))
 
-        self.vi.state_list = list(self.state_list)
+        # self.vi.state_list = list(self.state_list)
         self.vi.optimize()
 
     def get_state_values(self):

@@ -2,6 +2,7 @@
 
 """
 import math
+import pdb
 from collections import deque
 
 import pygame
@@ -78,12 +79,15 @@ class GridWorldVisualizer(Visualizer):
             'start': (255, 255, 255, 255),
             'wall': (51, 107, 135, 255),
             'goal': (0, 255, 0, 255),
+            'subgoal': (255, 255, 0, 255),
             'agent': (144, 175, 197, 255),
             'path': (255, 255, 255, 255)
         }
 
         self.messages = deque(maxlen=29)
         self.active_visualizers = set()
+
+        self.img_counter = 0
 
     def add_visualizer(self, *args):
         """Add visualizer
@@ -161,7 +165,7 @@ class GridWorldVisualizer(Visualizer):
             self._render_grid(pos=pos)
             self._render_borders(pos=pos)
             self._render_walls(pos=pos)
-            self._render_elements("goal", "start", "agent", pos=pos)
+            self._render_elements("goal", "subgoal", "start", "agent", pos=pos)
             # self._render_map(grid, pos=positions.pop())
         if self.VALUE_FUNCTION in self.active_visualizers and value_map is not None:
             pos = positions.pop()
@@ -169,14 +173,14 @@ class GridWorldVisualizer(Visualizer):
             self._render_borders(pos=pos)
             self._render_walls(pos=pos)
             self._render_value_map(value_map, pos=pos)
-            self._render_elements("goal", "start", pos=pos)
+            self._render_elements("goal", "subgoal", "start", pos=pos)
         if self.DENSITY in self.active_visualizers and density_map is not None:
             pos = positions.pop()
             self._render_grid(pos=pos)
             self._render_borders(pos=pos)
             self._render_walls(pos=pos)
             self._render_value_map(density_map, pos=pos)
-            self._render_elements("goal", "start", pos=pos)
+            self._render_elements("goal", "subgoal", "start", pos=pos)
         if self.CONSOLE in self.active_visualizers:
             pos = positions.pop()
             self._render_borders(pos=pos)
@@ -184,6 +188,9 @@ class GridWorldVisualizer(Visualizer):
 
         pygame.display.flip()
         self.clock.tick(self.fps)
+
+        pygame.image.save(self.screen, '/home/bart/Projects/thesis/img_cover/%.3d.jpg' % self.img_counter)
+        self.img_counter += 1
 
         return True
 
@@ -291,6 +298,11 @@ class GridWorldVisualizer(Visualizer):
             y, x = self.env.goal_state
         elif element == "agent":
             y, x = self.env.state
+        elif element == "subgoal":
+            if self.env.subgoal_state is not None:
+                y, x = self.env.subgoal_state
+            else:
+                y, x = -10, -10
         else:
             raise NotImplementedError
 
@@ -348,8 +360,10 @@ class GridWorldVisualizer(Visualizer):
         border_left, border_top, border_right, border_bottom = self._get_borders(overshoot_w, overshoot_h)
 
         # Normalize map
-        if np.sum(value_map) != 0.:
-            value_map /= np.max(value_map)
+        # if np.sum(value_map) != 0.:
+        #     value_map /= np.max(value_map)
+        scale = 20
+        value_map = np.clip(value_map, 0, scale) / scale
         cmap = plt.get_cmap('hot')
         rgba_img = cmap(value_map) * 255
 

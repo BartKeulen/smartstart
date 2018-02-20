@@ -53,7 +53,7 @@ class RMax:
             self.vi.r.set_reward(state, action, self.r_max)
             self.vi.p.set_transition(state, action, self.absorb_state, 1.)
 
-        if done:
+        if done and reward > 0:
             self.vi.terminal_states.append(tuple(next_state))
 
         self.vi.state_list = list(self.state_list)

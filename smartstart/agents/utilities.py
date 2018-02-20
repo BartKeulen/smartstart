@@ -216,9 +216,26 @@ def calc_average_rise_time_in_training_steps(summaries, epsilon, baseline):
     std = np.std(rise_times)
     return mean, std
 
+
+def calc_average_rise_time_in_training_steps_from_average_reward(summaries, max_reward, epsilon, baseline):
+    rise_times = []
+    for summary in summaries:
+        idx = np.argmax(np.asarray(summary.test['rewards']) / np.asarray(summary.test['steps']) >=
+                        max_reward / (baseline * (1 + epsilon)))
+
+        training_steps = summary.get_test_iterations_in_training_steps()
+        rise_time = training_steps[idx] if idx > 0 else training_steps[-1]
+        rise_times.append(rise_time)
+
+    rise_times = np.asarray(rise_times)
+
+    mean = np.mean(rise_times)
+    std = np.std(rise_times)
+    return mean, std
+
 # def calc_average_rise_time_in_training_steps(summaries, epsilon, baseline):
 #     training_steps, average_steps, std_steps = calc_average_steps_training_steps(summaries)
-#
+#b
 #     lower_steps = average_steps - std_steps
 #     upper_steps = average_steps + std_steps
 #

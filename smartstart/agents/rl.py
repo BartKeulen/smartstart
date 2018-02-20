@@ -89,7 +89,7 @@ def train(env, agent, true_state_action_values=None):
                     break
 
         summary.add_train_episode(episode)
-        # logger.info('[TRAIN] - Episode: %d, steps: %d, reward %.2f' % (i_episode, episode.steps, episode.reward))
+        logger.info('[TRAIN] - Episode: %d, steps: %d, reward %.2f' % (i_episode, episode.steps, episode.reward))
 
         if RENDER_EPISODE:
             RENDER_EPISODE = render(env, agent)
