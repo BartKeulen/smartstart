@@ -360,10 +360,10 @@ class GridWorldVisualizer(Visualizer):
         border_left, border_top, border_right, border_bottom = self._get_borders(overshoot_w, overshoot_h)
 
         # Normalize map
-        # if np.sum(value_map) != 0.:
-        #     value_map /= np.max(value_map)
-        scale = 20
-        value_map = np.clip(value_map, 0, scale) / scale
+        if np.sum(value_map) != 0.:
+            value_map /= np.max(value_map)
+        # scale = 20
+        # value_map = np.clip(value_map, 0, scale) / scale
         cmap = plt.get_cmap('hot')
         rgba_img = cmap(value_map) * 255
 

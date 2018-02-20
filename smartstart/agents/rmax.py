@@ -1,8 +1,7 @@
 import logging
-import pdb
 
 import numpy as np
-from smartstart.agents.counter import Counter
+from smartstart.utilities.counter import Counter
 from smartstart.agents.valueiteration import ValueIteration
 
 logger = logging.getLogger(__name__)

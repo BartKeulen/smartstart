@@ -1,10 +1,10 @@
 import logging
-import pdb
 
 import numpy as np
 from smartstart.agents.smartstart import SmartStart
 
-from smartstart.agents.utilities import Summary, Episode
+from smartstart.utilities.utilities import Summary, Episode
+from smartstart.utilities.utilities import compare_policies
 
 logger = logging.getLogger(__name__)
 
@@ -144,21 +144,3 @@ def render(env, agent, message=None):
         density_map = agent.counter.get_state_visitation_counts()
     value_map = agent.get_state_values()
     return env.render(value_map=value_map, density_map=density_map, message=message)
-
-
-def compare_policies(true_state_action_values, state_action_values, env):
-    count = 0
-    tot_count = 0
-    for i in range(env.h):
-        for j in range(env.w):
-            if env.grid_world[i, j] != 1 and env.grid_world[i, j] != 3:
-                true_policy = get_policy_action_values(true_state_action_values[i, j])
-                policy = get_policy_action_values(state_action_values[i, j])
-                if set(true_policy) == set(policy):
-                    count += 1
-                tot_count += 1
-    return count/tot_count, count, tot_count
-
-
-def get_policy_action_values(action_values):
-    return [idx for idx, value in enumerate(action_values) if value == np.max(action_values)]

@@ -1,9 +1,8 @@
 import logging
-import pdb
 
 import numpy as np
 
-from smartstart.agents.counter import Counter
+from smartstart.utilities.counter import Counter
 from smartstart.agents.valueiteration import ValueIteration
 
 
@@ -48,7 +47,6 @@ class MBRL:
         if done and reward > 0:
             self.vi.terminal_states.append(tuple(next_state))
 
-        # self.vi.state_list = list(self.state_list)
         self.vi.optimize()
 
     def get_state_values(self):

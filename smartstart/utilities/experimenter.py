@@ -4,9 +4,9 @@ This methods defined in this module make it easy to run multiple experiments
 in parallel and using different sets of parameters.
 """
 from multiprocessing import Pool, cpu_count
-import pprint
+from collections import Mapping
+from itertools import product
 
-from sklearn.model_selection import ParameterGrid
 from tqdm import *
 
 
@@ -58,7 +58,9 @@ def run_experiment(param_grid, n_processes=None):
     Exception
         Please define a task function in the param_grid to execute.
     """
-    if type(param_grid) is not list:
+    if isinstance(param_grid, Mapping):
+        # wrap dictionary in a singleton list to support either dict
+        # or list of dicts
         param_grid = [param_grid]
 
     for params in param_grid:
@@ -72,11 +74,8 @@ def run_experiment(param_grid, n_processes=None):
             params['run'] = range(params['num_exp'])
             del params['num_exp']
 
-        if type(params['task']) is not list:
-            params['task'] = [params['task']]
-
     # Convert parameter grid to iterable list
-    params = list(ParameterGrid(param_grid))
+    params = list(parameter_grid(param_grid))
     for i in range(len(params)):
         params[i]['id'] = i
 
@@ -101,3 +100,23 @@ def process_task(params):
         dictionary with the parameters to be used in the experiment
     """
     params['task'](params)
+
+
+def parameter_grid(param_grid):
+    for p in param_grid:
+        # Always sort the keys of a dictionary, for reproducibility
+        items = sorted(p.items())
+        if not items:
+            yield {}
+        else:
+            keys, values = zip(*items)
+            values = list(values)
+            for i, v in enumerate(values):
+                if not isinstance(v, list):
+                    if hasattr(v, '__iter__'):
+                        values[i] = list(v)
+                    else:
+                        values[i] = [v]
+            for v in product(*values):
+                params = dict(zip(keys, v))
+                yield params

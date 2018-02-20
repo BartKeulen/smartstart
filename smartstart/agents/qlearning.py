@@ -1,7 +1,7 @@
 import logging
-from smartstart.agents.counter import Counter
+from smartstart.utilities.counter import Counter
 
-from smartstart.agents.policies import *
+from smartstart.utilities.policies import *
 
 
 logger = logging.getLogger(__name__)
