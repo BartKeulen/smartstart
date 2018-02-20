@@ -8,3 +8,5 @@ Cognition ([IHMC](https://www.ihmc.us)).
 
 Full documentation can be found on the github pages for this project, click
 [here](https://bartkeulen.github.io/smartstart/).
+
+**Latest code can be found in Develop. The docs and gh-pages have not been updated yet.**
