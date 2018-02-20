@@ -4,12 +4,13 @@ This methods defined in this module make it easy to run multiple experiments
 in parallel and using different sets of parameters.
 """
 from multiprocessing import Pool, cpu_count
+from collections import Mapping
+from itertools import product
 
-from sklearn.model_selection import ParameterGrid
 from tqdm import *
 
 
-def run_experiment(param_grid, n_processes=-1):
+def run_experiment(param_grid, n_processes=None):
     """Method for running experiments
 
     This method is used for making it easy to run experiments in parallel and
@@ -57,7 +58,9 @@ def run_experiment(param_grid, n_processes=-1):
     Exception
         Please define a task function in the param_grid to execute.
     """
-    if type(param_grid) is not list:
+    if isinstance(param_grid, Mapping):
+        # wrap dictionary in a singleton list to support either dict
+        # or list of dicts
         param_grid = [param_grid]
 
     for params in param_grid:
@@ -71,17 +74,14 @@ def run_experiment(param_grid, n_processes=-1):
             params['run'] = range(params['num_exp'])
             del params['num_exp']
 
-        if type(params['task']) is not list:
-            params['task'] = [params['task']]
-
     # Convert parameter grid to iterable list
-    params = list(ParameterGrid(param_grid))
+    params = list(parameter_grid(param_grid))
     for i in range(len(params)):
         params[i]['id'] = i
 
-    print("\033[1mNumber of processes: %d\033[0m" % len(params))
+    print("\n\033[1mNumber of processes: %d\033[0m" % len(params))
 
-    if n_processes == -1:
+    if n_processes is None or n_processes <= 0:
         n_processes = cpu_count()
     if n_processes > 1:
         with Pool(n_processes) as p:
@@ -100,3 +100,23 @@ def process_task(params):
         dictionary with the parameters to be used in the experiment
     """
     params['task'](params)
+
+
+def parameter_grid(param_grid):
+    for p in param_grid:
+        # Always sort the keys of a dictionary, for reproducibility
+        items = sorted(p.items())
+        if not items:
+            yield {}
+        else:
+            keys, values = zip(*items)
+            values = list(values)
+            for i, v in enumerate(values):
+                if not isinstance(v, list):
+                    if hasattr(v, '__iter__'):
+                        values[i] = list(v)
+                    else:
+                        values[i] = [v]
+            for v in product(*values):
+                params = dict(zip(keys, v))
+                yield params
