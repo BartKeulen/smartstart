@@ -1,5 +1,5 @@
 import numpy as np
-from smartstart.utilities.counter import Counter
+from smartstart.agents.counter import Counter
 from smartstart.agents.qlearning import QLearning
 from smartstart.agents.rmax import RMax
 from smartstart.agents.mbrl import MBRL

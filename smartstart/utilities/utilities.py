@@ -6,10 +6,7 @@ import logging
 import numpy as np
 from google.cloud import storage
 
-from smartstart.agents.qlearning import QLearning
-from smartstart.agents.rmax import RMax
-from smartstart.agents.mbrl import MBRL
-from smartstart.agents.smartstart import SmartStart
+from smartstart.agents import agents
 from smartstart.environments.gridworld import GridWorld
 
 logger = logging.getLogger(__name__)
@@ -22,13 +19,6 @@ SEED = None
 MAX_STEPS = 50000
 MAX_STEPS_EPISODE = 100
 TEST_FREQ = 0
-
-agents = {
-    'QLearning': QLearning,
-    'RMax': RMax,
-    'MBRL': MBRL,
-    'SmartStart': SmartStart
-}
 
 
 class Episode:
@@ -123,7 +113,7 @@ class Summary:
     def save(self, directory, post_fix=None, bucket_name=None):
         agent = self.agent
         name = agent.name
-        if agent.__class__ == SmartStart:
+        if agent.__class__ == agents['SmartStart']:
             agent = self.agent.agent
             name += '_' + agent.name
         if hasattr(agent, 'exploration_strategy'):

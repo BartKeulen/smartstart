@@ -87,8 +87,6 @@ class GridWorldVisualizer(Visualizer):
         self.messages = deque(maxlen=29)
         self.active_visualizers = set()
 
-        self.img_counter = 0
-
     def add_visualizer(self, *args):
         """Add visualizer
 
@@ -106,7 +104,7 @@ class GridWorldVisualizer(Visualizer):
             else:
                 self.active_visualizers.add(arg)
 
-    def render(self, value_map=None, density_map=None, message=None, close=False):
+    def render(self, value_map=None, density_map=None, message=None, close=False, filename=None):
         """Render the current state of the GridWorld
 
         Parameters
@@ -189,8 +187,8 @@ class GridWorldVisualizer(Visualizer):
         pygame.display.flip()
         self.clock.tick(self.fps)
 
-        pygame.image.save(self.screen, '/home/bart/Projects/thesis/img_cover/%.3d.jpg' % self.img_counter)
-        self.img_counter += 1
+        if filename is not None:
+            pygame.image.save(self.screen, '/home/bart/Projects/thesis/img_cover/%s.jpg' % filename)
 
         return True
 

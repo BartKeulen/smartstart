@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from smartstart.utilities.counter import Counter
+from smartstart.agents.counter import Counter
 from smartstart.agents.valueiteration import ValueIteration
 
 

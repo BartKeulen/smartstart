@@ -3,10 +3,8 @@ import logging
 import numpy as np
 import matplotlib.pyplot as plt
 
-from smartstart.agents.qlearning import QLearning
-from smartstart.utilities.counter import Counter
-from smartstart.environments.gridworld import GridWorld
-from smartstart.environments.gridworldvisualizer import GridWorldVisualizer
+from smartstart.agents import Counter, QLearning
+from smartstart.environments import GridWorld, GridWorldVisualizer
 import smartstart.rl as rl
 
 # Set logging level to info to see text

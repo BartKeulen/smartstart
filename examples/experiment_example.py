@@ -3,13 +3,10 @@ import os
 
 import numpy as np
 
-from smartstart.agents.qlearning import QLearning
-from smartstart.agents.smartstart import SmartStart
-from smartstart.agents.valueiteration import ValueIteration
-from smartstart.utilities.counter import Counter
-from smartstart.environments.gridworld import GridWorld
+from smartstart.agents import Counter, QLearning, ValueIteration, SmartStart
+from smartstart.environments import GridWorld
 import smartstart.rl as rl
-from smartstart.utilities.experimenter import run_experiment
+from smartstart.utilities import run_experiment
 
 # Set logging level to warning
 logging.basicConfig(level=logging.WARNING, format='%(name)s - %(levelname)s - %(message)s')

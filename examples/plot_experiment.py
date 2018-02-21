@@ -5,8 +5,8 @@ import pdb
 import numpy as np
 import matplotlib.pyplot as plt
 
-from smartstart.agents.smartstart import SmartStart
-from smartstart.utilities.utilities import Summary, calc_average_reward_training_steps
+from smartstart.agents import SmartStart
+from smartstart.utilities import Summary, calc_average_reward_training_steps
 
 data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
