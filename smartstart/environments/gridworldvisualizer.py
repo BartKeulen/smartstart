@@ -104,7 +104,7 @@ class GridWorldVisualizer(Visualizer):
             else:
                 self.active_visualizers.add(arg)
 
-    def render(self, value_map=None, density_map=None, message=None, close=False, filename=None):
+    def render(self, value_map=None, density_map=None, message=None, close=False, fp=None):
         """Render the current state of the GridWorld
 
         Parameters
@@ -187,8 +187,8 @@ class GridWorldVisualizer(Visualizer):
         pygame.display.flip()
         self.clock.tick(self.fps)
 
-        if filename is not None:
-            pygame.image.save(self.screen, '/home/bart/Projects/thesis/img_cover/%s.jpg' % filename)
+        if fp is not None:
+            pygame.image.save(self.screen, fp)
 
         return True
 
@@ -260,15 +260,25 @@ class GridWorldVisualizer(Visualizer):
         border_left, border_top, border_right, border_bottom = self._get_borders(overshoot_w, overshoot_h)
 
         for element in args:
-            x, y = self._get_element(element)
-            pos = np.array([x, y]) + 1/2
-            pos *= np.array([scale_w, scale_h])
-            pos += np.array([border_left + offset_left, border_top + offset_top])
-            pos = np.asarray(pos, dtype=np.int)
+            res = self._get_element(element)
+            if isinstance(res, list):
+                for x, y in res:
+                    vertices = np.array([[x, y], [x + 1, y], [x + 1, y + 1], [x, y + 1]])
+                    vertices[:, 0] = vertices[:, 0] * scale_w + border_left + offset_left
+                    vertices[:, 1] = vertices[:, 1] * scale_h + border_top + offset_top
 
-            color = self.colors[element]
-            radius = int(min(scale_w, scale_h) / 2)
-            pygame.draw.circle(self.screen, color, tuple(pos), radius)
+                    color = self.colors[element]
+                    pygame.draw.polygon(self.screen, color, vertices)
+            else:
+                x, y = res
+                pos = np.array([x, y]) + 1/2
+                pos *= np.array([scale_w, scale_h])
+                pos += np.array([border_left + offset_left, border_top + offset_top])
+                pos = np.asarray(pos, dtype=np.int)
+
+                color = self.colors[element]
+                radius = int(min(scale_w, scale_h) / 2)
+                pygame.draw.circle(self.screen, color, tuple(pos), radius)
 
     def _get_element(self, element):
         """Returns the position of the element
@@ -298,6 +308,8 @@ class GridWorldVisualizer(Visualizer):
             y, x = self.env.state
         elif element == "subgoal":
             if self.env.subgoal_state is not None:
+                if isinstance(self.env.subgoal_state, list):
+                    return self.env.subgoal_state
                 y, x = self.env.subgoal_state
             else:
                 y, x = -10, -10
@@ -358,10 +370,10 @@ class GridWorldVisualizer(Visualizer):
         border_left, border_top, border_right, border_bottom = self._get_borders(overshoot_w, overshoot_h)
 
         # Normalize map
-        if np.sum(value_map) != 0.:
-            value_map /= np.max(value_map)
-        # scale = 20
-        # value_map = np.clip(value_map, 0, scale) / scale
+        # if np.sum(value_map) != 0.:
+        #     value_map /= np.max(value_map)
+        scale = 40
+        value_map = np.clip(value_map, 0, scale) / scale
         cmap = plt.get_cmap('hot')
         rgba_img = cmap(value_map) * 255
 

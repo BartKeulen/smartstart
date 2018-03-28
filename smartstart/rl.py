@@ -1,7 +1,13 @@
 import logging
+import os
+import pdb
+import subprocess
+import shutil
+import time
 
 import numpy as np
 from smartstart.agents.smartstart import SmartStart
+from smartstart.utilities import create_directory
 
 from smartstart.utilities.utilities import Summary, Episode
 from smartstart.utilities.utilities import compare_policies
@@ -11,16 +17,24 @@ logger = logging.getLogger(__name__)
 RENDER = False
 RENDER_TEST = False
 RENDER_EPISODE = False
+RENDER_FREQ = 1
 
 SEED = None
 MAX_STEPS = 50000
 MAX_STEPS_EPISODE = 100
 TEST_FREQ = 0
 
+SAVE_FP = None
+SAVE_FILENAME = 'out'
+SAVE_IDX = 1
+
 
 def train(env, agent, true_state_action_values=None):
-    global RENDER, RENDER_EPISODE
+    global RENDER, RENDER_EPISODE, SAVE_IDX
     np.random.seed(SEED)
+
+    if SAVE_FP is not None:
+        SAVE_IDX = 1
 
     summary = Summary(env, agent)
 
@@ -45,7 +59,7 @@ def train(env, agent, true_state_action_values=None):
                 action = agent.get_action(obs, use_ss_policy=True)
                 obs_tp1, reward, done = env.step(action)
 
-                if RENDER:
+                if RENDER and total_steps % RENDER_FREQ == 0:
                     RENDER = render(env, agent)
 
                 agent.update(obs, action, reward, obs_tp1, done)
@@ -74,7 +88,7 @@ def train(env, agent, true_state_action_values=None):
                 action = agent.get_action(obs, use_ss_policy=False)
                 obs_tp1, reward, done = env.step(action)
 
-                if RENDER:
+                if RENDER and total_steps % RENDER_FREQ == 0:
                     RENDER = render(env, agent)
 
                 agent.update(obs, action, reward, obs_tp1, done)
@@ -110,7 +124,7 @@ def train(env, agent, true_state_action_values=None):
         i_episode += 1
 
     if RENDER or RENDER_EPISODE:
-        env.render(close=True)
+        render(env, agent, close=True)
 
     return summary
 
@@ -138,9 +152,32 @@ def test(env, agent, episode=0):
     return episode
 
 
-def render(env, agent, message=None):
+def render(env, agent, close=False, message=None):
+    global SAVE_IDX
+
+    if SAVE_FP is not None and close:
+        fp = os.path.join(SAVE_FP, 'tmp')
+        fp_out = os.path.join(SAVE_FP, '%s.mp4' % SAVE_FILENAME)
+        subprocess.run(['ffmpeg', '-y', '-r', '%d' % 15, '-s', '%dx%d' % (env._visualizer.size[0], env._visualizer.size[1]),
+                        '-i', os.path.join(fp, '%08d.png'), '-crf', '%d' % 15, fp_out])
+        shutil.rmtree(fp, ignore_errors=False, onerror=None)
+
+    if close:
+        return env.render(close=True)
+
     density_map = None
     if hasattr(agent, 'counter'):
         density_map = agent.counter.get_state_visitation_counts()
     value_map = agent.get_state_values()
-    return env.render(value_map=value_map, density_map=density_map, message=message)
+
+    if SAVE_FP is not None:
+        if SAVE_IDX == 1:
+            create_directory(os.path.join(SAVE_FP, 'tmp/'))
+
+        filename = '%.8d.png' % SAVE_IDX
+        fp = os.path.join(SAVE_FP, 'tmp', filename)
+        SAVE_IDX += 1
+    else:
+        fp = None
+
+    return env.render(value_map=value_map, density_map=density_map, message=message, fp=fp)
