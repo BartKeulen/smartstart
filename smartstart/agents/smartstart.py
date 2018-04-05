@@ -1,4 +1,8 @@
+import pdb
+
 import numpy as np
+from scipy import signal as sg
+
 from smartstart.agents.counter import Counter
 from smartstart.agents.qlearning import QLearning
 from smartstart.agents.rmax import RMax
@@ -20,11 +24,13 @@ class SmartStart:
                  counter,
                  c_ss=2.,
                  eta=0.5,
-                 m=1.):
+                 m=1.,
+                 mask_approx_count=None):
         self.name = self.__class__.__name__
         self.agent = agent
         self.vi = value_iteration
         self.counter = counter
+        self.mask_approx_count = mask_approx_count
 
         self.c_ss = c_ss
         self.eta = eta
@@ -40,7 +46,7 @@ class SmartStart:
             return self.agent.get_action(state)
 
     def get_smart_start_state(self):
-        state_visitation_counts = self.counter.get_state_visitation_counts()
+        state_visitation_counts = self.get_visitation_counts()
         total_count = np.sum(state_visitation_counts)
         state_values = self.agent.get_state_values()
 
@@ -50,6 +56,15 @@ class SmartStart:
 
         smart_start_states = np.where(np.ravel(ucb) == np.max(ucb))[0]  # Returns flattened indices of values that equal maximum ucb
         return np.unravel_index(np.random.choice(smart_start_states), ucb.shape)  # Chooses random and transforms back to state
+
+    def get_visitation_counts(self):
+        if self.mask_approx_count is None:
+            return self.counter.get_state_visitation_counts()
+        else:
+            state_visitation_counts = self.counter.get_state_visitation_counts()
+            approx_counts = sg.convolve(state_visitation_counts, self.mask_approx_count, "same")
+            approx_counts[state_visitation_counts == 0] = 0
+            return approx_counts
 
     def fit_model_and_optimize(self, smart_start_state):
         actions = list(range(self.counter.shape[-1]))
