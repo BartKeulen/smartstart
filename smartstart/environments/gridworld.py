@@ -7,10 +7,12 @@ from collections import defaultdict
 
 import numpy as np
 from smartstart.agents.valueiteration import TransitionModel, RewardFunction
+from smartstart.agents.valueiteration_new import TabularModel
 
 from smartstart.environments.environment import Environment
 from smartstart.environments.generate_gridworld import generate_gridworld
 from smartstart.environments.presets import *
+from smartstart.representation.tabular import Tabular
 
 
 class GridWorld(Environment):
@@ -130,6 +132,9 @@ class GridWorld(Environment):
         p = TransitionModel(self.actions)
         r = RewardFunction(self.actions)
 
+        representation = Tabular(self)
+        model = TabularModel(representation)
+
         for state in states:
             cur_state = np.asarray(state)
             for action in self.actions:
@@ -146,17 +151,19 @@ class GridWorld(Environment):
 
                     p.add_transition(cur_state, action, next_state, transition_prob)
 
+                    reward = 0.
                     if self.grid_world[tuple(next_state)] == 3:
                         if self.subgoal_state is not None:
-                            reward = 100.
+                            reward = transition_prob*100.
                         else:
-                            reward = 1.
+                            reward = transition_prob*1.
                         r.set_reward(state, action, transition_prob*reward)
-
-                    if self.subgoal_state is not None and self.grid_world[tuple(next_state)] == 4:
+                    elif self.subgoal_state is not None and self.grid_world[tuple(next_state)] == 4:
                         r.set_reward(state, action, transition_prob)
+                        reward = transition_prob
+                    model.set(cur_state, action, next_state, transition_prob, reward)
 
-        return p, r
+        return p, r, model
 
     def reset(self, start_state=None):
         """
