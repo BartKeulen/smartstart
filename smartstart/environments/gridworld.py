@@ -63,11 +63,12 @@ class GridWorld(Environment):
     MEDIUM = 'Medium'
     HARD = 'Hard'
     MAZE = 'Maze'
+    LARGE = 'Large'
     MISLEADING = 'Misleading'
     EXTREME = 'Extreme'
     IMPOSSIBRUUHHH = 'Impossible'
 
-    def __init__(self, name, layout, T_prob=1., wall_reset=False, scale=3):
+    def __init__(self, name, layout, T_prob=1., wall_reset=False, scale=3, scale_goal=False):
         super(GridWorld, self).__init__(name)
         layout = np.asarray(layout)
         self.T_prob = T_prob
@@ -76,7 +77,10 @@ class GridWorld(Environment):
 
         grid_world = np.kron(layout, np.ones((scale, scale), dtype=layout.dtype))
         start_state = np.asarray(np.where(grid_world == 2))[:, math.floor(scale**2/2)]
-        goal_state = np.asarray(np.where(grid_world == 3))[:, math.floor(scale**2/2)]
+        if not scale_goal:
+            goal_state = np.asarray(np.where(grid_world == 3))[:, math.floor(scale**2/2)]
+            grid_world[grid_world == 3] = 0
+            grid_world[tuple(goal_state)] = 3
         if np.any(grid_world == 4):
             subgoal_state = np.asarray(np.where(grid_world == 4))[:, math.floor(scale**2/2)]
             grid_world[grid_world == 4] = 0
@@ -84,15 +88,13 @@ class GridWorld(Environment):
         else:
             subgoal_state = None
         grid_world[grid_world == 2] = 0
-        grid_world[grid_world == 3] = 0
         grid_world[tuple(start_state)] = 2
-        grid_world[tuple(goal_state)] = 3
 
         self.h, self.w = grid_world.shape
         self.actions = [0, 1, 2, 3]
         self.num_actions = 4
-        self.grid_world, self.start_state, self.goal_state, self.subgoal_state = \
-            grid_world, start_state, goal_state, subgoal_state
+        self.grid_world, self.start_state, self.subgoal_state = \
+            grid_world, start_state, subgoal_state
 
     def get_all_states(self):
         """Return all the states of the gridworld
@@ -250,16 +252,16 @@ class GridWorld(Environment):
                 new_state = self.state.copy()
 
         if self.subgoal_state is not None:
-            if np.array_equal(new_state, self.subgoal_state):
+            if self.grid_world[tuple(new_state)] == 4:
                 r = 1.
-            elif np.array_equal(new_state, self.goal_state):
+            elif self.grid_world[tuple(new_state)] == 3:
                 r = 100.
             else:
                 r = 0.
         else:
-            r = 1. if np.array_equal(new_state, self.goal_state) else 0.
+            r = 1. if self.grid_world[tuple(new_state)] == 3 else 0.
 
-        done = True if np.array_equal(new_state, self.goal_state) or np.array_equal(new_state, self.subgoal_state) else False
+        done = True if self.grid_world[tuple(new_state)] == 3 or self.grid_world[tuple(new_state)] == 4 else False
 
         self.state = new_state
 
@@ -356,6 +358,8 @@ class GridWorld(Environment):
             name, layout = hard()
         elif type == GridWorld.MAZE:
             name, layout = maze()
+        elif type == GridWorld.LARGE:
+            name, layout = maze_large()
         elif type == GridWorld.MISLEADING:
             name, layout = misleading()
             if 'scale' not in kwargs:

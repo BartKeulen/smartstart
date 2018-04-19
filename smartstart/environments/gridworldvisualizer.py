@@ -303,7 +303,8 @@ class GridWorldVisualizer(Visualizer):
         if element == "start":
             y, x = self.env.start_state
         elif element == "goal":
-            y, x = self.env.goal_state
+            goal_states = np.where(self.env.grid_world == 3)
+            return [(x, y) for y, x in zip(*goal_states)]
         elif element == "agent":
             y, x = self.env.state
         elif element == "subgoal":

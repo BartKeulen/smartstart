@@ -25,12 +25,12 @@ class SmartStart:
                  c_ss=2.,
                  eta=0.5,
                  m=1.,
-                 mask_approx_count=None):
+                 mask=None):
         self.name = self.__class__.__name__
         self.agent = agent
         self.vi = value_iteration
         self.counter = counter
-        self.mask_approx_count = mask_approx_count
+        self.mask = mask
 
         self.c_ss = c_ss
         self.eta = eta
@@ -58,11 +58,11 @@ class SmartStart:
         return np.unravel_index(np.random.choice(smart_start_states), ucb.shape)  # Chooses random and transforms back to state
 
     def get_visitation_counts(self):
-        if self.mask_approx_count is None:
+        if self.mask is None:
             return self.counter.get_state_visitation_counts()
         else:
             state_visitation_counts = self.counter.get_state_visitation_counts()
-            approx_counts = sg.convolve(state_visitation_counts, self.mask_approx_count, "same")
+            approx_counts = sg.convolve(state_visitation_counts, self.mask, "same")
             approx_counts[state_visitation_counts == 0] = 0
             return approx_counts
 
@@ -102,6 +102,8 @@ class SmartStart:
         json_dict['agent'] = self.agent.to_json_dict()
         json_dict['counter'] = self.counter.to_json_dict()
         json_dict['vi'] = self.vi.to_json_dict()
+        if self.mask is not None:
+            json_dict['mask'] = self.mask.tolist()
         return json_dict
 
     @classmethod
@@ -110,6 +112,11 @@ class SmartStart:
         agent = agents[json_dict['agent']['name']].from_json_dict(json_dict['agent'])
         counter = Counter.from_json_dict(json_dict['counter'])
         vi = ValueIteration.from_json_dict(json_dict['vi'])
+        if 'mask' in json_dict and json_dict['mask'] is not None:
+            json_dict['mask'] = np.asarray(json_dict['mask'])
+        if 'mask_approx_count' in json_dict:
+            json_dict['mask'] = json_dict['mask_approx_count']
+            del json_dict['mask_approx_count']
         del json_dict['agent']
         del json_dict['counter']
         del json_dict['vi']
