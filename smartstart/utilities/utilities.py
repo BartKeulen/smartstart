@@ -7,7 +7,6 @@ import numpy as np
 from google.cloud import storage
 
 from smartstart.agents import agents
-from smartstart.environments.gridworld import GridWorld
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +99,7 @@ class Summary:
 
     @classmethod
     def from_json(cls, json_str):
+        from smartstart.environments.gridworld import GridWorld
         json_dict = json.loads(json_str)
         json_dict = json_dict.copy()
         env = GridWorld.from_json_dict(json_dict['env'])
